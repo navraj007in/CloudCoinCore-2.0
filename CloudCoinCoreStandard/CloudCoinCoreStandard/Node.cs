@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CloudCoinCoreStandard
+namespace CloudCoinCore
 {
-    class Node
+    public class Node
     {
-
+        /*
+         * 
+         * This Class Contains the properties of a RAIDA node.
+         * 
+         * */
     }
 }
