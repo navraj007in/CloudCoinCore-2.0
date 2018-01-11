@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CloudCoinClient.CoreClasses;
-
+using CloudCoinCore;
 namespace CloudCoinClient
 {
     /// <summary>
@@ -22,15 +22,21 @@ namespace CloudCoinClient
     public partial class MainWindow : Window
     {
         FileSystem FS = new FileSystem();
+        RAIDA raida;
         public MainWindow()
         {
             InitializeComponent();
-            FS.CreateFolderStructure();
-            MessageBox.Show(FS.RootPath);
+            Setup();           
         }
 
-        public void SetupFS()
+        public void Setup()
         {
+            // Create the Folder Structure
+            FS.CreateFolderStructure();
+            // Populate RAIDA Nodes
+            raida = RAIDA.GetInstance();
+            raida.Echo();
+            //Load Local Coins
 
         }
     }

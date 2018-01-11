@@ -1,12 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Runtime;
+using Android.Views;
+using Android.Widget;
 using CloudCoinCore;
 using System.IO;
 
-namespace CloudCoinClient.CoreClasses
+namespace CloudCoinAndroid.CoreClasses
 {
     public class FileSystem : IFileSystem
     {
@@ -29,15 +35,8 @@ namespace CloudCoinClient.CoreClasses
         }
         public override bool CreateFolderStructure()
         {
-            if(Properties.Settings.Default.WorkSpace == "")
-            {
-                RootPath = AppDomain.CurrentDomain.BaseDirectory;
-            }   
-            else
-            {
-                RootPath = Properties.Settings.Default.WorkSpace;
-            }
-            
+
+
             // Create the Actual Folder Structure
             return CreateDirectories();
             //return true;
@@ -74,7 +73,8 @@ namespace CloudCoinClient.CoreClasses
 
         public override void LoadFileSystem()
         {
-            
+
         }
     }
+    
 }

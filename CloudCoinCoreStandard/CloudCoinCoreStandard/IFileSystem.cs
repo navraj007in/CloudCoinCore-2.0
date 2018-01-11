@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace CloudCoinCore
 {
@@ -26,6 +27,9 @@ namespace CloudCoinCore
         public abstract bool CreateFolderStructure();
 
         public abstract void LoadFileSystem();
+
+
+
 
     }
 }

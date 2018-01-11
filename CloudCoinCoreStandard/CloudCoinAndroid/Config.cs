@@ -20,8 +20,6 @@ namespace CloudCoinCore
         public static string TAG_TRASH = "Trash";
         public static string TAG_SUSPECT = "Suspect";
 
-        public static int NodeCount = 25;
-        public static int NetworkNumber = 1;
 
     }
 }
