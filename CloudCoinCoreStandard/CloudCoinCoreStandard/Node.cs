@@ -67,6 +67,7 @@ namespace CloudCoinCore
                 //RAIDA_Status.failsEcho[raidaID] = true;
                 if (ex.InnerException != null)
                     echoResponse.fullResponse = ex.InnerException.Message;
+                Debug.WriteLine("Error---"+ ex.Message);
             }
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             echoResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CloudCoinClient.CoreClasses;
 using CloudCoinCore;
+using System.Diagnostics;
+
 namespace CloudCoinClient
 {
     /// <summary>
@@ -36,7 +38,24 @@ namespace CloudCoinClient
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
             raida.Echo();
+            
             //Load Local Coins
+
+        }
+
+        private void cmdShow_Click(object sender, RoutedEventArgs e)
+        {
+            lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
+            lblNotReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count();
+
+
+        }
+
+        private void cmdEcho_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("-----------------------------------");
+            raida.Echo();
+            Debug.WriteLine("-----------------------------------");
 
         }
     }

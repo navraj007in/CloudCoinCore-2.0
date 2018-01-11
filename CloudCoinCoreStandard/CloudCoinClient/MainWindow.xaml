@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <StackPanel Orientation="Vertical">
+            <Label Content="Ready Nodes :"/>
+            <Label x:Name="lblReady"/>
+            <Label Content="NotReady Nodes :"/>
+            <Label x:Name="lblNotReady"/>
+            <Button x:Name="cmdShow" Content="Show Status" Click="cmdShow_Click" Width="200"></Button>
+            <Button x:Name="cmdEcho" Content="Echo" Click="cmdEcho_Click" Width="200"></Button>
+
+        </StackPanel>
     </Grid>
 </Window>

@@ -12,7 +12,7 @@ namespace CloudCoinCore
          * This Class Contains and abstracts the properties of RAIDA network.
          * */
         public static RAIDA MainNetwork;
-        Node[] nodes = new Node[Config.NodeCount];
+        public Node[] nodes = new Node[Config.NodeCount];
 
         private RAIDA()
         {
