@@ -37,7 +37,7 @@ namespace CloudCoinClient
             FS.CreateFolderStructure();
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
-            raida.Echo();
+            //raida.Echo();
             
             //Load Local Coins
 
@@ -51,10 +51,19 @@ namespace CloudCoinClient
 
         }
 
-        private void cmdEcho_Click(object sender, RoutedEventArgs e)
+        private async void cmdEcho_Click(object sender, RoutedEventArgs e)
         {
+
+            var echos = raida.GetEchoTasks();
+            await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
+            MessageBox.Show("Finished Echo");
+            Debug.WriteLine("Finished Echo");
+            for (int i = 0; i < raida.nodes.Count(); i++)
+            {
+                Debug.WriteLine("Parallel - Value-" + raida.nodes[i].RAIDANodeStatus);
+            }
             Debug.WriteLine("-----------------------------------");
-            raida.Echo();
+           // raida.Echo();
             Debug.WriteLine("-----------------------------------");
 
         }

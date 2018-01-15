@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace CloudCoinCore
 {
@@ -32,12 +33,42 @@ namespace CloudCoinCore
             }
         }
 
+        public List<Func<Task>> GetEchoTasks()
+        {
+            var echoTasks = new List<Func<Task>>
+            {
+
+            };
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                echoTasks.Add(nodes[i].Echo);
+            }
+            return echoTasks;
+        }
+
+        public List<Task> GetDetectTasks(CloudCoin cc)
+        {
+            var detectTasks = new List<Task>
+            {
+
+            };
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                detectTasks.Add(nodes[i].Detect(Config.NetworkNumber,cc.sn, cc.an[i],cc.pan[i],0));
+            }
+            return detectTasks;
+        }
         public void Echo()
         {
             for(int i=0;i<Config.NodeCount;i++)
             {
-                nodes[i].echo();
+                nodes[i].Echo();
             }
+        }
+
+        public void Detect()
+        {
+
         }
     }
 }
