@@ -23,5 +23,8 @@ namespace CloudCoinCore
         public static int NodeCount = 25;
         public static int NetworkNumber = 1;
 
+        public static string[] allowedExtensions = new[] { ".stack", ".jpeg", ".chest", ".bank",".jpg" };
+
+
     }
 }

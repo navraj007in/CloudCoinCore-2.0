@@ -10,6 +10,20 @@ namespace CloudCoinClient.CoreClasses
 {
     public class FileSystem : IFileSystem
     {
+        public static IEnumerable<CloudCoin> importCoins;
+        public static IEnumerable<CloudCoin> exportCoins;
+        public static IEnumerable<CloudCoin> importedCoins;
+        public static IEnumerable<FileInfo> templateFiles;
+        public static IEnumerable<CloudCoin> languageCoins;
+        public static IEnumerable<CloudCoin> counterfeitCoins;
+        public static IEnumerable<CloudCoin> partialCoins;
+        public static IEnumerable<CloudCoin> frackedCoins;
+        public static IEnumerable<CloudCoin> detectedCoins;
+        public static IEnumerable<CloudCoin> suspectCoins;
+        public static IEnumerable<CloudCoin> trashCoins;
+        public static IEnumerable<CloudCoin> bankCoins;
+
+
         public FileSystem()
         {
             ImportFolder = Config.TAG_IMPORT;
@@ -23,7 +37,6 @@ namespace CloudCoinClient.CoreClasses
             DetectedFolder = Config.TAG_DETECTED;
             SuspectFolder = Config.TAG_SUSPECT;
             TrashFolder = Config.TAG_TRASH;
-            LanguageFolder = Config.TAG_LANGUAGE;
             BankFolder = Config.TAG_BANK;
 
         }
@@ -74,7 +87,19 @@ namespace CloudCoinClient.CoreClasses
 
         public override void LoadFileSystem()
         {
-            
+            LoadFolderCoins(RootPath + ImportFolder);
+            LoadFolderCoins(RootPath + ExportFolder);
+            LoadFolderCoins(RootPath + BankFolder);
+            LoadFolderCoins(RootPath + LostFolder);
+            LoadFolderCoins(RootPath + ImportedFolder);
+            LoadFolderCoins(RootPath + TrashFolder);
+            LoadFolderCoins(RootPath + SuspectFolder);
+            LoadFolderCoins(RootPath + DetectedFolder);
+            LoadFolderCoins(RootPath + FrackedFolder);
+            LoadFolderCoins(RootPath + TemplateFolder);
+            LoadFolderCoins(RootPath + PartialFolder);
+            LoadFolderCoins(RootPath + CounterfeitFolder);
+            LoadFolderCoins(RootPath + LanguageFolder);
         }
     }
 }

@@ -38,7 +38,8 @@ namespace CloudCoinClient
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
             //raida.Echo();
-            
+            FS.LoadFileSystem();
+            FS.LoadFolderCoins(AppDomain.CurrentDomain.BaseDirectory);
             //Load Local Coins
 
         }
