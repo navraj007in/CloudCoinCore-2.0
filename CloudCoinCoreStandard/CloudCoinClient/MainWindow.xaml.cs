@@ -39,7 +39,7 @@ namespace CloudCoinClient
             raida = RAIDA.GetInstance();
             //raida.Echo();
             FS.LoadFileSystem();
-            FS.LoadFolderCoins(AppDomain.CurrentDomain.BaseDirectory);
+            FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
             //Load Local Coins
 
         }
