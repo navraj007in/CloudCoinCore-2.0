@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCoinClient", "CloudCoi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCoinAndroid", "CloudCoinAndroid\CloudCoinAndroid.csproj", "{1356E221-C9EF-476F-BF2B-C564019D7C7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCoinConsole", "CloudCoinConsole\CloudCoinConsole.csproj", "{D96E9B7A-1647-4AB8-B89A-7138C7BBEB75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{1356E221-C9EF-476F-BF2B-C564019D7C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1356E221-C9EF-476F-BF2B-C564019D7C7F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1356E221-C9EF-476F-BF2B-C564019D7C7F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D96E9B7A-1647-4AB8-B89A-7138C7BBEB75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D96E9B7A-1647-4AB8-B89A-7138C7BBEB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D96E9B7A-1647-4AB8-B89A-7138C7BBEB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D96E9B7A-1647-4AB8-B89A-7138C7BBEB75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

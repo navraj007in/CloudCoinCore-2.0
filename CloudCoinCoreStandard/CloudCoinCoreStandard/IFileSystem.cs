@@ -50,7 +50,8 @@ namespace CloudCoinCore
             {
                 fnames[i] = Path.GetFileName(files.ElementAt(i));
                 var coins = Utils.LoadJson(files[i]);
-                folderCoins.AddRange(coins);
+                if(coins !=null )
+                    folderCoins.AddRange(coins);
             };
 
             Debug.WriteLine("Total " +folderCoins.Count + " items read");
