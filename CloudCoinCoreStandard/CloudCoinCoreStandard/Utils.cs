@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace CloudCoinCore
 {
@@ -36,7 +37,7 @@ namespace CloudCoinCore
                     HttpResponseMessage response = await cli.GetAsync(urlAddress);
                     if (response.IsSuccessStatusCode)
                         data = await response.Content.ReadAsStringAsync();
-
+                    Debug.WriteLine(data);
                 }
             }
             catch (Exception ex)

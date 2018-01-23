@@ -19,9 +19,12 @@ namespace CloudCoinCore
         public static string TAG_PARTIAL = "Partial";
         public static string TAG_TRASH = "Trash";
         public static string TAG_SUSPECT = "Suspect";
-
+        public const int YEARSTILEXPIRE = 2;
+        public static int milliSecondsToTimeOut = 10000;
         public static int NodeCount = 25;
         public static int NetworkNumber = 1;
+
+        public enum Folder { Suspect, Counterfeit, Fracked, Bank, Trash };
 
         public static string[] allowedExtensions = new[] { ".stack", ".jpeg", ".chest", ".bank",".jpg" };
 

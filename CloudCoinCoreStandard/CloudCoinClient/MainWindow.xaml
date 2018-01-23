@@ -14,7 +14,7 @@
             <Label x:Name="lblNotReady"/>
             <Button x:Name="cmdShow" Content="Show Status" Click="cmdShow_Click" Width="200"></Button>
             <Button x:Name="cmdEcho" Content="Echo" Click="cmdEcho_Click" Width="200"></Button>
-
+            <Button x:Name="cmdDetect" Content="Detect" Click="cmdDetect_Click" Width="200"></Button>
         </StackPanel>
     </Grid>
 </Window>

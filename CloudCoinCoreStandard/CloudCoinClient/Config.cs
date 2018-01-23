@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CloudCoinCore
+namespace CloudCoinClient
 {
     public class Config
     {

@@ -31,7 +31,7 @@ namespace CloudCoinCore
 
         public abstract void LoadFileSystem();
 
-        public void LoadFolderCoins(string folder)
+        public List<CloudCoin> LoadFolderCoins(string folder)
         {
             List<CloudCoin> folderCoins = new List<CloudCoin>();
 
@@ -54,7 +54,44 @@ namespace CloudCoinCore
                     folderCoins.AddRange(coins);
             };
 
-            Debug.WriteLine("Total " +folderCoins.Count + " items read");
+            //Debug.WriteLine("Total " +folderCoins.Count + " items read");
+
+            return folderCoins;
+        }
+
+        public List<FileInfo> LoadFiles(string folder)
+        {
+            List<FileInfo> fileInfos = new List<FileInfo>();
+            var files = Directory
+                .GetFiles(folder)
+                .ToList();
+            foreach (var item in files)
+            {
+                fileInfos.Add(new FileInfo(item));
+                Debug.WriteLine("Read File-"+item);
+            }
+
+            Debug.WriteLine("Total " + files.Count + " items read");
+
+            return fileInfos;
+        }
+
+        public List<FileInfo> LoadFiles(string folder,string[] allowedExtensions)
+        {
+            List<FileInfo> fileInfos = new List<FileInfo>();
+            var files = Directory
+                .GetFiles(folder)
+                .Where(file => allowedExtensions.Any(file.ToLower().EndsWith))
+                .ToList();
+            foreach (var item in files)
+            {
+                fileInfos.Add(new FileInfo(item));
+                Debug.WriteLine(item);
+            }
+
+            Debug.WriteLine("Total " + files.Count + " items read");
+
+            return fileInfos;
         }
 
         //public bool importAll()

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using CloudCoinClient.CoreClasses;
 using CloudCoinCore;
 using System.Diagnostics;
+using System.Threading;
 
 namespace CloudCoinClient
 {
@@ -37,12 +38,14 @@ namespace CloudCoinClient
             FS.CreateFolderStructure();
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
+            raida.FS = FS;
             //raida.Echo();
             FS.LoadFileSystem();
             FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
             //Load Local Coins
 
         }
+        ParallelLoopResult result;
 
         private void cmdShow_Click(object sender, RoutedEventArgs e)
         {
@@ -59,6 +62,7 @@ namespace CloudCoinClient
             await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
             MessageBox.Show("Finished Echo");
             Debug.WriteLine("Finished Echo");
+            
             for (int i = 0; i < raida.nodes.Count(); i++)
             {
                 Debug.WriteLine("Parallel - Value-" + raida.nodes[i].RAIDANodeStatus);
@@ -67,6 +71,23 @@ namespace CloudCoinClient
            // raida.Echo();
             Debug.WriteLine("-----------------------------------");
 
+        }
+
+        private async void cmdDetect_Click(object sender, RoutedEventArgs e)
+        {
+            FS.LoadFileSystem();
+            new Thread(delegate () {
+                foreach (var coin in FileSystem.importCoins)
+                {
+                   // coin.GeneratePAN();
+                    coin.setAnsToPans();
+                    var tasks = coin.GetDetectTasks();
+                    raida.DetectCoin(coin, CloudCoinCore.Config.milliSecondsToTimeOut);
+                    MessageBox.Show("Finished Detect");
+
+                }
+            }).Start();
+            
         }
     }
 }

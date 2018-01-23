@@ -22,7 +22,7 @@ namespace CloudCoinClient.CoreClasses
         public static IEnumerable<CloudCoin> suspectCoins;
         public static IEnumerable<CloudCoin> trashCoins;
         public static IEnumerable<CloudCoin> bankCoins;
-
+        public static IEnumerable<CloudCoin> lostCoins;
 
         public FileSystem()
         {
@@ -87,18 +87,18 @@ namespace CloudCoinClient.CoreClasses
 
         public override void LoadFileSystem()
         {
-            LoadFolderCoins(RootPath + ImportFolder);
-            LoadFolderCoins(RootPath + ExportFolder);
-            LoadFolderCoins(RootPath + BankFolder);
-            LoadFolderCoins(RootPath + LostFolder);
-            LoadFolderCoins(RootPath + ImportedFolder);
-            LoadFolderCoins(RootPath + TrashFolder);
-            LoadFolderCoins(RootPath + SuspectFolder);
-            LoadFolderCoins(RootPath + DetectedFolder);
-            LoadFolderCoins(RootPath + FrackedFolder);
+            importCoins = LoadFolderCoins(RootPath + ImportFolder);
+            exportCoins  =LoadFolderCoins(RootPath + ExportFolder);
+            bankCoins  =LoadFolderCoins(RootPath + BankFolder);
+            lostCoins  = LoadFolderCoins(RootPath + LostFolder);
+            importedCoins = LoadFolderCoins(RootPath + ImportedFolder);
+            trashCoins = LoadFolderCoins(RootPath + TrashFolder);
+            suspectCoins = LoadFolderCoins(RootPath + SuspectFolder);
+            detectedCoins = LoadFolderCoins(RootPath + DetectedFolder);
+            frackedCoins = LoadFolderCoins(RootPath + FrackedFolder);
             LoadFolderCoins(RootPath + TemplateFolder);
-            LoadFolderCoins(RootPath + PartialFolder);
-            LoadFolderCoins(RootPath + CounterfeitFolder);
+            partialCoins = LoadFolderCoins(RootPath + PartialFolder);
+            counterfeitCoins = LoadFolderCoins(RootPath + CounterfeitFolder);
             LoadFolderCoins(RootPath + LanguageFolder);
         }
     }

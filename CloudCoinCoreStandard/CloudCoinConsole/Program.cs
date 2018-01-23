@@ -23,9 +23,14 @@ namespace CloudCoinConsole
             raida = RAIDA.GetInstance();
             //raida.Echo();
             FS.LoadFileSystem();
-            FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
+            var coins  =FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
+            foreach(var coin in coins)
+            {
+                Console.WriteLine("Found Coin - " + coin.sn + " with denomination - "+ coin.denomination);
+            }
             //Load Local Coins
 
+            Console.Read();
         }
     }
 }

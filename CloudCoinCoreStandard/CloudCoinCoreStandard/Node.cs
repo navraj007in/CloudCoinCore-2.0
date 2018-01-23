@@ -29,11 +29,12 @@ namespace CloudCoinCore
         {
             this.NodeNumber = NodeNumber;
             fullUrl = GetFullURL();
+            Debug.WriteLine(fullUrl);
         }
 
         public String GetFullURL()
         {
-            return "https://RAIDA" + NodeNumber + ".cloudcoin.global/service/";
+            return "https://RAIDA" + (NodeNumber-1) + ".cloudcoin.global/service/";
         }
 
         public async Task<Response> Echo()
@@ -86,16 +87,19 @@ namespace CloudCoinCore
          * @param d int that is the Denomination of the Coin
          * @return Response object. 
          */
-        public async Task<Response> Detect(int nn, int sn, String an, String pan, int d)
+        public async Task<Response> Detect(CloudCoin coin)
         {
             Response detectResponse = new Response();
-            detectResponse.fullRequest = this.fullUrl + "detect?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + pan + "&denomination=" + d + "&b=t";
+            detectResponse.fullRequest = this.fullUrl + "detect?nn=" + coin.nn + "&sn=" + coin.sn + "&an=" + coin.an[NodeNumber] + "&pan=" + coin.pan[NodeNumber] + "&denomination=" + coin.denomination + "&b=t";
             DateTime before = DateTime.Now;
+            coin.setAnsToPans();
             try
             {
                 detectResponse.fullResponse = await Utils.GetHtmlFromURL(detectResponse.fullRequest);
+                
                 DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
                 detectResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
+                coin.response = detectResponse;
 
                 if (detectResponse.fullResponse.Contains("pass"))
                 {
