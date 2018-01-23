@@ -27,7 +27,7 @@ namespace CloudCoinAndroid
             FS.CreateFolderStructure();
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
-            raida.Echo();
+            //raida.Echo();
             //Load Local Coins
 
         }

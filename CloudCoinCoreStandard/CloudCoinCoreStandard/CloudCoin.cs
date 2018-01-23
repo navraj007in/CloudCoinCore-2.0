@@ -14,10 +14,9 @@ namespace CloudCoinCore
         public int hp;// HitPoints (1-25, One point for each server not failed)
         public String edHex;// Months from zero date that the coin will expire. 
         public string folder;
-        public Task<Response>[] DetectTasks = new Task<Response>[Config.NodeCount];
-        public Task[] DetectionTasks = new Task[Config.NodeCount];
+       
 
-        public Response response;
+        public Response[] response= new Response[Config.NodeCount];
         public String[] gradeStatus = new String[3];// What passed, what failed, what was undetected
         //Fields
         [JsonProperty("nn")]
@@ -91,56 +90,21 @@ namespace CloudCoinCore
 
             return nom;
         }//end get denomination
-        public List<Task> detectTaskList;
-        public Task[] GetDetectTasks()
+        public List<Task> detectTaskList = new List<Task>();
+        public List<Task> GetDetectTasks()
         {
-
             var raida = RAIDA.GetInstance();
-            var detectTasks = new List<Task>
-            {
-
-            };
-
-            Task<Response>[] taskArray = new Task<Response>[Config.NodeCount];
 
             CloudCoin cc = this;
-            var results = new Double[taskArray.Length];
             int i = 0;
-            
-                //Task t = Task.Factory.StartNew(() => raida.nodes[i].Detect(cc));
-                //taskArray[i] = raida.nodes[i].Detect(this);
-                //DetectionTasks[i] = t;
-                //detectTasks.Add(taskArray[i]);
-
+           
             for(int j = 0; j < Config.NodeCount; j++)
             {
-                Debug.WriteLine("Count-" + j);
                 Task t = Task.Factory.StartNew(() => raida.nodes[i].Detect(cc));
-                taskArray[i] = raida.nodes[i].Detect(this);
-                DetectionTasks[i] = t;
-                detectTasks.Add(taskArray[i]);
+                detectTaskList.Add(t);
             }
-            //while (i < Config.NodeCount)
-            //{
-            //    Task t = Task.Factory.StartNew(() => raida.nodes[i].Detect(cc));
-            //    taskArray[i] = raida.nodes[i].Detect(this);
-            //    DetectionTasks[i] = t;
-            //    detectTasks.Add(taskArray[i]);
-            //    i++;
-
-            //}
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    if (i == Config.NodeCount)
-            //        break;
-            //    Task t = Task.Factory.StartNew(() => raida.nodes[i].Detect(cc));
-            //    taskArray[i] = raida.nodes[i].Detect(this);
-            //    DetectionTasks[i] = t;
-            //    detectTasks.Add(taskArray[i]);
-            //}
-            detectTaskList = detectTasks;
-            //DetectTasks = taskArray;
-            return taskArray;
+                     
+            return detectTaskList;
         }
         public void GeneratePAN()
         {

@@ -16,6 +16,7 @@ namespace CloudCoinCore
         public static RAIDA MainNetwork;
         public Node[] nodes = new Node[Config.NodeCount];
         public IFileSystem FS;
+        public CloudCoin coin;
         private RAIDA()
         {
             for(int i = 0; i < Config.NodeCount; i++)
@@ -46,114 +47,41 @@ namespace CloudCoinCore
             }
             return echoTasks;
         }
-        
-        public List<Task> GetDetectTasks(CloudCoin cc)
+
+        public List<Func<Task>> GetDetectTasks(CloudCoin coin)
         {
-            var detectTasks = new List<Task>
+            this.coin = coin;
+
+            var detectTasks = new List<Func<Task>>
             {
 
             };
-
             for (int i = 0; i < nodes.Length; i++)
             {
-               detectTasks.Add( Task.Factory.StartNew(() => nodes[i].Detect(cc)));
-
-                //detectTasks.Add(nodes[i].Detect(cc));
-
+                detectTasks.Add(nodes[i].Detect);
             }
             return detectTasks;
         }
-        public void Echo()
-        {
-            for(int i=0;i<Config.NodeCount;i++)
-            {
-                nodes[i].Echo();
-            }
-        }
-
-        public void Detect()
-        {
-
-        }
         public Response[] responseArray = new Response[25];
 
-        public void DetectCoin(CloudCoin coin, Task<Response>[] taskList, int milliSecondsToTimeOut)
+        public async Task DetectCoin(CloudCoin coin, int milliSecondsToTimeOut)
         {
-
-            var results =  Task.WaitAll(taskList, milliSecondsToTimeOut);
+            //Task.WaitAll(coin.detectTaskList.ToArray(),Config.milliSecondsToTimeOut);
             //Get data from the detection agents
-            //var result = ((Task<Response>)taskList[0]).Result;
-            //Debug.WriteLine(result.fullResponse);
-            var response = taskList[0].Result;
-
-            //for (int i = 0; i < Config.NodeCount; i++)
-            //{
-            //    response = taskList[0].Result;
-            //    Debug.WriteLine(response);
-            //    try
-            //    {
-            //        if (responseArray[i] != null)
-            //        {
-            //            coin.setPastStatus(responseArray[i].outcome, i);
-            //        }
-            //        else
-            //        {
-            //            coin.setPastStatus("undetected", i);
-            //        };// should be pass, fail, error or undetected. 
-            //    }
-            //    catch(Exception e)
-            //    {
-
-            //    }
-            //}//end for each detection agent
-
-            coin.setAnsToPansIfPassed();
-            coin.calculateHP();
-            // cu.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
-            coin.calcExpirationDate();
-            coin.grade();
-
-            //return cu;
-        }//end detect coin
-
-        public async void DetectCoin(CloudCoin coin, int milliSecondsToTimeOut)
-        {
-            //try
-            {
-                Task.WaitAll(coin.detectTaskList.ToArray(),Config.milliSecondsToTimeOut);
-            }
-            //catch(Exception e)
-            {
-
-            }
-            //Get data from the detection agents
-            //await Task.WhenAll(coin.DetectTasks.AsParallel().Select(async task => await task()));
-            //var result = ((Task<Response>)taskList[0]).Result;
-            //Debug.WriteLine(result.fullResponse);
+            //Task.WaitAll(coin.detectTaskList.ToArray(), milliSecondsToTimeOut);
+            await Task.WhenAll(coin.detectTaskList);
             for (int i = 0; i < Config.NodeCount; i++)
             {
-                ///var result = ((Task<Response>)coin.DetectTasks[i]).Result;
                 var resp = coin.response;
-                //Debug.WriteLine(result);
-                Debug.WriteLine(coin.response.outcome);
+                Debug.WriteLine(coin.response[i].outcome);
 
-                //if (responseArray[i] != null)
-                //{
-                //    coin.setPastStatus(responseArray[i].outcome, i);
-                //}
-                //else
-                //{
-                //    coin.setPastStatus("undetected", i);
-                //};// should be pass, fail, error or undetected. 
             }//end for each detection agent
 
             coin.setAnsToPansIfPassed();
             coin.calculateHP();
-            // cu.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
+
             coin.calcExpirationDate();
             coin.grade();
-            //return true;
-            //return cu;
         }//end detect coin
 
 
