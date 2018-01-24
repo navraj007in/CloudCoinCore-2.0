@@ -94,8 +94,21 @@ namespace CloudCoinCore
 
             coin.calcExpirationDate();
             coin.grade();
-        }//end detect coin
+            DetectEventArgs de = new DetectEventArgs(coin);
+            OnThresholdReached(de);
 
+        }//end detect coin
+        public event EventHandler CoinDetected;
+
+        protected virtual void OnThresholdReached(DetectEventArgs e)
+        {
+            CoinDetected?.Invoke(this, e);
+            //EventHandler handler = CoinDetected;
+            //if (handler != null)
+            //{
+            //    handler(this, e);
+            //}
+        }
 
     }
 }

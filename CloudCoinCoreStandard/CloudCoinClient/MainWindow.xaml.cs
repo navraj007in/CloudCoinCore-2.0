@@ -29,6 +29,7 @@ namespace CloudCoinClient
         public MainWindow()
         {
             InitializeComponent();
+            
             Setup();           
         }
 
@@ -39,12 +40,20 @@ namespace CloudCoinClient
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
             raida.FS = FS;
+            CoinDetected += Raida_CoinDetected;
             //raida.Echo();
             FS.LoadFileSystem();
             FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
             //Load Local Coins
 
         }
+
+        private void Raida_CoinDetected(object sender, EventArgs e)
+        {
+            DetectEventArgs eargs = (DetectEventArgs)e;
+            Debug.WriteLine("Coin Detection Event Recieved - " +eargs.DetectedCoin.sn);
+        }
+
         ParallelLoopResult result;
 
         private void cmdShow_Click(object sender, RoutedEventArgs e)
@@ -73,8 +82,21 @@ namespace CloudCoinClient
 
         }
 
+        public event EventHandler CoinDetected;
+
+        protected virtual void OnThresholdReached(DetectEventArgs e)
+        {
+            CoinDetected?.Invoke(this, e);
+            //EventHandler handler = CoinDetected;
+            //if (handler != null)
+            //{
+            //    handler(this, e);
+            //}
+        }
+
         private async void cmdDetect_Click(object sender, RoutedEventArgs e)
         {
+            cmdDetect.IsEnabled = false;
             FS.LoadFileSystem();
             foreach (var coin in FileSystem.importCoins)
             {
@@ -90,11 +112,14 @@ namespace CloudCoinClient
 
                 Debug.WriteLine(coin.sn + " Pass Count -" + countp);
                 Debug.WriteLine(coin.sn + " Fail Count -" + countf);
+                DetectEventArgs de = new DetectEventArgs(coin);
+                OnThresholdReached(de);
                 //Task.WaitAll(tasks.ToArray());
                 //detect(coin);
                 // await raida.DetectCoin(coin, CloudCoinCore.Config.milliSecondsToTimeOut);
 
             }
+            cmdDetect.IsEnabled = true;
             MessageBox.Show("Finished Detect");
             //    new Thread( async delegate ()
             //{

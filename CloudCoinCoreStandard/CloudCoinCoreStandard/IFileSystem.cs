@@ -86,48 +86,15 @@ namespace CloudCoinCore
             foreach (var item in files)
             {
                 fileInfos.Add(new FileInfo(item));
-                Debug.WriteLine(item);
+                //Debug.WriteLine(item);
             }
 
-            Debug.WriteLine("Total " + files.Count + " items read");
+            //Debug.WriteLine("Total " + files.Count + " items read");
 
             return fileInfos;
         }
 
-        //public bool importAll()
-        //{
-        //    var ext = new List<string> { ".jpg", ".stack", ".jpeg" };
-        //    var fnamesRaw = Directory.GetFiles(this.fileUtils.importFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => ext.Contains(Path.GetExtension(s)));
-        //    string[] fnames = new string[fnamesRaw.Count()];
-        //    for (int i = 0; i < fnamesRaw.Count(); i++)
-        //    {
-        //        fnames[i] = Path.GetFileName(fnamesRaw.ElementAt(i));
-        //    };
-
-        //    //String[] fnames = new DirectoryInfo(this.fileUtils.importFolder).GetFiles().Select(o => o.Name).ToArray();//Get a list of all in the folder except the directory "imported"
-
-        //    if (fnames.Length == 0)//   Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        //  Console.ForegroundColor = ConsoleColor.Green;
-        //        //  Console.Out.WriteLine("Importing the following files: ");
-        //        CoreLogger.Log("Importing the following files: ");
-        //        //  Console.ForegroundColor = ConsoleColor.White;
-        //        for (int i = 0; i < fnames.Length; i++)// Loop through each file. 
-        //        {
-        //            Console.Out.WriteLine(fnames[i]);
-        //            CoreLogger.Log(fnames[i]);
-        //            this.importOneFile(fnames[i]);
-        //        } // end for each file name
-        //        return true;
-        //    }//end if no files 
-        //}// End Import All
-
-        // This loads a JSON file (.stack) from the hard drive that contains only one CloudCoin and turns it into an object. 
-        //   This uses Newton soft but causes a enrror System.IO.FileNotFoundException. Could not load file 'Newtonsoft.Json'  
+        
         public CloudCoin loadOneCloudCoinFromJsonFile(String loadFilePath)
         {
 
