@@ -41,10 +41,10 @@ namespace CloudCoinCore
                 .GetFiles(folder)
                 .Where(file => Config.allowedExtensions.Any(file.ToLower().EndsWith))
                 .ToList();
-            foreach(var item in files)
-            {
-                Debug.WriteLine(item);
-            }
+            //foreach(var item in files)
+            //{
+            //    Debug.WriteLine(item);
+            //}
             string[] fnames = new string[files.Count()];
             for (int i = 0; i < files.Count(); i++)
             {

@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Linq;
 
 namespace CloudCoinCore
 {
@@ -73,9 +74,20 @@ namespace CloudCoinCore
             for (int i = 0; i < Config.NodeCount; i++)
             {
                 var resp = coin.response;
-                Debug.WriteLine(coin.response[i].outcome);
+               // Debug.WriteLine(coin.response[i].outcome);
 
             }//end for each detection agent
+
+            var counts = coin.response
+                .GroupBy(item => item.outcome== "pass")
+                .Select(grp => new { Number = grp.Key, Count = grp.Count() });
+
+            var countsf = coin.response
+                    .GroupBy(item => item.outcome == "fail")
+                    .Select(grp => new { Number = grp.Key, Count = grp.Count() });
+
+            Debug.WriteLine("Pass Count -" +counts.Count());
+            Debug.WriteLine("Fail Count -" + countsf.Count());
 
             coin.setAnsToPansIfPassed();
             coin.calculateHP();

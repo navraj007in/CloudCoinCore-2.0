@@ -37,7 +37,7 @@ namespace CloudCoinCore
                     HttpResponseMessage response = await cli.GetAsync(urlAddress);
                     if (response.IsSuccessStatusCode)
                         data = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine(data);
+                    //Debug.WriteLine(data);
                 }
             }
             catch (Exception ex)

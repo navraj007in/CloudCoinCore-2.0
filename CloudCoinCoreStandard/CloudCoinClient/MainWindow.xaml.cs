@@ -73,7 +73,7 @@ namespace CloudCoinClient
 
         }
 
-        private void cmdDetect_Click(object sender, RoutedEventArgs e)
+        private async void cmdDetect_Click(object sender, RoutedEventArgs e)
         {
             FS.LoadFileSystem();
             foreach (var coin in FileSystem.importCoins)
@@ -82,12 +82,18 @@ namespace CloudCoinClient
                 coin.setAnsToPans();
                 raida.coin = coin;
                 var tasks = raida.GetDetectTasks(coin);
-                Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
+                await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
                 Debug.WriteLine("Coin No. - " + coin.sn + "Scanned");
+               
+                int countp = coin.response.Where(x => x.outcome == "pass").Count();
+                int countf = coin.response.Where(x => x.outcome == "fail").Count();
+
+                Debug.WriteLine(coin.sn + " Pass Count -" + countp);
+                Debug.WriteLine(coin.sn + " Fail Count -" + countf);
                 //Task.WaitAll(tasks.ToArray());
                 //detect(coin);
                 // await raida.DetectCoin(coin, CloudCoinCore.Config.milliSecondsToTimeOut);
-              
+
             }
             MessageBox.Show("Finished Detect");
             //    new Thread( async delegate ()
