@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CloudCoinCore
 {
@@ -145,9 +146,9 @@ namespace CloudCoinCore
 
         public void calculateHP()
         {
-            hp = 25;
+            hp = Config.NodeCount;
             char[] pownArray = pown.ToCharArray();
-            for (int i = 0; (i < 25); i++)
+            for (int i = 0; (i < Config.NodeCount); i++)
             {
                 if (pownArray[i] == 'f')
                 {
@@ -159,7 +160,6 @@ namespace CloudCoinCore
 
         public bool setPastStatus(string status, int raida_id)
         {
-
             char[] pownArray = this.pown.ToCharArray();
             switch (status)
             {
@@ -169,6 +169,42 @@ namespace CloudCoinCore
                 case "undetected": pownArray[raida_id] = 'u'; break;
                 case "noresponse": pownArray[raida_id] = 'n'; break;
             }//end switch
+            this.pown = new string(pownArray);
+            return true;
+        }//end set past status
+
+        public void doPostProcessing()
+        {
+            setPastStatus();
+            setAnsToPansIfPassed();
+            calculateHP();
+            calcExpirationDate();
+            grade();
+        }
+        public bool setPastStatus()
+        {
+            char[] pownArray = pown.ToCharArray();
+            for (int i = 0; i < Config.NodeCount; i++)
+            {
+                if (response[i] != null)
+                {
+                    string status = response[i].outcome;
+                    switch (status)
+                    {
+                        case "error": pownArray[i] = 'e'; break;
+                        case "fail": pownArray[i] = 'f'; break;
+                        case "pass": pownArray[i] = 'p'; break;
+                        case "undetected": pownArray[i] = 'u'; break;
+                        case "noresponse": pownArray[i] = 'n'; break;
+                    }//end switch
+                }
+                else
+                {
+                    pownArray[i] = 'u';
+                };// should be pass, fail, error or undetected. 
+            }//end for each detection agent
+
+
             this.pown = new string(pownArray);
             return true;
         }//end set past status
@@ -201,29 +237,15 @@ namespace CloudCoinCore
 
         public String[] grade()
         {
-            int passed = 0;
-            int failed = 0;
-            int other = 0;
+            int total = Config.NodeCount;
+
+            int passed = response.Where(x => x.outcome == "pass").Count();
+            int failed = response.Where(x => x.outcome == "fail").Count();
+            int other = total - passed - failed;
+
             String passedDesc = "";
             String failedDesc = "";
             String otherDesc = "";
-            char[] pownArray = pown.ToCharArray();
-
-            for (int i = 0; (i < 25); i++)
-            {
-                if (pownArray[i] == 'p')
-                {
-                    passed++;
-                }
-                else if (pownArray[i] == 'f')
-                {
-                    failed++;
-                }
-                else
-                {
-                    other++;
-                }// end if pass, fail or unknown
-            }
 
             // for each status
             // Calculate passed

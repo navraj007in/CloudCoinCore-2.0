@@ -74,24 +74,18 @@ namespace CloudCoinClient
             
             for (int i = 0; i < raida.nodes.Count(); i++)
             {
-                Debug.WriteLine("Parallel - Value-" + raida.nodes[i].RAIDANodeStatus);
+                Debug.WriteLine("Node"+ i +" Status --" + raida.nodes[i].RAIDANodeStatus);
             }
             Debug.WriteLine("-----------------------------------");
-           // raida.Echo();
             Debug.WriteLine("-----------------------------------");
 
         }
 
         public event EventHandler CoinDetected;
 
-        protected virtual void OnThresholdReached(DetectEventArgs e)
+        protected virtual void OnCoinDetected(DetectEventArgs e)
         {
             CoinDetected?.Invoke(this, e);
-            //EventHandler handler = CoinDetected;
-            //if (handler != null)
-            //{
-            //    handler(this, e);
-            //}
         }
 
         private async void cmdDetect_Click(object sender, RoutedEventArgs e)
@@ -113,21 +107,13 @@ namespace CloudCoinClient
                 Debug.WriteLine(coin.sn + " Pass Count -" + countp);
                 Debug.WriteLine(coin.sn + " Fail Count -" + countf);
                 DetectEventArgs de = new DetectEventArgs(coin);
-                OnThresholdReached(de);
-                //Task.WaitAll(tasks.ToArray());
-                //detect(coin);
-                // await raida.DetectCoin(coin, CloudCoinCore.Config.milliSecondsToTimeOut);
+                OnCoinDetected(de);
+                coin.doPostProcessing();
+
 
             }
             cmdDetect.IsEnabled = true;
             MessageBox.Show("Finished Detect");
-            //    new Thread( async delegate ()
-            //{
-
-
-
-            //}).Start();
-
         }
 
         private void detect(CloudCoin coin)
