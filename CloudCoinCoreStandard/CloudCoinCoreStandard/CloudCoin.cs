@@ -16,8 +16,7 @@ namespace CloudCoinCore
         public int hp;// HitPoints (1-25, One point for each server not failed)
         public String edHex;// Months from zero date that the coin will expire. 
         public string folder;
-       
-
+        
         public Response[] response= new Response[Config.NodeCount];
         public String[] gradeStatus = new String[3];// What passed, what failed, what was undetected
         //Fields
@@ -58,7 +57,13 @@ namespace CloudCoinCore
             this.ed = ed;
             this.pown = pown;
             this.aoid = aoid;
+
         }//end of constructor
+
+        public string FileName { get {
+                return this.getDenomination() + ".CloudCoin." + nn + "." + sn + ".";
+            }
+        }
 
         public int getDenomination()
         {
@@ -249,7 +254,6 @@ namespace CloudCoinCore
             if(passed > Config.PassCount)
             {
                 DetectResult = DetectionStatus.Passed;
-                //detectionResult.Result = DetectionStatus.Passed;
             }
             else
             {

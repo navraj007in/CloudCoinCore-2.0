@@ -50,7 +50,6 @@ namespace CloudCoinClient.CoreClasses
             //return true;
         }
 
-
         public bool CreateDirectories()
         {
             // Create Subdirectories as per the RootFolder Location
@@ -94,6 +93,11 @@ namespace CloudCoinClient.CoreClasses
             LoadFolderCoins(RootPath + PartialFolder);
             LoadFolderCoins(RootPath + CounterfeitFolder);
             LoadFolderCoins(RootPath + LanguageFolder);
+        }
+
+        public override void DetectPreProcessing()
+        {
+
         }
     }
 }

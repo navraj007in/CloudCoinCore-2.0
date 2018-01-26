@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CloudCoinCore;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CloudCoinClient.CoreClasses
 {
@@ -23,6 +25,8 @@ namespace CloudCoinClient.CoreClasses
         public static IEnumerable<CloudCoin> trashCoins;
         public static IEnumerable<CloudCoin> bankCoins;
         public static IEnumerable<CloudCoin> lostCoins;
+        public static IEnumerable<CloudCoin> preprocessingCoins;
+
 
         public FileSystem()
         {
@@ -86,6 +90,8 @@ namespace CloudCoinClient.CoreClasses
             return true;
         }
 
+        
+
         public override void LoadFileSystem()
         {
             importCoins = LoadFolderCoins(RootPath + ImportFolder);
@@ -100,7 +106,34 @@ namespace CloudCoinClient.CoreClasses
             LoadFolderCoins(RootPath + TemplateFolder);
             partialCoins = LoadFolderCoins(RootPath + PartialFolder);
             counterfeitCoins = LoadFolderCoins(RootPath + CounterfeitFolder);
+            preprocessingCoins = LoadFolderCoins(RootPath + PreDetectFolder);
+
             LoadFolderCoins(RootPath + LanguageFolder);
         }
+
+        public override void DetectPreProcessing()
+        {
+            foreach(var coin in importCoins)
+            {
+                string fileName = coin.FileName;
+                int coinExists = (from x in preprocessingCoins
+                                  where x.sn == coin.sn
+                                  select x).Count();
+                if(coinExists>0)
+                {
+                    string suffix = Utils.RandomString(16);
+                    fileName += suffix;
+                }
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Converters.Add(new JavaScriptDateTimeConverter());
+                serializer.NullValueHandling = NullValueHandling.Ignore;
+                Stack stack = new Stack(coin);
+                using(StreamWriter sw = new StreamWriter(RootPath + PreDetectFolder + Path.DirectorySeparatorChar +fileName + ".stack"))
+                using(JsonWriter writer = new JsonTextWriter(sw))
+                {
+                       serializer.Serialize(writer, stack);
+                }
+            } 
+       }
     }
 }

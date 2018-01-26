@@ -76,6 +76,11 @@ namespace CloudCoinAndroid.CoreClasses
         {
 
         }
+
+        public override void DetectPreProcessing()
+        {
+            throw new NotImplementedException();
+        }
     }
     
 }

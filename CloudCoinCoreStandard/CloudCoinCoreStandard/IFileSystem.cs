@@ -90,6 +90,8 @@ namespace CloudCoinCore
             return fileInfos;
         }
 
+        public abstract void DetectPreProcessing();
+
         
         public CloudCoin loadOneCloudCoinFromJsonFile(String loadFilePath)
         {
@@ -126,6 +128,10 @@ namespace CloudCoinCore
             return returnCC;
         }//end load one CloudCoin from JSON
 
+        public void writeCoin(CloudCoin coin, string folder)
+        {
+            //File.Copy()
+        }
         public String importJSON(String jsonfile)
         {
             String jsonData = "";

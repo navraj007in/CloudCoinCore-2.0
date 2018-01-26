@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace CloudCoinCore
 {
-    class CoinUtils
+    public class CoinUtils
     {
         //  instance variables
         public CloudCoin cc;

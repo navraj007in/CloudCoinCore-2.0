@@ -85,6 +85,9 @@ namespace CloudCoinClient
         {
             cmdDetect.IsEnabled = false;
             FS.LoadFileSystem();
+
+            FS.DetectPreProcessing();
+
             foreach (var coin in FileSystem.importCoins)
             {
                 // coin.GeneratePAN();
@@ -112,6 +115,29 @@ namespace CloudCoinClient
         private void detect(CloudCoin coin)
         {
             
+        }
+
+        private async void cmdMultiDetect_Click(object sender, RoutedEventArgs e)
+        {
+            cmdMultiDetect.IsEnabled = false;
+            FS.LoadFileSystem();
+
+            FS.DetectPreProcessing();
+            
+            var predetectCoins = FS.LoadFolderCoins(FS.RootPath + FS.PreDetectFolder);
+            int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;
+            if(predetectCoins.Count() % CloudCoinCore.Config.MultiDetectLoad > 0) LotCount++;
+            
+            int coinCount = 0;
+            for(int i =0;i < LotCount;i++)
+            {
+                var coins = predetectCoins.Skip(i*CloudCoinCore.Config.MultiDetectLoad).Take(200);
+                raida.coins = coins;
+
+            }
+
+            Debug.WriteLine("Total Coins parsed- " + coinCount);
+            cmdMultiDetect.IsEnabled = true;
         }
     }
 }
