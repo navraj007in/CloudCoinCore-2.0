@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CloudCoinCore
 {
@@ -39,6 +40,8 @@ namespace CloudCoinCore
         public List<string> aoid { get; set; }
 
         public int denomination { get; set; }
+        public DetectionResult detectionResult { get; set; }
+        public DetectionStatus DetectResult { get; set; }
 
         int pSN;
         //Constructors
@@ -243,6 +246,16 @@ namespace CloudCoinCore
             int failed = response.Where(x => x.outcome == "fail").Count();
             int other = total - passed - failed;
 
+            if(passed > Config.PassCount)
+            {
+                DetectResult = DetectionStatus.Passed;
+                //detectionResult.Result = DetectionStatus.Passed;
+            }
+            else
+            {
+                DetectResult = DetectionStatus.Failed;
+            }
+
             String passedDesc = "";
             String failedDesc = "";
             String otherDesc = "";
@@ -388,6 +401,46 @@ namespace CloudCoinCore
             this.edHex = monthsAfterZero.ToString("X2");
         }// end calc exp date
 
+        public bool containsThreat()
+        {
+            bool threat = false;
+            string doublePown = pown + pown;
+            //There are four threat patterns that would allow attackers to seize other 
+            //String UP_LEFT = "ff***f";
+            //String UP_RIGHT = "ff***pf";
+            //String DOWN_LEFT = "fp***ff";
+            //String DOWN_RIGHT = "pf***ff";
+
+
+            Match UP_LEFT = Regex.Match(doublePown, @"ff[a-z][a-z][a-z]fp", RegexOptions.IgnoreCase);
+            Match UP_RIGHT = Regex.Match(doublePown, @"ff[a-z][a-z][a-z]pf", RegexOptions.IgnoreCase);
+            Match DOWN_LEFT = Regex.Match(doublePown, @"fp[a-z][a-z][a-z]ff", RegexOptions.IgnoreCase);
+            Match DOWN_RIGHT = Regex.Match(doublePown, @"pf[a-z][a-z][a-z]ff", RegexOptions.IgnoreCase);
+
+            //Check if 
+            if (UP_LEFT.Success || UP_RIGHT.Success || DOWN_LEFT.Success || DOWN_RIGHT.Success)
+            {
+                threat = true;
+            }//end if coin contains threats.
+
+
+            return threat;
+        }//End Contains Threat
+    }
+    public enum DetectionStatus
+    {
+        Passed,
+        Failed,
+        Other
+    }
+    public struct DetectionResult
+    {
+        public DetectionStatus Result;
+        public int PassCount ;
+        public int FailCount ;
+        public int OtherCount;
+
+        public int Description;
     }
 }
 

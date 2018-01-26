@@ -24,6 +24,7 @@ namespace CloudCoinCore
         public string PartialFolder { get; set; }
         public string CounterfeitFolder { get; set; }
         public string LanguageFolder { get; set; }
+        public string PreDetectFolder { get; set; }
 
         //public abstract IFileSystem(string path);
 
@@ -35,16 +36,13 @@ namespace CloudCoinCore
         {
             List<CloudCoin> folderCoins = new List<CloudCoin>();
 
-            //var allowedExtensions = new[] { ".doc", ".docx", ".pdf", ".ppt", ".pptx", ".xls", ".xslx" };
+           
             // Get All the supported CloudCoin Files from the folder
             var files = Directory
                 .GetFiles(folder)
                 .Where(file => Config.allowedExtensions.Any(file.ToLower().EndsWith))
                 .ToList();
-            //foreach(var item in files)
-            //{
-            //    Debug.WriteLine(item);
-            //}
+
             string[] fnames = new string[files.Count()];
             for (int i = 0; i < files.Count(); i++)
             {
@@ -53,8 +51,6 @@ namespace CloudCoinCore
                 if(coins !=null )
                     folderCoins.AddRange(coins);
             };
-
-            //Debug.WriteLine("Total " +folderCoins.Count + " items read");
 
             return folderCoins;
         }

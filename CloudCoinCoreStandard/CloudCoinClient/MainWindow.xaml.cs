@@ -28,8 +28,7 @@ namespace CloudCoinClient
         RAIDA raida;
         public MainWindow()
         {
-            InitializeComponent();
-            
+            InitializeComponent();            
             Setup();           
         }
 
@@ -54,31 +53,25 @@ namespace CloudCoinClient
             Debug.WriteLine("Coin Detection Event Recieved - " +eargs.DetectedCoin.sn);
         }
 
-        ParallelLoopResult result;
-
         private void cmdShow_Click(object sender, RoutedEventArgs e)
         {
             lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
             lblNotReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count();
-
-
         }
 
         private async void cmdEcho_Click(object sender, RoutedEventArgs e)
         {
-
             var echos = raida.GetEchoTasks();
             await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
             MessageBox.Show("Finished Echo");
-            Debug.WriteLine("Finished Echo");
-            
+            lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
+            lblNotReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count();
+
             for (int i = 0; i < raida.nodes.Count(); i++)
             {
                 Debug.WriteLine("Node"+ i +" Status --" + raida.nodes[i].RAIDANodeStatus);
             }
             Debug.WriteLine("-----------------------------------");
-            Debug.WriteLine("-----------------------------------");
-
         }
 
         public event EventHandler CoinDetected;

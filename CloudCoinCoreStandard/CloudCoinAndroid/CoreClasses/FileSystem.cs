@@ -31,6 +31,7 @@ namespace CloudCoinAndroid.CoreClasses
             TrashFolder = Config.TAG_TRASH;
             LanguageFolder = Config.TAG_LANGUAGE;
             BankFolder = Config.TAG_BANK;
+            PreDetectFolder = Config.TAG_PARTIAL;
 
         }
         public override bool CreateFolderStructure()

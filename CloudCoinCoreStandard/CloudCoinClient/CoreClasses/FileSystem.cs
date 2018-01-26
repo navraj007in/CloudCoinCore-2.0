@@ -38,7 +38,7 @@ namespace CloudCoinClient.CoreClasses
             SuspectFolder = Config.TAG_SUSPECT;
             TrashFolder = Config.TAG_TRASH;
             BankFolder = Config.TAG_BANK;
-
+            PreDetectFolder = Config.TAG_PREDETECT;
         }
         public override bool CreateFolderStructure()
         {
@@ -77,6 +77,7 @@ namespace CloudCoinClient.CoreClasses
                 Directory.CreateDirectory(RootPath + PartialFolder);
                 Directory.CreateDirectory(RootPath + CounterfeitFolder);
                 Directory.CreateDirectory(RootPath + LanguageFolder);
+                Directory.CreateDirectory(RootPath + PreDetectFolder);
             }
             catch (Exception e)
             {
