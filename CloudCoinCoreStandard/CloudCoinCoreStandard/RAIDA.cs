@@ -19,7 +19,7 @@ namespace CloudCoinCore
         public IFileSystem FS;
         public CloudCoin coin;
         public IEnumerable<CloudCoin> coins;
-
+        public MultiDetectRequest multiRequest;
         private RAIDA()
         {
             for(int i = 0; i < Config.NodeCount; i++)
@@ -66,20 +66,165 @@ namespace CloudCoinCore
             return detectTasks;
         }
 
-        public List<Func<Task>> GetMultiDetectTasks(CloudCoin coin)
-        {
-            this.coin = coin;
+        //public Task<Response[]> GetMultiDetecttionTasks(CloudCoin[] coins, int milliSecondsToTimeOut)
+        //{
+        //    this.coins = coins;
 
+        //    responseArrayMulti = new Response[Config.NodeCount, coins.Length];
+
+        //    int[] nns = new int[coins.Length];
+        //    int[] sns = new int[coins.Length];
+
+
+        //    String[][] ans = new String[Config.NodeCount][];
+        //    String[][] pans = new String[Config.NodeCount][];
+
+        //    int[] dens = new int[coins.Length];//Denominations
+        //                                       //Stripe the coins
+
+        //    //List<Func<Task>> multiTaskList = new List<Func<Task>>();
+        //    Task<Response[]> multiTaskList = new Task<Response[]>() { };
+        //    //var taskList;
+        //    for (int i = 0; i < coins.Length; i++)//For every coin
+        //    {
+        //        coins[i].setAnsToPans();
+        //        nns[i] = coins[i].nn;
+        //        sns[i] = coins[i].sn;
+        //        dens[i] = coins[i].denomination;
+        //        //ans[i] = new String[coins.Length];
+        //        //pans[i] = new String[coins.Length];
+
+        //        //ans[i] = new String[Config.MultiDetectLoad];
+        //        //pans[i] = new String[Config.MultiDetectLoad];
+
+        //        for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+        //        {
+        //            ans[nodeNumber][i] = coins[i].an[nodeNumber];
+        //            pans[nodeNumber][i] = coins[i].pan[nodeNumber];
+
+        //        }
+
+
+        //    }//end for every coin put in an array
+        //    var tasks;
+        //    for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+        //    {
+        //        var task = detectOneMulti(nodeNumber, nns, sns, ans[nodeNumber], pans[nodeNumber], dens, milliSecondsToTimeOut);
+        //        multiTaskList.Add(task);
+                
+        //    }
+
+        //    return multiTaskList;
+        //}
+
+
+        public List<Task<Response[]>> GetMultiDetectTasksold(CloudCoin[] coins, int milliSecondsToTimeOut)
+        {
+            this.coins = coins;
+
+            responseArrayMulti = new Response[Config.NodeCount, coins.Length];
+
+            int[] nns = new int[coins.Length];
+            int[] sns = new int[coins.Length];
+
+
+            String[][] ans = new String[Config.NodeCount][];
+            String[][] pans = new String[Config.NodeCount][];
+
+            int[] dens = new int[coins.Length];//Denominations
+                                               //Stripe the coins
+
+            //List<Func<Task>> multiTaskList = new List<Func<Task>>();
+            List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
+
+            for (int i = 0; i < coins.Length; i++)//For every coin
+            {
+                coins[i].setAnsToPans();
+                nns[i] = coins[i].nn;
+                sns[i] = coins[i].sn;
+                dens[i] = coins[i].denomination;
+                //ans[i] = new String[coins.Length];
+                //pans[i] = new String[coins.Length];
+
+                //ans[i] = new String[Config.MultiDetectLoad];
+                //pans[i] = new String[Config.MultiDetectLoad];
+
+                for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+                {
+                    ans[nodeNumber][i] = coins[i].an[nodeNumber];
+                    pans[nodeNumber][i] = coins[i].pan[nodeNumber];
+
+                }
+
+
+            }//end for every coin put in an array
+
+            for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+            {
+               // var task = detectOneMulti(nodeNumber, nns, sns, ans[nodeNumber], pans[nodeNumber], dens, milliSecondsToTimeOut);
+                //multiTaskList.Add(task);
+            }
+
+            return multiTaskList;
+        }
+
+        public List<Func<Task>> GetMultiDetectTasks(CloudCoin[] coins, int milliSecondsToTimeOut)
+        {
+            this.coins = coins;
+
+            responseArrayMulti = new Response[Config.NodeCount, coins.Length];
+
+            int[] nns = new int[coins.Length];
+            int[] sns = new int[coins.Length];
+
+
+            String[][] ans = new String[Config.NodeCount][];
+            String[][] pans = new String[Config.NodeCount][];
+
+            int[] dens = new int[coins.Length];//Denominations
+                                               //Stripe the coins
             var detectTasks = new List<Func<Task>>
             {
 
             };
-            for (int i = 0; i < nodes.Length; i++)
+            List<Func<Task>> multiTaskList = new List<Func<Task>>();
+
+            //List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
+
+            for (int i = 0; i < coins.Length; i++)//For every coin
             {
-                detectTasks.Add(nodes[i].Detect);
+                coins[i].setAnsToPans();
+                nns[i] = coins[i].nn;
+                sns[i] = coins[i].sn;
+                dens[i] = coins[i].denomination;
+
+                //ans[i] = new String[coins.Length];
+                //pans[i] = new String[coins.Length];
+
+                //ans[i] = new String[Config.MultiDetectLoad];
+                //pans[i] = new String[Config.MultiDetectLoad];
+
+                for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+                {
+                    ans[nodeNumber][i] = coins[i].an[nodeNumber];
+                    pans[nodeNumber][i] = coins[i].pan[nodeNumber];
+
+                }
+
+
+            }//end for every coin put in an array
+
+            for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+            {
+
+                //multiTaskList.Add(tsk);
+                detectTasks.Add(nodes[nodeNumber].MultiDetect);
             }
-            return detectTasks;
+
+            return multiTaskList;
         }
+
+
         public Response[] responseArray = new Response[25];
 
         public async Task DetectCoin(CloudCoin coin, int milliSecondsToTimeOut)
@@ -124,92 +269,116 @@ namespace CloudCoinCore
         }
         public Response[,] responseArrayMulti;
 
-        public CloudCoin[] detectMultiCoin(CloudCoin[] coins, int milliSecondsToTimeOut)
-        {
-            //Make arrays to stripe the coins
+        //public CloudCoin[] detectMultiCoin(CloudCoin[] coins, int milliSecondsToTimeOut)
+        //{
+        //    //Make arrays to stripe the coins
 
-            responseArrayMulti = new Response[Config.NodeCount, coins.Length];
+        //    responseArrayMulti = new Response[Config.NodeCount, coins.Length];
 
-            int[] nns = new int[coins.Length];
-            int[] sns = new int[coins.Length];
+        //    int[] nns = new int[coins.Length];
+        //    int[] sns = new int[coins.Length];
             
 
-            String[][] ans = new String[Config.NodeCount][];
-            String[][] pans = new String[Config.NodeCount][];
+        //    String[][] ans = new String[Config.NodeCount][];
+        //    String[][] pans = new String[Config.NodeCount][];
 
-            int[] dens = new int[coins.Length];//Denominations
-                                               //Stripe the coins
+        //    int[] dens = new int[coins.Length];//Denominations
+        //                                       //Stripe the coins
 
-            List<Func<Task>> multiTaskList = new List<Func<Task>>();
-            List<Task<Response[]>> multiTaskList1 = new List<Task<Response[]>>();
+        //    //List<Func<Task>> multiTaskList = new List<Func<Task>>();
+        //    List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
 
-            for (int i = 0; i < coins.Length; i++)//For every coin
-            {
-                coins[i].setAnsToPans();
-                nns[i] = coins[i].nn;
-                sns[i] = coins[i].sn;
-                dens[i] = coins[i].denomination;
-                ans[i] = new String[coins.Length];
-                pans[i] = new String[coins.Length];
+        //    for(int arrCount =0;arrCount<Config.NodeCount;arrCount++)
+        //    {
+        //        ans[arrCount] = new String[coins.Length];
+        //        pans[arrCount] = new String[coins.Length];
 
-                for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
-                {
-                    ans[nodeNumber][i] = coins[i].an[nodeNumber];
-                    pans[nodeNumber][i] = coins[i].pan[nodeNumber];
+        //    }
+        //    for (int i = 0; i < coins.Length; i++)//For every coin
+        //    {
+        //        coins[i].setAnsToPans();
+        //        nns[i] = coins[i].nn;
+        //        sns[i] = coins[i].sn;
+        //        dens[i] = coins[i].denomination;
+        //        //ans[i] = new String[coins.Length];
+        //        //pans[i] = new String[coins.Length];
 
-                }
+        //        //ans[i] = new String[Config.MultiDetectLoad];
+        //        //pans[i] = new String[Config.MultiDetectLoad];
+
+        //        for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+        //        {
+        //            ans[nodeNumber][i] = coins[i].an[nodeNumber];
+        //            pans[nodeNumber][i] = coins[i].pan[nodeNumber];
+
+        //        }
 
 
-            }//end for every coin put in an array
+        //    }//end for every coin put in an array
 
-            for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
-            {
-                var task = detectOneMulti(nodeNumber, nns, sns, ans[nodeNumber], pans[nodeNumber], dens, milliSecondsToTimeOut);
-                multiTaskList1.Add(task);
-            }
-            Task.WaitAll(multiTaskList1.ToArray(), milliSecondsToTimeOut);
+        //    for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+        //    {
+        //        var task = detectOneMulti(nodeNumber, nns, sns, ans[nodeNumber], pans[nodeNumber], dens, milliSecondsToTimeOut);
+        //        multiTaskList.Add(task);
+        //    }
+        //    Task.WaitAll(multiTaskList.ToArray(), milliSecondsToTimeOut);
 
-            //Get data from the detection agents
-            for (int i = 0; i < nns.Length; i++)
-            {
-                for (int j = 0; j < 25; j++)
-                {//For each coin
-                    if (responseArrayMulti[j, i] != null)
-                    {
-                        coins[i].setPastStatus(responseArrayMulti[j, i].outcome, j);
+        //    //Get data from the detection agents
+        //    for (int i = 0; i < nns.Length; i++)
+        //    {
+        //        for (int j = 0; j < 25; j++)
+        //        {//For each coin
+        //            if (responseArrayMulti[j, i] != null)
+        //            {
+        //                coins[i].setPastStatus(responseArrayMulti[j, i].outcome, j);
                         
-                        //updateLog(cu[i].cc.sn + " detect:" + j + " " + responseArrayMulti[j, i].fullResponse);
+        //                //updateLog(cu[i].cc.sn + " detect:" + j + " " + responseArrayMulti[j, i].fullResponse);
 
-                    }
-                    else
-                    {
-                        coins[i].setPastStatus("undetected", j);
+        //            }
+        //            else
+        //            {
+        //                coins[i].setPastStatus("undetected", j);
 
-                    };// should be pass, fail, error or undetected, or No response. 
-                }//end for each coin checked
+        //            };// should be pass, fail, error or undetected, or No response. 
+        //        }//end for each coin checked
                 
-                coins[i].setAnsToPansIfPassed();
-                coins[i].calculateHP();
-                coins[i].calcExpirationDate();
-                coins[i].grade();
-            }//end for each detection agent
+        //        coins[i].setAnsToPansIfPassed();
+        //        coins[i].calculateHP();
+        //        coins[i].calcExpirationDate();
+        //        coins[i].grade();
+        //    }//end for each detection agent
 
-            return coins;//Return the array of coins detected
-        }//end detect coin
+        //    return coins;//Return the array of coins detected
+        //}//end detect coin
 
         /* For Multi-Detect*/
-        public async Task<Response[]> detectOneMulti(int raida_id, int[] nn, int[] sn, String[] an, String[] pan, int[] d, int milliSecondsToTimeOut)
-        {
-            //DetectionAgent da = new DetectionAgent(raida_id);
 
-            Response[] tempArray = await nodes[raida_id].multiDetect(nn, sn, an, pan, d, milliSecondsToTimeOut);
+//        public async Response[] DetectOneMulti1(int raida_id, int[] nn, int[] sn, String[] an, String[] pan, int[] d, int milliSecondsToTimeOut)
+//        {
+//            //DetectionAgent da = new DetectionAgent(raida_id);
 
-            for (int i = 0; i < tempArray.Length; i++)//Fill up the array
-            {
-                responseArrayMulti[raida_id, i] = tempArray[i];
-            }
+//            Response[] tempArray = await nodes[raida_id].multiDetect(nn, sn, an, pan, d, milliSecondsToTimeOut);
 
-            return tempArray;
-        }//end detectOneMulti
+//            for (int i = 0; i < tempArray.Length; i++)//Fill up the array
+//            {
+//                responseArrayMulti[raida_id, i] = tempArray[i];
+//            }
+
+//            return nodes[raida_id].multiDetect(nn, sn, an, pan, d, milliSecondsToTimeOut);
+////            return tempArray;
+//        }//end detectOneMulti
+//        public async Task<Response[]> detectOneMulti(int raida_id, int[] nn, int[] sn, String[] an, String[] pan, int[] d, int milliSecondsToTimeOut)
+//        {
+//            //DetectionAgent da = new DetectionAgent(raida_id);
+
+//            Response[] tempArray = await nodes[raida_id].multiDetect(nn, sn, an, pan, d, milliSecondsToTimeOut);
+
+//            for (int i = 0; i < tempArray.Length; i++)//Fill up the array
+//            {
+//                responseArrayMulti[raida_id, i] = tempArray[i];
+//            }
+
+//            return tempArray;
+//        }//end detectOneMulti
     }
 }
