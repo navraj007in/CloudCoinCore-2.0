@@ -187,10 +187,10 @@ namespace CloudCoinCore
             {
 
             };
+            
             List<Func<Task>> multiTaskList = new List<Func<Task>>();
 
             //List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
-
             for (int i = 0; i < coins.Length; i++)//For every coin
             {
                 coins[i].setAnsToPans();
@@ -198,30 +198,35 @@ namespace CloudCoinCore
                 sns[i] = coins[i].sn;
                 dens[i] = coins[i].denomination;
 
-                //ans[i] = new String[coins.Length];
-                //pans[i] = new String[coins.Length];
+            }
+            multiRequest = new MultiDetectRequest();
+            multiRequest.timeout = Config.milliSecondsToTimeOut;
+            for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+            {
+                
+                ans[nodeNumber] = new String[coins.Length];
+                pans[nodeNumber] = new String[coins.Length];
 
-                //ans[i] = new String[Config.MultiDetectLoad];
-                //pans[i] = new String[Config.MultiDetectLoad];
-
-                for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
+                for (int i = 0; i < coins.Length; i++)//For every coin
                 {
                     ans[nodeNumber][i] = coins[i].an[nodeNumber];
                     pans[nodeNumber][i] = coins[i].pan[nodeNumber];
 
                 }
+                multiRequest.an[nodeNumber] = ans[nodeNumber];
+                multiRequest.pan[nodeNumber] = pans[nodeNumber];
+                multiRequest.nn = nns;
+                multiRequest.sn = sns;
+                multiRequest.d = dens;
+            }
 
-
-            }//end for every coin put in an array
 
             for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
             {
-
-                //multiTaskList.Add(tsk);
                 detectTasks.Add(nodes[nodeNumber].MultiDetect);
             }
 
-            return multiTaskList;
+            return detectTasks;
         }
 
 

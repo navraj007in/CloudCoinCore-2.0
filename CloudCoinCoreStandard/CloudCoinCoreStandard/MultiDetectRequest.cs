@@ -6,10 +6,10 @@ namespace CloudCoinCore
 {
     public class MultiDetectRequest
     {
-        public int[] nn;
+        public int[] nn ;
         public int[] sn;
-        public String[] an;
-        public String[] pan;
+        public String[][] an = new String[Config.NodeCount][];
+        public String[][] pan = new String[Config.NodeCount][];
         public int[] d;
         public int timeout;
     }

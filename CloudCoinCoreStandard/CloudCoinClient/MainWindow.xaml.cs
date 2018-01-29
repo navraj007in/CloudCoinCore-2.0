@@ -136,11 +136,23 @@ namespace CloudCoinClient
 
                 var tasks = raida.GetMultiDetectTasks(coins.ToArray(),CloudCoinCore.Config.milliSecondsToTimeOut);
                 var t = tasks.ToArray();
-                await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
+                try
+                {
+                    await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                coinCount++;
+                //await Task.WaitAll(tasks.ToArray());
                 //await Task.WaitAll(t, CloudCoinCore.Config.milliSecondsToTimeOut);
                 //raida.detectMultiCoin(raida.coins.ToArray(), CloudCoinCore.Config.milliSecondsToTimeOut);
             }
-
+            for(int j = 0; j < CloudCoinCore.Config.NodeCount; j++)
+            {
+                Debug.WriteLine("Multi Detect Response for node " + j + "--" + raida.nodes[j].multiResponse.ToString());
+            }
             Debug.WriteLine("Total Coins parsed- " + coinCount);
             cmdMultiDetect.IsEnabled = true;
         }
