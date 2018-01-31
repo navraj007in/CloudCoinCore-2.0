@@ -81,6 +81,12 @@ namespace CloudCoinAndroid.CoreClasses
         {
             throw new NotImplementedException();
         }
+
+
+        public override void ProcessCoins(IEnumerable<CloudCoin> coins)
+        {
+            throw new NotImplementedException();
+        }
     }
     
 }

@@ -99,5 +99,11 @@ namespace CloudCoinClient.CoreClasses
         {
 
         }
+
+
+        public override void ProcessCoins(IEnumerable<CloudCoin> coins)
+        {
+            
+        }
     }
 }

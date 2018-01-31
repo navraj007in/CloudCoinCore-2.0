@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CloudCoinCore
 {
@@ -90,6 +91,7 @@ namespace CloudCoinCore
             return fileInfos;
         }
 
+        public abstract void ProcessCoins(IEnumerable<CloudCoin> coins);
         public abstract void DetectPreProcessing();
 
         
@@ -128,10 +130,8 @@ namespace CloudCoinCore
             return returnCC;
         }//end load one CloudCoin from JSON
 
-        public void writeCoin(CloudCoin coin, string folder)
-        {
-            //File.Copy()
-        }
+   
+      
         public String importJSON(String jsonfile)
         {
             String jsonData = "";

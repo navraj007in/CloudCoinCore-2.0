@@ -120,15 +120,17 @@ namespace CloudCoinClient
         private async void cmdMultiDetect_Click(object sender, RoutedEventArgs e)
         {
             cmdMultiDetect.IsEnabled = false;
+            // Load All Coins of Workspace File System
             FS.LoadFileSystem();
 
+            // Prepare Coins for Import
             FS.DetectPreProcessing();
             
             var predetectCoins = FS.LoadFolderCoins(FS.RootPath + FS.PreDetectFolder);
+            // Process Coins in Lots of 200. Can be changed from Config File
             int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;
             if(predetectCoins.Count() % CloudCoinCore.Config.MultiDetectLoad > 0) LotCount++;
             
-            int coinCount = 0;
             for(int i =0;i < LotCount;i++)
             {
                 var coins = predetectCoins.Skip(i*CloudCoinCore.Config.MultiDetectLoad).Take(200);
@@ -145,21 +147,23 @@ namespace CloudCoinClient
                         {
                             coin.response[k] = raida.nodes[k].multiResponse.responses[j];
                         }
+                        int countp = coin.response.Where(x => x.outcome == "pass").Count();
+                        int countf = coin.response.Where(x => x.outcome == "fail").Count();
+                        coin.PassCount = countp;
+                        coin.FailCount = countf;
+
+                        
                         j++;
                     }
+                    FS.ProcessCoins(coins);
 
                 }
                 catch(Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
-                coinCount++;
             }
-            for(int j = 0; j < CloudCoinCore.Config.NodeCount; j++)
-            {
-                Debug.WriteLine("Multi Detect Response for node " + j + "--" + raida.nodes[j].multiResponse.ToString());
-            }
-            Debug.WriteLine("Total Coins parsed- " + coinCount);
+            
             cmdMultiDetect.IsEnabled = true;
         }
     }

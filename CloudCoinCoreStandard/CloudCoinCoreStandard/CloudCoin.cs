@@ -41,6 +41,8 @@ namespace CloudCoinCore
         public int denomination { get; set; }
         public DetectionResult detectionResult { get; set; }
         public DetectionStatus DetectResult { get; set; }
+        public int PassCount = 0;
+        public int FailCount = 0;
 
         int pSN;
         //Constructors

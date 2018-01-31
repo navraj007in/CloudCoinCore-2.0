@@ -207,7 +207,7 @@ namespace CloudCoinCore
                 postVariables.Add(new KeyValuePair<string, string>("ans[]", an[i]));
                 postVariables.Add(new KeyValuePair<string, string>("pans[]", pan[i]));
                 postVariables.Add(new KeyValuePair<string, string>("denomination[]", d[i].ToString()));
-                Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
+                //Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
 
                 response[i].fullRequest = this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
             }
@@ -404,7 +404,7 @@ namespace CloudCoinCore
                     postVariables.Add(new KeyValuePair<string, string>("ans[]", an[i]));
                     postVariables.Add(new KeyValuePair<string, string>("pans[]", pan[i]));
                     postVariables.Add(new KeyValuePair<string, string>("denomination[]", d[i].ToString()));
-                    Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
+                   // Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
 
                     response[i].fullRequest = this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
                 }
