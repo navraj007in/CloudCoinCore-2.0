@@ -39,10 +39,13 @@ namespace CloudCoinCore
         public List<string> aoid { get; set; }
 
         public int denomination { get; set; }
+        public String DetectionResult;
         public DetectionResult detectionResult { get; set; }
         public DetectionStatus DetectResult { get; set; }
-        public int PassCount = 0;
-        public int FailCount = 0;
+        public int PassCount { get { return passCount; } set { passCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
+        private int passCount = 0;
+        private int failCount = 0; 
+        public int FailCount { get { return failCount; } set { failCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
 
         int pSN;
         //Constructors

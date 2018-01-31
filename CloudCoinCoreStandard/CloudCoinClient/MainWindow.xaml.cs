@@ -24,7 +24,8 @@ namespace CloudCoinClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        FileSystem FS = new FileSystem();
+        string RootPath;
+        FileSystem FS ;
         RAIDA raida;
         public MainWindow()
         {
@@ -34,6 +35,16 @@ namespace CloudCoinClient
 
         public void Setup()
         {
+            if (Properties.Settings.Default.WorkSpace == "")
+            {
+                RootPath = AppDomain.CurrentDomain.BaseDirectory;
+            }
+            else
+            {
+                RootPath = Properties.Settings.Default.WorkSpace;
+            }
+            FS = new FileSystem(RootPath);
+
             // Create the Folder Structure
             FS.CreateFolderStructure();
             // Populate RAIDA Nodes
@@ -42,7 +53,7 @@ namespace CloudCoinClient
             CoinDetected += Raida_CoinDetected;
             //raida.Echo();
             FS.LoadFileSystem();
-            FS.LoadFolderCoins(FS.RootPath + FS.CounterfeitFolder);
+            FS.LoadFolderCoins(FS.CounterfeitFolder);
             //Load Local Coins
 
         }
@@ -126,7 +137,9 @@ namespace CloudCoinClient
             // Prepare Coins for Import
             FS.DetectPreProcessing();
             
-            var predetectCoins = FS.LoadFolderCoins(FS.RootPath + FS.PreDetectFolder);
+            var predetectCoins = FS.LoadFolderCoins(FS.PreDetectFolder);
+            FileSystem.predetectCoins = predetectCoins;
+
             // Process Coins in Lots of 200. Can be changed from Config File
             int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;
             if(predetectCoins.Count() % CloudCoinCore.Config.MultiDetectLoad > 0) LotCount++;
@@ -151,19 +164,34 @@ namespace CloudCoinClient
                         int countf = coin.response.Where(x => x.outcome == "fail").Count();
                         coin.PassCount = countp;
                         coin.FailCount = countf;
-
+                        Debug.WriteLine("Coin Deteced. S. No. - " + coin.sn + ". Pass Count - " + coin.PassCount + ". Fail Count  - " + coin.FailCount + ". Result - " + coin.DetectionResult);
                         
                         j++;
+                       
                     }
-                    FS.ProcessCoins(coins);
-
+                    FS.writeCoin(coins, FS.DetectedFolder);
+                    //FS.ProcessCoins(coins);
                 }
                 catch(Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
             }
-            
+            var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
+            var passedCoins = (from x in detectedCoins
+                               where x.DetectionResult == "Pass"
+                               select x).ToList();
+
+            var failedCoins = (from x in detectedCoins
+                               where x.DetectionResult == "Fail"
+                               select x).ToList();
+
+            Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
+            Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
+            FS.writeCoin(failedCoins, FS.CounterfeitFolder,true);
+            //FileSystem.detectedCoins = FS.LoadFolderCoins(FS.RootPath + System.IO.Path.DirectorySeparatorChar + FS.DetectedFolder);
+
+
             cmdMultiDetect.IsEnabled = true;
         }
     }

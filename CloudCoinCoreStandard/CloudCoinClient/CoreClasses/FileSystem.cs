@@ -25,35 +25,30 @@ namespace CloudCoinClient.CoreClasses
         public static IEnumerable<CloudCoin> trashCoins;
         public static IEnumerable<CloudCoin> bankCoins;
         public static IEnumerable<CloudCoin> lostCoins;
-        public static IEnumerable<CloudCoin> preprocessingCoins;
+        public static IEnumerable<CloudCoin> predetectCoins;
 
 
-        public FileSystem()
+        public FileSystem(string RootPath)
         {
-            ImportFolder = Config.TAG_IMPORT;
-            ExportFolder = Config.TAG_EXPORT;
-            ImportedFolder = Config.TAG_IMPORTED;
-            TemplateFolder = Config.TAG_TEMPLATES;
-            LanguageFolder = Config.TAG_LANGUAGE;
-            CounterfeitFolder = Config.TAG_COUNTERFEIT;
-            PartialFolder = Config.TAG_PARTIAL;
-            FrackedFolder = Config.TAG_FRACKED;
-            DetectedFolder = Config.TAG_DETECTED;
-            SuspectFolder = Config.TAG_SUSPECT;
-            TrashFolder = Config.TAG_TRASH;
-            BankFolder = Config.TAG_BANK;
-            PreDetectFolder = Config.TAG_PREDETECT;
+            this.RootPath = RootPath;
+            ImportFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_IMPORT + Path.DirectorySeparatorChar;
+            ExportFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_EXPORT + Path.DirectorySeparatorChar;
+            ImportedFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_IMPORTED + Path.DirectorySeparatorChar;
+            TemplateFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_TEMPLATES + Path.DirectorySeparatorChar;
+            LanguageFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_LANGUAGE + Path.DirectorySeparatorChar;
+            CounterfeitFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_COUNTERFEIT + Path.DirectorySeparatorChar;
+            PartialFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_PARTIAL + Path.DirectorySeparatorChar;
+            FrackedFolder = RootPath + Path.DirectorySeparatorChar+  Config.TAG_FRACKED + Path.DirectorySeparatorChar;
+            DetectedFolder = RootPath + Path.DirectorySeparatorChar+ Config.TAG_DETECTED+ Path.DirectorySeparatorChar;
+            SuspectFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_SUSPECT+ Path.DirectorySeparatorChar;
+            TrashFolder = RootPath + Path.DirectorySeparatorChar +  Config.TAG_TRASH+ Path.DirectorySeparatorChar;
+            BankFolder = RootPath + Path.DirectorySeparatorChar +  Config.TAG_BANK + Path.DirectorySeparatorChar;
+            PreDetectFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_PREDETECT + Path.DirectorySeparatorChar;
+            LostFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_LOST + Path.DirectorySeparatorChar;
+
         }
         public override bool CreateFolderStructure()
         {
-            if(Properties.Settings.Default.WorkSpace == "")
-            {
-                RootPath = AppDomain.CurrentDomain.BaseDirectory;
-            }   
-            else
-            {
-                RootPath = Properties.Settings.Default.WorkSpace;
-            }
             
             // Create the Actual Folder Structure
             return CreateDirectories();
@@ -68,20 +63,20 @@ namespace CloudCoinClient.CoreClasses
 
             try
             {
-                Directory.CreateDirectory(RootPath + ImportFolder);
-                Directory.CreateDirectory(RootPath + ExportFolder);
-                Directory.CreateDirectory(RootPath + BankFolder);
-                Directory.CreateDirectory(RootPath + ImportedFolder);
-                Directory.CreateDirectory(RootPath + LostFolder);
-                Directory.CreateDirectory(RootPath + TrashFolder);
-                Directory.CreateDirectory(RootPath + SuspectFolder);
-                Directory.CreateDirectory(RootPath + DetectedFolder);
-                Directory.CreateDirectory(RootPath + FrackedFolder);
-                Directory.CreateDirectory(RootPath + TemplateFolder);
-                Directory.CreateDirectory(RootPath + PartialFolder);
-                Directory.CreateDirectory(RootPath + CounterfeitFolder);
-                Directory.CreateDirectory(RootPath + LanguageFolder);
-                Directory.CreateDirectory(RootPath + PreDetectFolder);
+                Directory.CreateDirectory(ImportFolder);
+                Directory.CreateDirectory(ExportFolder);
+                Directory.CreateDirectory(BankFolder);
+                Directory.CreateDirectory(ImportedFolder);
+                Directory.CreateDirectory(LostFolder);
+                Directory.CreateDirectory(TrashFolder);
+                Directory.CreateDirectory(SuspectFolder);
+                Directory.CreateDirectory(DetectedFolder);
+                Directory.CreateDirectory(FrackedFolder);
+                Directory.CreateDirectory(TemplateFolder);
+                Directory.CreateDirectory(PartialFolder);
+                Directory.CreateDirectory(CounterfeitFolder);
+                Directory.CreateDirectory(LanguageFolder);
+                Directory.CreateDirectory(PreDetectFolder);
             }
             catch (Exception e)
             {
@@ -94,21 +89,20 @@ namespace CloudCoinClient.CoreClasses
 
         public override void LoadFileSystem()
         {
-            importCoins = LoadFolderCoins(RootPath + ImportFolder);
-            exportCoins  =LoadFolderCoins(RootPath + ExportFolder);
-            bankCoins  =LoadFolderCoins(RootPath + BankFolder);
-            lostCoins  = LoadFolderCoins(RootPath + LostFolder);
-            importedCoins = LoadFolderCoins(RootPath + ImportedFolder);
-            trashCoins = LoadFolderCoins(RootPath + TrashFolder);
-            suspectCoins = LoadFolderCoins(RootPath + SuspectFolder);
-            detectedCoins = LoadFolderCoins(RootPath + DetectedFolder);
-            frackedCoins = LoadFolderCoins(RootPath + FrackedFolder);
-            LoadFolderCoins(RootPath + TemplateFolder);
-            partialCoins = LoadFolderCoins(RootPath + PartialFolder);
-            counterfeitCoins = LoadFolderCoins(RootPath + CounterfeitFolder);
-            preprocessingCoins = LoadFolderCoins(RootPath + PreDetectFolder);
+            importCoins = LoadFolderCoins(ImportFolder);
+            exportCoins  =LoadFolderCoins(ExportFolder);
+            bankCoins  =LoadFolderCoins(BankFolder);
+            lostCoins  = LoadFolderCoins(LostFolder);
+            importedCoins = LoadFolderCoins(ImportedFolder);
+            trashCoins = LoadFolderCoins(TrashFolder);
+            suspectCoins = LoadFolderCoins(SuspectFolder);
+            detectedCoins = LoadFolderCoins(DetectedFolder);
+            frackedCoins = LoadFolderCoins(FrackedFolder);
+            LoadFolderCoins(TemplateFolder);
+            partialCoins = LoadFolderCoins(PartialFolder);
+            counterfeitCoins = LoadFolderCoins(CounterfeitFolder);
+            predetectCoins = LoadFolderCoins(PreDetectFolder);
 
-            LoadFolderCoins(RootPath + LanguageFolder);
         }
 
         
@@ -117,7 +111,7 @@ namespace CloudCoinClient.CoreClasses
             foreach(var coin in importCoins)
             {
                 string fileName = coin.FileName;
-                int coinExists = (from x in preprocessingCoins
+                int coinExists = (from x in predetectCoins
                                   where x.sn == coin.sn
                                   select x).Count();
                 if(coinExists>0)
@@ -129,7 +123,7 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 Stack stack = new Stack(coin);
-                using(StreamWriter sw = new StreamWriter(RootPath + PreDetectFolder + Path.DirectorySeparatorChar +fileName + ".stack"))
+                using(StreamWriter sw = new StreamWriter(PreDetectFolder + fileName + ".stack"))
                 using(JsonWriter writer = new JsonTextWriter(sw))
                 {
                        serializer.Serialize(writer, stack);
@@ -139,10 +133,9 @@ namespace CloudCoinClient.CoreClasses
 
          public override void ProcessCoins(IEnumerable<CloudCoin> coins)
         {
-            writeCoin(coins, RootPath + System.IO.Path.DirectorySeparatorChar + DetectedFolder);
-            var detectedCoins = LoadFolderCoins(RootPath + System.IO.Path.DirectorySeparatorChar + DetectedFolder);
-            string CounterfeitFolder = RootPath + Path.DirectorySeparatorChar + this.CounterfeitFolder;
-            string BankFolder = RootPath + Path.DirectorySeparatorChar + this.BankFolder;
+           
+            var detectedCoins = LoadFolderCoins(DetectedFolder);
+            
 
             foreach(var coin in detectedCoins)
             {
@@ -180,12 +173,28 @@ namespace CloudCoinClient.CoreClasses
             }
         }
 
-        public void writeCoin(IEnumerable<CloudCoin> coins, string folder)
+        public void writeCoin(IEnumerable<CloudCoin> coins, string folder,bool writeAll=false)
         {
+            if(writeAll)
+            {
+                string fileName = Utils.RandomString(16) + ".stack";
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Converters.Add(new JavaScriptDateTimeConverter());
+                serializer.NullValueHandling = NullValueHandling.Ignore;
+                Stack stack = new Stack(coins.ToArray());
+                using (StreamWriter sw = new StreamWriter(folder + fileName + ".stack"))
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, stack);
+                }
+                return;
+            }
+            var folderCoins = LoadFolderCoins(folder);
+
             foreach (var coin in coins)
             {
                 string fileName = coin.FileName;
-                int coinExists = (from x in detectedCoins
+                int coinExists = (from x in folderCoins
                                   where x.sn == coin.sn
                                   select x).Count();
                 if (coinExists > 0)
@@ -197,7 +206,7 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 Stack stack = new Stack(coin);
-                using (StreamWriter sw = new StreamWriter(RootPath + DetectedFolder + Path.DirectorySeparatorChar + fileName + ".stack"))
+                using (StreamWriter sw = new StreamWriter(folder + fileName + ".stack"))
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
                     serializer.Serialize(writer, stack);
