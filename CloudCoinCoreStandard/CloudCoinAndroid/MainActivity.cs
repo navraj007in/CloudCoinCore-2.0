@@ -1,15 +1,16 @@
 ﻿using Android.App;
 using Android.Widget;
 using Android.OS;
-using CloudCoinAndroid.CoreClasses;
+
 using CloudCoinCore;
+using CloudCoinClient.CoreClasses;
 
 namespace CloudCoinAndroid
 {
     [Activity(Label = "CloudCoinAndroid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        FileSystem FS = new FileSystem();
+        FileSystem FS = new FileSystem("");
         RAIDA raida;
 
         protected override void OnCreate(Bundle bundle)

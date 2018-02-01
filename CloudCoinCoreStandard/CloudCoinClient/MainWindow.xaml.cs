@@ -52,6 +52,9 @@ namespace CloudCoinClient
             raida.FS = FS;
             CoinDetected += Raida_CoinDetected;
             //raida.Echo();
+            FS.ClearCoins(FS.PreDetectFolder);
+            FS.ClearCoins(FS.DetectedFolder);
+
             FS.LoadFileSystem();
             FS.LoadFolderCoins(FS.CounterfeitFolder);
             //Load Local Coins
@@ -146,12 +149,16 @@ namespace CloudCoinClient
             
             for(int i =0;i < LotCount;i++)
             {
+                //Pick up 200 Coins and send them to RAIDA
                 var coins = predetectCoins.Skip(i*CloudCoinCore.Config.MultiDetectLoad).Take(200);
                 raida.coins = coins;
 
                 var tasks = raida.GetMultiDetectTasks(coins.ToArray(),CloudCoinCore.Config.milliSecondsToTimeOut);
                 try
                 {
+                    string requestFileName = Utils.RandomString(16).ToLower() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".stack";
+                    // Write Request To file before detect
+                    FS.WriteStackToFile(coins, FS.RequestsFolder + requestFileName);
                     await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
                     int j = 0;
                     foreach(var coin in coins)
@@ -188,7 +195,10 @@ namespace CloudCoinClient
 
             Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
             Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
+            FS.moveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
             FS.writeCoin(failedCoins, FS.CounterfeitFolder,true);
+            FS.RemoveCoins(failedCoins, FS.DetectedFolder);
+
             //FileSystem.detectedCoins = FS.LoadFolderCoins(FS.RootPath + System.IO.Path.DirectorySeparatorChar + FS.DetectedFolder);
 
 

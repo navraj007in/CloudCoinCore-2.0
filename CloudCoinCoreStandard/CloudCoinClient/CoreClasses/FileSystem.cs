@@ -45,6 +45,7 @@ namespace CloudCoinClient.CoreClasses
             BankFolder = RootPath + Path.DirectorySeparatorChar +  Config.TAG_BANK + Path.DirectorySeparatorChar;
             PreDetectFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_PREDETECT + Path.DirectorySeparatorChar;
             LostFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_LOST + Path.DirectorySeparatorChar;
+            RequestsFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_REQUESTS + Path.DirectorySeparatorChar;
 
         }
         public override bool CreateFolderStructure()
@@ -77,6 +78,7 @@ namespace CloudCoinClient.CoreClasses
                 Directory.CreateDirectory(CounterfeitFolder);
                 Directory.CreateDirectory(LanguageFolder);
                 Directory.CreateDirectory(PreDetectFolder);
+                Directory.CreateDirectory(RequestsFolder);
             }
             catch (Exception e)
             {
@@ -100,7 +102,7 @@ namespace CloudCoinClient.CoreClasses
             frackedCoins = LoadFolderCoins(FrackedFolder);
             LoadFolderCoins(TemplateFolder);
             partialCoins = LoadFolderCoins(PartialFolder);
-            counterfeitCoins = LoadFolderCoins(CounterfeitFolder);
+            //counterfeitCoins = LoadFolderCoins(CounterfeitFolder);
             predetectCoins = LoadFolderCoins(PreDetectFolder);
 
         }
@@ -173,6 +175,65 @@ namespace CloudCoinClient.CoreClasses
             }
         }
 
+        public void moveCoins(IEnumerable<CloudCoin> coins,string sourceFolder, string targetFolder)
+        {
+            var folderCoins = LoadFolderCoins(targetFolder);
+
+            foreach (var coin in coins)
+            {
+                string fileName = coin.FileName;
+                int coinExists = (from x in folderCoins
+                                  where x.sn == coin.sn
+                                  select x).Count();
+                if (coinExists > 0)
+                {
+                    string suffix = Utils.RandomString(16);
+                    fileName += suffix.ToLower();
+                }
+                try
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Converters.Add(new JavaScriptDateTimeConverter());
+                    serializer.NullValueHandling = NullValueHandling.Ignore;
+                    Stack stack = new Stack(coin);
+                    using (StreamWriter sw = new StreamWriter(targetFolder + fileName + ".stack"))
+                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    {
+                        serializer.Serialize(writer, stack);
+                    }
+                    File.Delete(sourceFolder+ coin.FileName+".stack");
+                }
+                catch(Exception e)
+                {
+
+                }
+
+
+            }
+        }
+
+        public void RemoveCoins(IEnumerable<CloudCoin> coins, string folder)
+        {
+
+            foreach (var coin in coins)
+            {
+                    File.Delete(folder + coin.FileName + ".stack");
+
+            }
+        }
+
+        public void WriteStackToFile(IEnumerable<CloudCoin> coins,string fileName)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            Stack stack = new Stack(coins.ToArray());
+            using (StreamWriter sw = new StreamWriter(fileName + ".stack"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, stack);
+            }
+        }
         public void writeCoin(IEnumerable<CloudCoin> coins, string folder,bool writeAll=false)
         {
             if(writeAll)
@@ -215,7 +276,33 @@ namespace CloudCoinClient.CoreClasses
             }
         }
 
-       
-        
+        public override void ClearCoins(string FolderName)
+        {
+            
+            var fii = GetFiles(FolderName,CloudCoinCore.Config.allowedExtensions);
+
+            DirectoryInfo di = new DirectoryInfo(FolderName);
+            
+
+            foreach (FileInfo file in fii)
+                try
+                {
+                    file.Attributes = FileAttributes.Normal;
+                    File.Delete(file.FullName);
+                }
+                catch { }
+           
+        }
+        public List<FileInfo> GetFiles(string path, params string[] extensions)
+        {
+            List<FileInfo> list = new List<FileInfo>();
+            foreach (string ext in extensions)
+                list.AddRange(new DirectoryInfo(path).GetFiles("*" + ext).Where(p =>
+                      p.Extension.Equals(ext, StringComparison.CurrentCultureIgnoreCase))
+                      .ToArray());
+            return list;
+        }
     }
+
+    
 }

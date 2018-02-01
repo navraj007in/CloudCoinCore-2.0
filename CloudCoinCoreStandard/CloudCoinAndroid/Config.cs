@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CloudCoinCore
+namespace CloudCoinClient
 {
     public class Config
     {
@@ -19,7 +19,18 @@ namespace CloudCoinCore
         public static string TAG_PARTIAL = "Partial";
         public static string TAG_TRASH = "Trash";
         public static string TAG_SUSPECT = "Suspect";
+        public static string TAG_PREDETECT = "PreDetect";
+        public static string TAG_REQUESTS = "Requests";
 
+        public const int YEARSTILEXPIRE = 2;
+        public static int milliSecondsToTimeOut = 10000;
+        public static int MultiDetectLoad = 200;
+        public static int NodeCount = 25;
+        public static int PassCount = 16;
+        public static int NetworkNumber = 1;
 
+        public enum Folder { Suspect, Counterfeit, Fracked, Bank, Trash };
+
+        public static string[] allowedExtensions = new[] { ".stack", ".jpeg", ".chest", ".bank", ".jpg" };
     }
 }

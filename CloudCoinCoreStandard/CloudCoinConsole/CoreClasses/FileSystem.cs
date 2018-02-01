@@ -105,5 +105,10 @@ namespace CloudCoinClient.CoreClasses
         {
             
         }
+
+        public override void ClearCoins(string FolderName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

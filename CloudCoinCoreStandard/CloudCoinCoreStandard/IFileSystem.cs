@@ -26,12 +26,15 @@ namespace CloudCoinCore
         public string CounterfeitFolder { get; set; }
         public string LanguageFolder { get; set; }
         public string PreDetectFolder { get; set; }
+        public string RequestsFolder { get; set; }
 
         //public abstract IFileSystem(string path);
 
         public abstract bool CreateFolderStructure();
 
         public abstract void LoadFileSystem();
+
+        public abstract void ClearCoins(string FolderName);
 
         public List<CloudCoin> LoadFolderCoins(string folder)
         {

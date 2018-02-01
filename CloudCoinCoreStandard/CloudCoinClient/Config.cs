@@ -20,7 +20,7 @@ namespace CloudCoinClient
         public static string TAG_TRASH = "Trash";
         public static string TAG_SUSPECT = "Suspect";
         public static string TAG_PREDETECT = "PreDetect";
-
+        public static string TAG_REQUESTS = "Requests";
 
     }
 }
