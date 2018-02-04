@@ -21,6 +21,7 @@ namespace CloudCoinClient
         public static string TAG_SUSPECT = "Suspect";
         public static string TAG_PREDETECT = "PreDetect";
         public static string TAG_REQUESTS = "Requests";
+        public static string TAG_DANGEROUS = "Dangerous";
 
     }
 }

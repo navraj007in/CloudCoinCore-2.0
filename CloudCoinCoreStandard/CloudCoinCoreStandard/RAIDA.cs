@@ -166,6 +166,13 @@ namespace CloudCoinCore
 
         }//end detect coin
 
+        public event EventHandler ProgressChanged;
+
+        public virtual void OnProgressChanged(ProgressChangedEventArgs e)
+        {
+            ProgressChanged?.Invoke(this, e);
+        }
+
         public event EventHandler CoinDetected;
 
         protected virtual void OnCoinDetected(DetectEventArgs e)

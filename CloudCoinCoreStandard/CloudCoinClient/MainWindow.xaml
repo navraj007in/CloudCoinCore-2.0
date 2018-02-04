@@ -17,6 +17,11 @@
             <Button x:Name="cmdEcho" Content="Echo" Click="cmdEcho_Click" Width="200"></Button>
             <Button x:Name="cmdDetect" Content="Detect" Click="cmdDetect_Click" Width="200"></Button>
             <Button x:Name="cmdMultiDetect" Content="Multi-Detect" Click="cmdMultiDetect_Click" Width="200"></Button>
+
+            <TextBox VerticalScrollBarVisibility="Visible" x:Name="txtProgress" Text="Progress"></TextBox>
+            <ProgressBar x:Name="bar1" Value ="0"  Maximum="100"></ProgressBar>
+            <ProgressBar x:Name="bar2" Value="0" Maximum="100"></ProgressBar>
+
         </StackPanel>
     </Grid>
 </Window>

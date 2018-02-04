@@ -15,9 +15,11 @@ namespace CloudCoinCore
         public string[] pan = new string[Config.NodeCount];
         public int hp;// HitPoints (1-25, One point for each server not failed)
         public String edHex;// Months from zero date that the coin will expire. 
+        [JsonIgnore]
         public string folder;
-        
+        [JsonIgnore]
         public Response[] response= new Response[Config.NodeCount];
+        [JsonIgnore]
         public String[] gradeStatus = new String[3];// What passed, what failed, what was undetected
         //Fields
         [JsonProperty("nn")]
@@ -38,15 +40,32 @@ namespace CloudCoinCore
         [JsonProperty("aoid")]
         public List<string> aoid { get; set; }
 
+        [JsonIgnore]
+        public string pastPown = "uuuuuuuuuuuuuuuuuuuuuuuuu";//Used to see if there are any improvments in defracking
+
+        [JsonIgnore]
+        public bool IsPerfect { get; set; }
+        [JsonIgnore]
+        public bool IsCounterfeit { get; set; }
+        [JsonIgnore]
+        public bool IsGradable { get; set; }
+        [JsonIgnore]
+        public bool IsFracked { get; set; }
+        [JsonIgnore]
         public int denomination { get; set; }
         public String DetectionResult;
+        [JsonIgnore]
         public DetectionResult detectionResult { get; set; }
+        [JsonIgnore]
         public DetectionStatus DetectResult { get; set; }
         public int PassCount { get { return passCount; } set { passCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
         private int passCount = 0;
         private int failCount = 0; 
         public int FailCount { get { return failCount; } set { failCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
 
+        public enum Folder { Suspect, Counterfeit, Fracked, Bank, Trash };
+
+        [JsonIgnore]
         int pSN;
         //Constructors
         public CloudCoin()
@@ -65,11 +84,80 @@ namespace CloudCoinCore
 
         }//end of constructor
 
+        [JsonIgnore]
         public string FileName { get {
                 return this.getDenomination() + ".CloudCoin." + nn + "." + sn + ".";
             }
         }
 
+        public bool isDangerous()
+        {
+            //The coin is considered a threat if it has any of the patersns that would allow the last user to take control.
+            //There are four of these patterns: One for each corner. 
+            bool threat = false;
+            //  Console.Out.WriteLine( cc.sn + " char count f =" + charCount(cc.pown, 'f'));
+            if ((charCount(pown, 'f') + charCount(pown, 'n')) > 5)
+            {
+                string doublePown = pown + pown;//double it so we see patters that happen on the ends.
+                Match UP_LEFT = Regex.Match(doublePown, @"ff[a-z][a-z][a-z]fp", RegexOptions.IgnoreCase);//String UP_LEFT = "ff***f";
+                Match UP_RIGHT = Regex.Match(doublePown, @"ff[a-z][a-z][a-z]pf", RegexOptions.IgnoreCase);//String UP_RIGHT = "ff***pf";
+                Match DOWN_LEFT = Regex.Match(doublePown, @"fp[a-z][a-z][a-z]ff", RegexOptions.IgnoreCase);//String DOWN_LEFT = "fp***ff";
+                Match DOWN_RIGHT = Regex.Match(doublePown, @"pf[a-z][a-z][a-z]ff", RegexOptions.IgnoreCase);//String DOWN_RIGHT = "pf***ff";
+                                                                                                            //Check if it has a weakness
+                                                                                                            // if (UP_LEFT.Success) { Console.Out.WriteLine("up left match"); }//end
+                                                                                                            //if (UP_RIGHT.Success) { Console.Out.WriteLine("up right match"); }//end
+                                                                                                            // if (DOWN_LEFT.Success) { Console.Out.WriteLine("down left match"); }//end
+                                                                                                            // if (DOWN_RIGHT.Success) { Console.Out.WriteLine("down right match"); }//end
+
+                if (UP_LEFT.Success || UP_RIGHT.Success || DOWN_LEFT.Success || DOWN_RIGHT.Success)
+                {
+                    threat = true;
+                }//end if coin contains threats.
+            }
+            return threat;
+        }//end is threat
+
+        public bool isCounterfeit()
+        {
+            //The coin is considered counterfeit if it has so many fails it cannot be fixed
+            bool returnTruth = false;
+            if ((charCount(pown, 'p') < 6 && (charCount(pown, 'f') > 13)))
+            {
+                returnTruth = true;
+                Console.Out.WriteLine("isCounterfeit");
+            }
+            else
+            {
+                Console.Out.WriteLine("Not isCounterfeit");
+            }
+            return returnTruth;
+        }//end is counterfeit
+
+        public int charCount(string pown, char character)
+        {
+            return pown.Count(x => x == character);
+        }
+
+        public bool isFracked()
+        {
+            //The coin is considered fracked if it has any fails
+            bool returnTruth = false;
+            if (charCount(pown, 'f') > 0 || charCount(pown, 'n') > 0)
+            {
+                returnTruth = true;
+            }
+            return returnTruth;
+        }//end is fracked
+
+        public bool isPerfect()
+        {
+            bool returnTruth = false;
+            if (pown == "ppppppppppppppppppppppppp")
+            {
+                returnTruth = true;
+            }
+            return returnTruth;
+        }
         public int getDenomination()
         {
             int nom = 0;
@@ -104,6 +192,7 @@ namespace CloudCoinCore
 
             return nom;
         }//end get denomination
+        [JsonIgnore]
         public List<Task> detectTaskList = new List<Task>();
         public List<Task> GetDetectTasks()
         {
@@ -126,6 +215,65 @@ namespace CloudCoinCore
                 pan[i] = this.generatePan();
             }
         }
+
+        public bool isFixable()
+        {
+            //The coin is considered fixable if it has any of the patersns that would allow the new owner to fix fracked.
+            //There are four of these patterns: One for each corner. 
+            bool canFix = false;
+            // Console.Out.WriteLine(cc.sn + " char count p =" + charCount(cc.pown, 'p'));
+            if (charCount(pown, 'p') > 5)
+            {
+                string doublePown = pown + pown;//double it so we see patters that happen on the ends.
+                Match UP_LEFT = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]pf", RegexOptions.IgnoreCase);//String UP_LEFT = "pp***pf";
+                Match UP_RIGHT = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]fp", RegexOptions.IgnoreCase);//String UP_RIGHT = "pp***fp";
+                Match DOWN_LEFT = Regex.Match(doublePown, @"pf[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_LEFT = "pf***pp";
+                Match DOWN_RIGHT = Regex.Match(doublePown, @"fp[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_RIGHT = "fp***pp";
+
+                Match UP_LEFT_n = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]pn", RegexOptions.IgnoreCase);//String UP_LEFT = "pp***pn";
+                Match UP_RIGHT_n = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]np", RegexOptions.IgnoreCase);//String UP_RIGHT = "pp***np";
+                Match DOWN_LEFT_n = Regex.Match(doublePown, @"pn[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_LEFT = "pn***pp";
+                Match DOWN_RIGHT_n = Regex.Match(doublePown, @"np[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_RIGHT = "np***pp";
+
+                Match UP_LEFT_e = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]pe", RegexOptions.IgnoreCase);//String UP_LEFT = "pp***pe";
+                Match UP_RIGHT_e = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]ep", RegexOptions.IgnoreCase);//String UP_RIGHT = "pp***ep";
+                Match DOWN_LEFT_e = Regex.Match(doublePown, @"pe[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_LEFT = "pe***pp";
+                Match DOWN_RIGHT_e = Regex.Match(doublePown, @"ep[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_RIGHT = "ep***pp";
+
+                Match UP_LEFT_u = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]pu", RegexOptions.IgnoreCase);//String UP_LEFT = "pp***pu";
+                Match UP_RIGHT_u = Regex.Match(doublePown, @"pp[a-z][a-z][a-z]up", RegexOptions.IgnoreCase);//String UP_RIGHT = "pp***up";
+                Match DOWN_LEFT_u = Regex.Match(doublePown, @"pu[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_LEFT = "pu***pp";
+                Match DOWN_RIGHT_u = Regex.Match(doublePown, @"up[a-z][a-z][a-z]pp", RegexOptions.IgnoreCase);//String DOWN_RIGHT = "up***pp";
+
+                if (UP_LEFT.Success || UP_RIGHT.Success || DOWN_LEFT.Success || DOWN_RIGHT.Success || UP_LEFT_n.Success || UP_RIGHT_n.Success || DOWN_LEFT_n.Success || DOWN_RIGHT_n.Success || UP_LEFT_e.Success || UP_RIGHT_e.Success || DOWN_LEFT_e.Success || DOWN_RIGHT_e.Success || UP_LEFT_u.Success || UP_RIGHT_u.Success || DOWN_LEFT_u.Success || DOWN_RIGHT_u.Success)
+                {
+                    canFix = true;
+                    Console.Out.WriteLine("isFixable");
+                }
+                else
+                {
+                    canFix = false;
+                    Console.Out.WriteLine("Not isFixable");
+                }
+
+
+                // if (UP_LEFT.Success) { Console.Out.WriteLine("canFix up left match"); }//end
+                // if (UP_RIGHT.Success) { Console.Out.WriteLine("canFix up right match"); }//end
+                // // if (DOWN_LEFT.Success) { Console.Out.WriteLine("canFix down left match"); }//end
+                // if (DOWN_RIGHT.Success) { Console.Out.WriteLine("canFix down right match"); }//end
+                //if (UP_LEFT_n.Success) { Console.Out.WriteLine("canFix_n up left match"); }//end
+                // if (UP_RIGHT_n.Success) { Console.Out.WriteLine("canFix_n up right match"); }//end
+                // if (DOWN_LEFT_n.Success) { Console.Out.WriteLine("canFix_n down left match"); }//end
+                // if (DOWN_RIGHT_n.Success) { Console.Out.WriteLine("canFix_n down right match"); }//end
+            }//end if more than five passed
+            else
+            {
+                canFix = false;
+                Console.Out.WriteLine("Not isFixable");
+            }
+            return canFix;
+        }//end is fixable
+
 
         public void setAnsToPans()
         {
@@ -247,6 +395,110 @@ namespace CloudCoinCore
                 return fullPan;
             }
         }
+
+        public void recordPown()
+        {
+            //records the last pown so we can see if there are improvments
+            pastPown = pown;
+        }//end record pown
+
+        public void sortToFolder()
+        {
+            //figures out which folder to put it in. 
+            if (isPerfect())
+            {
+                folder = folder = RAIDA.GetInstance().FS.BankFolder;
+                //folder = Folder.Bank;
+                return;
+            }//if is perfect
+
+            if (isCounterfeit())
+            {
+                folder = RAIDA.GetInstance().FS.CounterfeitFolder;
+                //folder = Folder.Counterfeit;
+                return;
+            }//if is counterfeit
+
+
+            if (!isFracked())
+            {
+                folder = RAIDA.GetInstance().FS.BankFolder;
+                return;
+            }//if is has no failes but some undetected but is gradable
+
+            //--------------------------------------
+            /*Now look  at fracked coins*/
+
+
+
+            if (isDangerous())//Previous owner could try to take it back. 
+            {
+
+                if (!isFixable())
+                {
+                    folder = RAIDA.GetInstance().FS.CounterfeitFolder;
+
+                    return;
+                }//end if not fixable
+            }
+            else
+            {
+                if (isFixable())
+                {
+                    folder = RAIDA.GetInstance().FS.FrackedFolder;
+                    return;
+                }//end if not fixable 
+            }//end if is dangerous
+
+
+
+            recordPown();
+            folder = RAIDA.GetInstance().FS.DangerousFolder;
+            //folder = Folder.Dangerous;//If you get down here, the coin is dangerous and needs to be defracked then detected again.
+
+            if (!isGradablePass())
+            {
+                if (noResponses())
+                {
+                    folder = RAIDA.GetInstance().FS.LostFolder;
+                    //folder = Folder.Lost;
+                    return;
+                }//end no responses
+                folder = RAIDA.GetInstance().FS.SuspectFolder;
+                //folder = Folder.Suspect;
+                return;
+            }//if is gradable
+        }//end sort folder
+
+        public bool noResponses()
+        {
+            //Does the coin have no-responses from the RIDA. This means the RAIDA may be using its PAN or AN
+            //These must be fixed in a special way using both.  
+            bool returnTruth = false;
+            if (charCount(pown, 'n') > 0)
+            {
+                returnTruth = true;
+            }
+            return returnTruth;
+        }//end is fracked
+
+
+        public bool isGradablePass()
+        {
+            //The coin is considered ungradable if it does not get more than 19 RAIDA available
+            bool returnTruth = false;
+            if (charCount(pown, 'f') + charCount(pown, 'p') > 16 && isFixable())
+            {
+                returnTruth = true;
+                Console.Out.WriteLine("isGradable");
+            }
+            else
+            {
+                Console.Out.WriteLine("Not isGradable");
+            }
+            return returnTruth;
+        }//end is gradable pass
+
 
         public String[] grade()
         {

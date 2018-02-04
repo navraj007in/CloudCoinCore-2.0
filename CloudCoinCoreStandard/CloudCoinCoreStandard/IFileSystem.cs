@@ -27,6 +27,7 @@ namespace CloudCoinCore
         public string LanguageFolder { get; set; }
         public string PreDetectFolder { get; set; }
         public string RequestsFolder { get; set; }
+        public string DangerousFolder { get; set; }
 
         //public abstract IFileSystem(string path);
 

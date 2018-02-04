@@ -46,6 +46,7 @@ namespace CloudCoinClient.CoreClasses
             PreDetectFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_PREDETECT + Path.DirectorySeparatorChar;
             LostFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_LOST + Path.DirectorySeparatorChar;
             RequestsFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_REQUESTS + Path.DirectorySeparatorChar;
+            DangerousFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_DANGEROUS + Path.DirectorySeparatorChar;
 
         }
         public override bool CreateFolderStructure()
@@ -79,6 +80,7 @@ namespace CloudCoinClient.CoreClasses
                 Directory.CreateDirectory(LanguageFolder);
                 Directory.CreateDirectory(PreDetectFolder);
                 Directory.CreateDirectory(RequestsFolder);
+                Directory.CreateDirectory(DangerousFolder);
             }
             catch (Exception e)
             {
@@ -222,7 +224,7 @@ namespace CloudCoinClient.CoreClasses
             }
         }
 
-        public void WriteStackToFile(IEnumerable<CloudCoin> coins,string fileName)
+        public void WriteCoinsToFile(IEnumerable<CloudCoin> coins,string fileName)
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
