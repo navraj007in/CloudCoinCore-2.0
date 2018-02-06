@@ -7,6 +7,7 @@ using CloudCoinCore;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Reflection;
 
 namespace CloudCoinClient.CoreClasses
 {
@@ -57,6 +58,29 @@ namespace CloudCoinClient.CoreClasses
             //return true;
         }
 
+        public void CopyTemplates()
+        {
+            string[] fileNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            foreach (String fileName in fileNames)
+            {
+                if (fileName.Contains("jpeg") || fileName.Contains("jpg"))
+                {
+                    try
+                    {
+                        string outputpath = Properties.Settings.Default.WorkSpace + "Templates" + System.IO.Path.DirectorySeparatorChar + fileName.Substring(26);
+                        //updateLog(outputpath);
+                        using (FileStream fileStream = File.Create(outputpath))
+                        {
+                            Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName).CopyTo(fileStream);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+        }
 
         public bool CreateDirectories()
         {

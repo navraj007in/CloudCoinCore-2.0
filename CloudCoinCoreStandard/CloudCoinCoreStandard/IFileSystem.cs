@@ -6,6 +6,7 @@ using System.Linq;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Reflection;
 
 namespace CloudCoinCore
 {
@@ -60,6 +61,7 @@ namespace CloudCoinCore
             return folderCoins;
         }
 
+       
         public List<FileInfo> LoadFiles(string folder)
         {
             List<FileInfo> fileInfos = new List<FileInfo>();

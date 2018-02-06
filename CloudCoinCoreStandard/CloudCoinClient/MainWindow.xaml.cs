@@ -47,6 +47,7 @@ namespace CloudCoinClient
 
             // Create the Folder Structure
             FS.CreateFolderStructure();
+            FS.CopyTemplates();
             // Populate RAIDA Nodes
             raida = RAIDA.GetInstance();
             raida.FS = FS;
@@ -76,6 +77,9 @@ namespace CloudCoinClient
         private async void cmdEcho_Click(object sender, RoutedEventArgs e)
         {
             var echos = raida.GetEchoTasks();
+            txtProgress.AppendText("Starting Echo to RAIDA\n");
+            txtProgress.AppendText("----------------------------------\n");
+
             await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
             MessageBox.Show("Finished Echo");
             lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
@@ -83,9 +87,10 @@ namespace CloudCoinClient
 
             for (int i = 0; i < raida.nodes.Count(); i++)
             {
+                txtProgress.AppendText("Node " + i + " Status --" + raida.nodes[i].RAIDANodeStatus+"\n");
                 Debug.WriteLine("Node"+ i +" Status --" + raida.nodes[i].RAIDANodeStatus);
             }
-            Debug.WriteLine("-----------------------------------");
+            Debug.WriteLine("-----------------------------------\n");
         }
 
         public event EventHandler CoinDetected;
@@ -180,13 +185,20 @@ namespace CloudCoinClient
                         int countf = coin.response.Where(x => x.outcome == "fail").Count();
                         coin.PassCount = countp;
                         coin.FailCount = countf;
+                        CoinCount++;
+
+                        txtProgress.AppendText("No. " + CoinCount +". Coin Deteced. S. No. - " + coin.sn + ". Pass Count - " + coin.PassCount + ". Fail Count  - " + coin.FailCount + ". Result - " + coin.DetectionResult+".\n");
                         Debug.WriteLine("Coin Deteced. S. No. - " + coin.sn + ". Pass Count - " + coin.PassCount + ". Fail Count  - " + coin.FailCount + ". Result - " + coin.DetectionResult);
-                        coin.sortToFolder();
+                        //coin.sortToFolder();
+                        pge.MinorProgress = (CoinCount ) * 100 / totalCoinCount;
+                        bar1.Value = pge.MinorProgress;
+                        Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
+                        raida.OnProgressChanged(pge);
                         j++;
-                       
                     }
-                    CoinCount+=j;
+                    //CoinCount+=j;
                     pge.MinorProgress = (CoinCount-1) * 100 / totalCoinCount;
+                    //bar1.Value = pge.MinorProgress;
                     Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
                     raida.OnProgressChanged(pge);
                     FS.writeCoin(coins, FS.DetectedFolder);
@@ -199,25 +211,35 @@ namespace CloudCoinClient
 
                 
             }
+
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
+            //foreach (var coin in detectedCoins)
+            //{
+            //    coin.sortToFolder();
+            //}
+            detectedCoins.ForEach(x => x.sortToFolder());
+            foreach(var coin in detectedCoins)
+            {
+                Debug.WriteLine(coin.sn + "-" + coin.pown + "-" + coin.folder);
+            }
             var passedCoins = (from x in detectedCoins
-                               where x.DetectionResult == "Pass"
+                               where x.folder == FS.BankFolder
                                select x).ToList();
 
             var failedCoins = (from x in detectedCoins
-                               where x.DetectionResult == "Fail"
+                               where x.folder== FS.CounterfeitFolder
                                select x).ToList();
 
             Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
             Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
-            
-            foreach(var coin in detectedCoins)
-            {
+            txtProgress.AppendText("Coin Detection finished.\n");
+            txtProgress.AppendText("Total Passed Coins - " + passedCoins.Count() +"\n");
+            txtProgress.AppendText("Total Failed Coins - " + failedCoins.Count() + "\n") ;
 
-            }
-            //FS.moveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
-            //FS.writeCoin(failedCoins, FS.CounterfeitFolder,true);
-            //FS.RemoveCoins(failedCoins, FS.DetectedFolder);
+
+            FS.moveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
+            FS.writeCoin(failedCoins, FS.CounterfeitFolder,true);
+            FS.RemoveCoins(failedCoins, FS.DetectedFolder);
 
             //FileSystem.detectedCoins = FS.LoadFolderCoins(FS.RootPath + System.IO.Path.DirectorySeparatorChar + FS.DetectedFolder);
             after = DateTime.Now;
@@ -225,13 +247,21 @@ namespace CloudCoinClient
 
         cmdMultiDetect.IsEnabled = true;
             Debug.WriteLine("Detection Completed in - " + ts.TotalMilliseconds/1000);
+            txtProgress.AppendText("Detection Completed in - " + ts.TotalMilliseconds / 1000);
+
         }
 
         private void Raida_ProgressChanged(object sender, EventArgs e)
         {
             ProgressChangedEventArgs pge = (ProgressChangedEventArgs)e;
 
-            txtProgress.Text += "Progress Detected - " + pge.MinorProgress + "\n";
+            //txtProgress.Text += "Progress Detected - " + pge.MinorProgress + "\n";
+            lblProgress.Content = String.Format("Progress Status : %d %", pge.MinorProgress);
+        }
+
+        private void txtProgress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txtProgress.ScrollToEnd();
         }
     }
 }

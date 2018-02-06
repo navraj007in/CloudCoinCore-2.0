@@ -25,7 +25,7 @@ namespace CloudCoinClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\NewCoins")]
         public string WorkSpace {
             get {
                 return ((string)(this["WorkSpace"]));

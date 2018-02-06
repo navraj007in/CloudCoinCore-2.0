@@ -86,6 +86,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NoteUserControl.xaml.cs">
+      <DependentUpon>NoteUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressEventArgs.cs" />
+    <Compile Include="UserControls\ColorToSCBrushConverter.cs" />
+    <Compile Include="UserControls\ImageButton.cs" />
+    <Compile Include="UserControls\IncrementUserControl.xaml.cs">
+      <DependentUpon>IncrementUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Led.xaml.cs">
+      <DependentUpon>Led.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\WidthToBorderThickConverter.cs" />
+    <Page Include="CloudCoinWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,12 +111,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CloudCoinWindow.xaml.cs">
+      <DependentUpon>CloudCoinWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="CoreClasses\FileSystem.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NoteUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\IncrementUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\Led.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -133,6 +165,182 @@
       <Project>{f8ca76b1-e464-4ff8-acd3-0e28c10b0ce1}</Project>
       <Name>CloudCoinCoreStandard</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Addicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Addicon_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Addicon_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\android-chrome-512x512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\android-chrome-512x512_131495165950459079.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Backupicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Backupicon_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Backupicon_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\btnUpDown1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\btnUpDown2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\btnUpDown3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\btnUpDown4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\c100.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\c25.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\c250.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cloudcoinheader.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\CloudCoinLogo2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dollar.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Foldericon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Foldericon_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Foldericon_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Footer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\jpeg1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\jpeg100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\jpeg25.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\jpeg250.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\jpeg5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\layer_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\layer_100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\layer_25_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\layer_250.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\layer_5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Logopart1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Logopart1_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Membershipicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Moneyband.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Moneyband_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Moneyband_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Moneyband_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Moneyband_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Privacyicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Refreshicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Refreshicon_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Refreshicon_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Settingsicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg100.2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg100.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg25.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg250.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\jpeg5.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
