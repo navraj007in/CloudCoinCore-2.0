@@ -175,29 +175,45 @@
             <ProgressBar x:Name="bar1" Value ="0"  Maximum="100" Margin="10,10"></ProgressBar>
             <ProgressBar x:Name="bar2" Value="0" Maximum="100" Margin="10,10"></ProgressBar>
             <StackPanel Orientation="Horizontal">
-                <Label Content="1s"/>
-                <Label Content="5s"/>
-                <Label Content="25s"/>
-                <Label Content="100s"/>
-                <Label Content="250s"/>
-
-
+                <Label Width="60" Content="1s"/>
+                <Label Width="60" Content="5s"/>
+                <Label Width="60" Content="25s"/>
+                <Label Width="60" Content="100s"/>
+                <Label Width="60" Content="250s"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label x:Name="lblOnesCount" Content="0"/>
-                <Label x:Name="lblFivesCount" Content="0"/>
-                <Label x:Name="lblQtrsCount"  Content="0"/>
-                <Label x:Name="lblHundredsCount" Content="0"/>
-                <Label x:Name="lblTwoFiftiesCount" Content="0"/>
-
-
+                <Label x:Name="lblOnesCount" Width="60" Content="0"/>
+                <Label x:Name="lblFivesCount" Width="60" Content="0"/>
+                <Label x:Name="lblQtrsCount" Width="60" Content="0"/>
+                <Label x:Name="lblHundredsCount" Width="60" Content="0"/>
+                <Label x:Name="lblTwoFiftiesCount" Width="60" Content="0"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label x:Name="lblOnes" Content="0"/>
-                <Label x:Name="lblFives" Content="0"/>
-                <Label x:Name="lblQtrs"  Content="0"/>
-                <Label x:Name="lblHundreds" Content="0"/>
-                <Label x:Name="lblTwoFifties" Content="0"/>
+                <Label x:Name="lblOnes" Width="60" Content="0"/>
+                <Label x:Name="lblFives" Width="60" Content="0"/>
+                <Label x:Name="lblQtrs"  Width="60" Content="0"/>
+                <Label x:Name="lblHundreds" Width="60" Content="0"/>
+                <Label x:Name="lblTwoFifties" Width="60" Content="0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="10,10" Content="Export Coins"></Label>
+                <RadioButton Margin="10,10" x:Name="rdbJpeg" Content="Jpeg"></RadioButton>
+                <RadioButton Margin="10,10" x:Name="rdbStack" Content="Stack"></RadioButton>
+                <Button x:Name="cmdExport" Content="Export" Width="100" Margin="20,10" Click="cmdExport_Click"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="60" Content="1s"/>
+                <Label Width="60" Content="5s"/>
+                <Label Width="60" Content="25s"/>
+                <Label Width="60" Content="100s"/>
+                <Label Width="60" Content="250s"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="0" Width="60" x:Name="txtExportOne"/>
+                <TextBox Text="0" Width="60" x:Name="txtExportFive"/>
+                <TextBox Text="0" Width="60" x:Name="txtExportQtr"/>
+                <TextBox Text="0" Width="60" x:Name="txtExportHundred"/>
+                <TextBox Text="0" Width="60" x:Name="txtExportTwoFifties"/>
 
 
             </StackPanel>

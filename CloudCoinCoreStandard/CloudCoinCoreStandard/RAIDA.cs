@@ -20,6 +20,10 @@ namespace CloudCoinCore
         public CloudCoin coin;
         public IEnumerable<CloudCoin> coins;
         public MultiDetectRequest multiRequest;
+
+        // Singleton Pattern implemented using private constructor 
+        // This allows only one instance of RAIDA per application
+
         private RAIDA()
         {
             for(int i = 0; i < Config.NodeCount; i++)
@@ -167,6 +171,8 @@ namespace CloudCoinCore
         }//end detect coin
 
         public event EventHandler ProgressChanged;
+        public int ReadyCount { get { return nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count(); } }
+        public int NotReadyCount { get { return nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count(); } }
 
         public virtual void OnProgressChanged(ProgressChangedEventArgs e)
         {

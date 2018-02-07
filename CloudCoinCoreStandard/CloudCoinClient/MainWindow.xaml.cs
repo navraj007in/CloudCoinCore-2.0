@@ -38,10 +38,12 @@ namespace CloudCoinClient
         public MainWindow()
         {
             InitializeComponent();
+            //Disable UI controls before  File system is loaded in memory.
             App.Current.Dispatcher.Invoke(delegate
             {
                 disableUI();
             });
+            // Load the Coins File system in Memory
             new Thread(delegate () {
                 Setup();
             }).Start();
@@ -107,8 +109,8 @@ namespace CloudCoinClient
 
         private void cmdShow_Click(object sender, RoutedEventArgs e)
         {
-            lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
-            lblNotReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count();
+            lblReady.Content = raida.ReadyCount;
+            lblNotReady.Content = raida.NotReadyCount;
         }
 
         private async void cmdEcho_Click(object sender, RoutedEventArgs e)
@@ -118,9 +120,9 @@ namespace CloudCoinClient
             txtProgress.AppendText("----------------------------------\n");
 
             await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
-            MessageBox.Show("Finished Echo");
-            lblReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count();
-            lblNotReady.Content = raida.nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count();
+            //MessageBox.Show("Finished Echo");
+            lblReady.Content = raida.ReadyCount;
+            lblNotReady.Content = raida.NotReadyCount;
 
             for (int i = 0; i < raida.nodes.Count(); i++)
             {
@@ -128,6 +130,7 @@ namespace CloudCoinClient
                 Debug.WriteLine("Node"+ i +" Status --" + raida.nodes[i].RAIDANodeStatus);
             }
             Debug.WriteLine("-----------------------------------\n");
+            txtProgress.AppendText("----------------------------------\n");
         }
 
         public event EventHandler CoinDetected;
@@ -276,6 +279,7 @@ namespace CloudCoinClient
             Debug.WriteLine("Detection Completed in - " + ts.TotalMilliseconds / 1000);
             updateLog("Detection Completed in - " + ts.TotalMilliseconds / 1000);
 
+            
             App.Current.Dispatcher.Invoke(delegate
             {
                 enableUI();
@@ -532,6 +536,11 @@ namespace CloudCoinClient
             }
 
             //backup();
+        }
+
+        private void cmdExport_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
