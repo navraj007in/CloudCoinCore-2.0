@@ -35,6 +35,15 @@ namespace CloudCoinClient
         int hundredsCount = 0;
         int twoFiftiesCount = 0;
 
+        public static int exportOnes = 0;
+        public static int exportFives = 0;
+        public static int exportTens = 0;
+        public static int exportQtrs = 0;
+        public static int exportHundreds = 0;
+        public static int exportTwoFifties = 0;
+        public static int exportJpegStack = 2;
+        public static string exportTag = "";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -429,6 +438,84 @@ namespace CloudCoinClient
             lblTwoFifties.Content = twoFiftiesCount * 250;
         }
 
+        public void export()
+        {
+            if (rdbJpeg.IsChecked == true)
+                exportJpegStack = 1;
+            else
+                exportJpegStack = 2;
+
+            //Banker bank = new Banker(fileUtils);
+            //int[] bankTotals = bank.countCoins(fileUtils.bankFolder);
+            //int[] frackedTotals = bank.countCoins(fileUtils.frackedFolder);
+            //int[] partialTotals = bank.countCoins(fileUtils.partialFolder);
+
+            ////updateLog("  Your Bank Inventory:");
+            //int grandTotal = (bankTotals[0] + frackedTotals[0] + partialTotals[0]);
+            // state how many 1, 5, 25, 100 and 250
+            int exp_1 = Convert.ToInt16(txtExportOne.Text);
+            int exp_5 = Convert.ToInt16(txtExportFive.Text);
+            int exp_25 = Convert.ToInt16(txtExportQtr.Text);
+            int exp_100 = Convert.ToInt16(txtExportHundred.Text);
+            int exp_250 = Convert.ToInt16(txtExportTwoFifties.Text);
+
+            ////Warn if too many coins
+
+            if (exp_1 + exp_5 + exp_25 + exp_100 + exp_250 == 0)
+            {
+                MessageBox.Show("Can not export 0 Coins.", "Export CloudCoins");
+                updateLog("Can not export 0 coins\n");
+                return;
+            }
+
+            ////updateLog(Convert.ToString(bankTotals[1] + frackedTotals[1] + bankTotals[2] + frackedTotals[2] + bankTotals[3] + frackedTotals[3] + bankTotals[4] + frackedTotals[4] + bankTotals[5] + frackedTotals[5] + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]));
+
+            //if (((bankTotals[1] + frackedTotals[1]) + (bankTotals[2] + frackedTotals[2]) + (bankTotals[3] + frackedTotals[3]) + (bankTotals[4] + frackedTotals[4]) + (bankTotals[5] + frackedTotals[5]) + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]) > 1000)
+            //{
+            //    Console.ForegroundColor = ConsoleColor.Red;
+            //    Console.Out.WriteLine("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
+            //    Console.Out.WriteLine("Do not export stack files with more than 1000 notes. .");
+            //    //updateLog("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
+            //    //updateLog("Do not export stack files with more than 1000 notes. .");
+
+            //    Console.ForegroundColor = ConsoleColor.White;
+            //}//end if they have more than 1000 coins
+
+            //Console.Out.WriteLine("  Do you want to export your CloudCoin to (1)jpgs or (2) stack (JSON) file?");
+            int file_type = 0; //reader.readInt(1, 2);
+
+
+
+
+
+            Exporter exporter = new Exporter(FS);
+            //exporter.OnUpdateStatus += Exporter_OnUpdateStatus; ;
+            file_type = exportJpegStack;
+
+            String tag = txtTag.Text;// reader.readString();
+            ////Console.Out.WriteLine(("Exporting to:" + exportFolder));
+
+            if (file_type == 1)
+            {
+                exporter.writeJPEGFiles(exp_1, exp_5, exp_25, exp_100, exp_250, tag);
+                // stringToFile( json, "test.txt");
+            }
+            else
+            {
+                exporter.writeJSONFile(exp_1, exp_5, exp_25, exp_100, exp_250, tag);
+            }
+
+
+            //// end if type jpge or stack
+
+            //RefreshCoins?.Invoke(this, new EventArgs());
+            ////updateLog("Exporting CloudCoins Completed.");
+            //showCoins();
+            //Process.Start(fileUtils.exportFolder);
+            //cmdExport.Content = "₡0";
+            System.Windows.Forms.MessageBox.Show("Export completed.", "Cloudcoins", System.Windows.Forms.MessageBoxButtons.OK);
+        }// end export One
+
         public void export(string backupDir)
         {
 
@@ -497,7 +584,6 @@ namespace CloudCoinClient
             int[] frackedTotals = bank.countCoins(FS.FrackedFolder);
             int[] partialTotals = bank.countCoins(FS.PartialFolder);
 
-
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
 
@@ -540,6 +626,49 @@ namespace CloudCoinClient
 
         private void cmdExport_Click(object sender, RoutedEventArgs e)
         {
+            export();
+        }
+
+        private void cmdListSerials_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                dialog.SelectedPath = FS.RootPath;
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    var csv = new StringBuilder();
+                    var coins = FS.LoadFolderCoins(dialog.SelectedPath).OrderBy(x=>x.sn);
+
+                    var headerLine = string.Format("sn,denomination,");
+                    string headeranstring = "";
+                    for (int i = 0; i < CloudCoinCore.Config.NodeCount; i++)
+                    {
+                        headeranstring += "an" + (i+1) + ",";
+                    }
+
+                    csv.AppendLine(headerLine + headeranstring);
+
+                    foreach (var coin in coins)
+                    {
+                        string anstring = "";
+                        for(int i=0;i<CloudCoinCore.Config.NodeCount;i++)
+                        {
+                            anstring += coin.an[i] + ",";
+                        }
+                        var newLine = string.Format("{0},{1},{2}", coin.sn, coin.denomination,anstring);
+                        csv.AppendLine(newLine);
+
+                    }
+                    //in your loop
+                    File.WriteAllText(dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "coins" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() + ".csv", csv.ToString());
+                    Process.Start(dialog.SelectedPath);
+                    //after your loop
+                    //Save the Coins to File system
+                    //FS.WriteCoinsToFile(bankCoins, dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower());
+                    //MessageBox.Show("Backup completed successfully.");
+                }
+            }
 
         }
     }

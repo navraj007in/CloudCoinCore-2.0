@@ -172,6 +172,7 @@ namespace CloudCoinCore
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
                         CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        //coinNote = fileSystem.loa
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = partialFileName;
