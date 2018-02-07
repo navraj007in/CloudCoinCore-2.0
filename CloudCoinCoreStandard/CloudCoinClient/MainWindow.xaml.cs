@@ -16,6 +16,8 @@ using CloudCoinClient.CoreClasses;
 using CloudCoinCore;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
+using System.IO;
 
 namespace CloudCoinClient
 {
@@ -27,6 +29,12 @@ namespace CloudCoinClient
         string RootPath;
         FileSystem FS ;
         RAIDA raida;
+        int onesCount = 0;
+        int fivesCount = 0;
+        int qtrCount = 0;
+        int hundredsCount = 0;
+        int twoFiftiesCount = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -84,6 +92,7 @@ namespace CloudCoinClient
 
             App.Current.Dispatcher.Invoke(delegate
             {
+                ShowCoins();
                 enableUI();
             });
 
@@ -316,5 +325,213 @@ namespace CloudCoinClient
 
         }
 
+        private void cmdWorkspace_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    string sMessageBoxText = "Do you want to Change CloudCoin Folder?";
+                    string sCaption = "Change Directory";
+
+                    MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                    MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                    MessageBoxResult rsltMessageBox = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+
+                    switch (rsltMessageBox)
+                    {
+                        case MessageBoxResult.Yes:
+                            /* ... */
+                            // lblDirectory.Text = dialog.SelectedPath;
+                            Properties.Settings.Default.WorkSpace = dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar;
+                            Properties.Settings.Default.Save();
+                            FS.RootPath = Properties.Settings.Default.WorkSpace;
+                            FS.CreateFolderStructure();
+                            //FileUtils fileUtils = FileUtils.GetInstance(Properties.Settings.Default.WorkSpace);
+                            //fileUtils.CreateDirectoryStructure();
+                            string[] fileNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+                            foreach (String fileName in fileNames)
+                            {
+                                if (fileName.Contains("jpeg"))
+                                {
+                                    try
+                                    {
+                                        string outputpath = Properties.Settings.Default.WorkSpace + "Templates" + System.IO.Path.DirectorySeparatorChar + fileName.Substring(22);
+                                        using (FileStream fileStream = File.Create(outputpath))
+                                        {
+                                            Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName).CopyTo(fileStream);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                    }
+                                }
+                            }
+                            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                            Application.Current.Shutdown();
+                            break;
+
+                        case MessageBoxResult.No:
+                            /* ... */
+                            break;
+
+                        case MessageBoxResult.Cancel:
+                            /* ... */
+                            break;
+                    }
+                }
+            }
+
+
+        }
+
+        private void ShowCoins()
+        {
+            var bankCoins = FS.LoadFolderCoins(FS.BankFolder);
+            var frackedCoins = FS.LoadFolderCoins(FS.FrackedFolder);
+
+            bankCoins.AddRange(frackedCoins);
+
+            onesCount = (from x in bankCoins
+                         where x.denomination == 1
+                         select x).Count();
+            fivesCount = (from x in bankCoins
+                         where x.denomination == 5
+                         select x).Count();
+            qtrCount = (from x in bankCoins
+                         where x.denomination == 25
+                         select x).Count();
+            hundredsCount = (from x in bankCoins
+                         where x.denomination == 100
+                         select x).Count();
+            twoFiftiesCount = (from x in bankCoins
+                         where x.denomination == 250
+                         select x).Count();
+
+
+            lblOnesCount.Content = onesCount;
+            lblFivesCount.Content = fivesCount;
+            lblQtrsCount.Content = qtrCount;
+            lblHundredsCount.Content = hundredsCount;
+            lblTwoFiftiesCount.Content = twoFiftiesCount;
+
+            lblOnes.Content = onesCount;
+            lblFives.Content = fivesCount * 5;
+            lblQtrs.Content = qtrCount * 25;
+            lblHundreds.Content = hundredsCount * 100;
+            lblTwoFifties.Content = twoFiftiesCount * 250;
+        }
+
+        public void export(string backupDir)
+        {
+
+
+            Banker bank = new Banker(FS);
+            int[] bankTotals = bank.countCoins(FS.BankFolder);
+            int[] frackedTotals = bank.countCoins(FS.FrackedFolder);
+            int[] partialTotals = bank.countCoins(FS.PartialFolder);
+
+            //updateLog("  Your Bank Inventory:");
+            int grandTotal = (bankTotals[0] + frackedTotals[0] + partialTotals[0]);
+            // state how many 1, 5, 25, 100 and 250
+            int exp_1 = bankTotals[1] + frackedTotals[1] + partialTotals[1];
+            int exp_5 = bankTotals[2] + frackedTotals[2] + partialTotals[2];
+            int exp_25 = bankTotals[3] + frackedTotals[3] + partialTotals[3];
+            int exp_100 = bankTotals[4] + frackedTotals[4] + partialTotals[4];
+            int exp_250 = bankTotals[5] + frackedTotals[5] + partialTotals[5];
+            //Warn if too many coins
+
+            if (exp_1 + exp_5 + exp_25 + exp_100 + exp_250 == 0)
+            {
+                Console.WriteLine("Can not export 0 coins");
+                return;
+            }
+
+            //updateLog(Convert.ToString(bankTotals[1] + frackedTotals[1] + bankTotals[2] + frackedTotals[2] + bankTotals[3] + frackedTotals[3] + bankTotals[4] + frackedTotals[4] + bankTotals[5] + frackedTotals[5] + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]));
+
+            if (((bankTotals[1] + frackedTotals[1]) + (bankTotals[2] + frackedTotals[2]) + (bankTotals[3] + frackedTotals[3]) + (bankTotals[4] + frackedTotals[4]) + (bankTotals[5] + frackedTotals[5]) + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]) > 1000)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
+                Console.Out.WriteLine("Do not export stack files with more than 1000 notes. .");
+                //updateLog("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
+                //updateLog("Do not export stack files with more than 1000 notes. .");
+
+                Console.ForegroundColor = ConsoleColor.White;
+            }//end if they have more than 1000 coins
+
+            Console.Out.WriteLine("  Do you want to export your CloudCoin to (1)jpgs or (2) stack (JSON) file?");
+            Exporter exporter = new Exporter(FS);
+
+            String tag = "backup";// reader.readString();
+                                  //Console.Out.WriteLine(("Exporting to:" + exportFolder));
+
+            exporter.writeJSONFile(exp_1, exp_5, exp_25, exp_100, exp_250, tag, 1, backupDir);
+
+
+            //end if type jpge or stack
+
+
+
+
+            //MessageBox.Show("Export completed.", "Cloudcoins", MessageBoxButtons.OK);
+        }// end export One
+
+
+        private void cmdShowFolders_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(FS.RootPath);
+        }
+
+        private void backup()
+        {
+            Banker bank = new Banker(FS);
+            int[] bankTotals = bank.countCoins(FS.BankFolder);
+            int[] frackedTotals = bank.countCoins(FS.FrackedFolder);
+            int[] partialTotals = bank.countCoins(FS.PartialFolder);
+
+
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    export(dialog.SelectedPath);
+                    //copyFolders(dialog.SelectedPath);
+                    MessageBox.Show("Backup completed successfully.");
+                }
+            }
+
+        }
+
+        private void cmdBackup_Click(object sender, RoutedEventArgs e)
+        {
+            // Load Bank, Fracked and Partial coins
+            var bankCoins = FS.LoadFolderCoins(FS.BankFolder);
+            var frackedCoins = FS.LoadFolderCoins(FS.FrackedFolder);
+            var partialCoins = FS.LoadFolderCoins(FS.PartialFolder);
+
+            // Add them all up in a single list for backup
+            bankCoins.AddRange(frackedCoins);
+            bankCoins.AddRange(partialCoins);
+
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    //Save the Coins to File system
+                    FS.WriteCoinsToFile(bankCoins,dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() );
+                    MessageBox.Show("Backup completed successfully.");
+                }
+            }
+
+            //backup();
+        }
     }
 }

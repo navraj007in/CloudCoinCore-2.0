@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Reflection;
+using SkiaSharp;
 
 namespace CloudCoinCore
 {
@@ -202,9 +203,10 @@ namespace CloudCoinCore
 
             json += quote + "]," + Environment.NewLine;//"],
             // End of ans
-            CoinUtils cu = new CoinUtils(cc);
-            cu.calcExpirationDate();
-            json += tab + tab + quote + "ed" + quote + ":" + quote + cu.cc.ed + quote + "," + Environment.NewLine; // "ed":"9-2016",
+            //CoinUtils cu = new CoinUtils(cc);
+            //cu.calcExpirationDate();
+            cc.calcExpirationDate();
+            json += tab + tab + quote + "ed" + quote + ":" + quote + cc.ed + quote + "," + Environment.NewLine; // "ed":"9-2016",
             if (string.IsNullOrEmpty(cc.pown)) { cc.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu"; }//Set pown to unknow if it is not set. 
             json += tab + tab + quote + "pown" + quote + ":" + quote + cc.pown + quote + "," + Environment.NewLine;// "pown":"uuupppppffpppppfuuf",
             json += tab + tab + quote + "aoid" + quote + ": []" + Environment.NewLine;
@@ -221,6 +223,110 @@ namespace CloudCoinCore
                 pos = str.IndexOf(substr, pos + 1);
             return pos;
         }
+
+        public bool writeJpeg(CloudCoin cc, string tag)
+        {
+            // Console.Out.WriteLine("Writing jpeg " + cc.sn);
+
+          //  CoinUtils cu = new CoinUtils(cc);
+
+            bool fileSavedSuccessfully = true;
+
+            /* BUILD THE CLOUDCOIN STRING */
+            String cloudCoinStr = "01C34A46494600010101006000601D05"; //THUMBNAIL HEADER BYTES
+            for (int i = 0; (i < 25); i++)
+            {
+                cloudCoinStr = cloudCoinStr + cc.an[i];
+            } // end for each an
+
+            //cloudCoinStr += "204f42455920474f4420262044454645415420545952414e545320";// Hex for " OBEY GOD & DEFEAT TYRANTS "
+            //cloudCoinStr += "20466f756e6465727320372d352d3137";// Founders 7-5-17
+            cloudCoinStr += "4c6976652046726565204f7220446965";// Live Free or Die
+            cloudCoinStr += "00000000000000000000000000";//Set to unknown so program does not export user data
+                                                         // for (int i =0; i < 25; i++) {
+                                                         //     switch () { }//end switch pown char
+                                                         // }//end for each pown
+            cloudCoinStr += "00"; // HC: Has comments. 00 = No
+            cc.calcExpirationDate();
+            cloudCoinStr += cc.edHex; // 01;//Expiration date Sep 2016 (one month after zero month)
+            cloudCoinStr += "01";//  cc.nn;//network number
+            String hexSN = cc.sn.ToString("X6");
+            String fullHexSN = "";
+            switch (hexSN.Length)
+            {
+                case 1: fullHexSN = ("00000" + hexSN); break;
+                case 2: fullHexSN = ("0000" + hexSN); break;
+                case 3: fullHexSN = ("000" + hexSN); break;
+                case 4: fullHexSN = ("00" + hexSN); break;
+                case 5: fullHexSN = ("0" + hexSN); break;
+                case 6: fullHexSN = hexSN; break;
+            }
+            cloudCoinStr = (cloudCoinStr + fullHexSN);
+            /* BYTES THAT WILL GO FROM 04 to 454 (Inclusive)*/
+            byte[] ccArray = this.hexStringToByteArray(cloudCoinStr);
+
+
+            /* READ JPEG TEMPLATE*/
+            byte[] jpegBytes = null;
+            switch (cc.getDenomination())
+            {
+                case 1: jpegBytes = readAllBytes(this.TemplateFolder + "jpeg1.jpg"); break;
+                case 5: jpegBytes = readAllBytes(this.TemplateFolder + "jpeg5.jpg"); break;
+                case 25: jpegBytes = readAllBytes(this.TemplateFolder + "jpeg25.jpg"); break;
+                case 100: jpegBytes = readAllBytes(this.TemplateFolder + "jpeg100.jpg"); break;
+                case 250: jpegBytes = readAllBytes(this.TemplateFolder + "jpeg250.jpg"); break;
+            }// end switch
+
+
+            /* WRITE THE SERIAL NUMBER ON THE JPEG */
+
+            //Bitmap bitmapimage;
+            SKBitmap bitmapimage;
+            //using (var ms = new MemoryStream(jpegBytes))
+            {
+
+                //bitmapimage = new Bitmap(ms);
+                bitmapimage = SKBitmap.Decode(jpegBytes);
+            }
+            SKCanvas canvas = new SKCanvas(bitmapimage);
+            //Graphics graphics = Graphics.FromImage(bitmapimage);
+            //graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            //graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            SKPaint textPaint = new SKPaint()
+            {
+                IsAntialias = true,
+                Color = SKColors.White,
+                TextSize = 14,
+                Typeface = SKTypeface.FromFamilyName("Arial")
+            };
+            //PointF drawPointAddress = new PointF(30.0F, 25.0F);
+
+            canvas.DrawText(String.Format("{0:N0}", cc.sn) + " of 16,777,216 on Network: 1", 30, 40, textPaint);
+            //graphics.DrawString(String.Format("{0:N0}", cc.sn) + " of 16,777,216 on Network: 1", new Font("Arial", 10), Brushes.White, drawPointAddress);
+
+            //ImageConverter converter = new ImageConverter();
+            //byte[] snBytes = (byte[])converter.ConvertTo(bitmapimage, typeof(byte[]));
+            SKImage image = SKImage.FromBitmap(bitmapimage);
+            SKData data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
+            byte[] snBytes = data.ToArray();
+
+            List<byte> b1 = new List<byte>(snBytes);
+            List<byte> b2 = new List<byte>(ccArray);
+            b1.InsertRange(4, b2);
+
+            if (tag == "random")
+            {
+                Random r = new Random();
+                int rInt = r.Next(100000, 1000000); //for ints
+                tag = rInt.ToString();
+            }
+
+            string fileName = ExportFolder + cc.FileName + tag + ".jpg";
+            File.WriteAllBytes(fileName, b1.ToArray());
+            Console.Out.WriteLine("Writing to " + fileName);
+            //CoreLogger.Log("Writing to " + fileName);
+            return fileSavedSuccessfully;
+        }//end write JPEG
 
         public string bytesToHexString(byte[] data)
         {
@@ -249,5 +355,123 @@ namespace CloudCoinCore
             }
             return (char)((i - 10) + 0x41);
         }//end GetHexValue
+
+        /* Writes a JPEG To the Export Folder */
+   
+        /* OPEN FILE AND READ ALL CONTENTS AS BYTE ARRAY */
+        public byte[] readAllBytes(string fileName)
+        {
+            byte[] buffer = null;
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                buffer = new byte[fs.Length];
+                int fileLength = Convert.ToInt32(fs.Length);
+                fs.Read(buffer, 0, fileLength);
+            }
+            return buffer;
+        }//end read all bytes
+
+        public bool writeTo(String folder, CloudCoin cc)
+        {
+            //CoinUtils cu = new CoinUtils(cc);
+            const string quote = "\"";
+            const string tab = "\t";
+            String wholeJson = "{" + Environment.NewLine; //{
+            bool alreadyExists = true;
+            String json = this.setJSON(cc);
+            if (!File.Exists(folder + cc.FileName + ".stack"))
+            {
+                wholeJson += tab + quote + "cloudcoin" + quote + ": [" + Environment.NewLine; // "cloudcoin" : [
+                wholeJson += json;
+                wholeJson += Environment.NewLine + tab + "]" + Environment.NewLine + "}";
+                File.WriteAllText(folder + cc.FileName + ".stack", wholeJson);
+            }
+            else
+            {
+                if (folder.Contains("Counterfeit") || folder.Contains("Trash"))
+                {
+                    //Let the program delete it
+                    alreadyExists = false;
+                    return alreadyExists;
+                }
+                else if (folder.Contains("Imported"))
+                {
+                    File.Delete(folder + cc.FileName + ".stack");
+                    File.WriteAllText(folder + cc.FileName + ".stack", wholeJson);
+                    alreadyExists = false;
+                    return alreadyExists;
+                }
+                else
+                {
+                    Console.WriteLine(cc.FileName + ".stack" + " already exists in the folder " + folder);
+                    //CoreLogger.Log(cu.fileName + ".stack" + " already exists in the folder " + folder);
+                    return alreadyExists;
+
+                }//end else
+
+            }//File Exists
+            File.WriteAllText(folder + cc.FileName + ".stack", wholeJson);
+            alreadyExists = false;
+            return alreadyExists;
+
+        }//End Write To
+
+        public void overWrite(String folder, CloudCoin cc)
+        {
+            //CoinUtils cu = new CoinUtils(cc);
+            const string quote = "\"";
+            const string tab = "\t";
+            String wholeJson = "{" + Environment.NewLine; //{
+            String json = this.setJSON(cc);
+
+            wholeJson += tab + quote + "cloudcoin" + quote + ": [" + Environment.NewLine; // "cloudcoin" : [
+            wholeJson += json;
+            wholeJson += Environment.NewLine + tab + "]" + Environment.NewLine + "}";
+
+            File.WriteAllText(folder + cc.FileName + ".stack", wholeJson);
+        }//End Overwrite
+
+        private CloudCoin parseJpeg(String wholeString)
+        {
+
+            CloudCoin cc = new CloudCoin();
+            int startAn = 40;
+            for (int i = 0; i < 25; i++)
+            {
+
+                cc.an[i] = wholeString.Substring(startAn, 32);
+                // Console.Out.WriteLine(i +": " + cc.an[i]);
+                startAn += 32;
+            }
+
+            // end for
+            cc.aoid = null;
+            // wholeString.substring( 840, 895 );
+            //cc.hp = 25;
+            // Integer.parseInt(wholeString.substring( 896, 896 ), 16);
+            cc.ed = wholeString.Substring(898, 4);
+            cc.nn = Convert.ToInt32(wholeString.Substring(902, 2), 16);
+            cc.sn = Convert.ToInt32(wholeString.Substring(904, 6), 16);
+            cc.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu";
+            //  Console.Out.WriteLine("parseJpeg cc.fileName " + cc.fileName);
+            return cc;
+        }// end parse Jpeg
+
+        // en d json test
+        public byte[] hexStringToByteArray(String HexString)
+        {
+            int NumberChars = HexString.Length;
+            byte[] bytes = new byte[NumberChars / 2];
+            for (int i = 0; i < NumberChars; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(HexString.Substring(i, 2), 16);
+            }
+            return bytes;
+        }//End hex string to byte array
+
+
+
+
+
     }
 }
