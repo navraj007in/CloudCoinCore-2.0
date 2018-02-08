@@ -171,6 +171,8 @@
                 <Button x:Name="cmdBackup" Content="Backup" Click="cmdBackup_Click" Width="150"></Button>
                 <Button x:Name="cmdListSerials" Content="List Serials" Click="cmdListSerials_Click" Width="150"></Button>
                 <Button x:Name="cmdExportBarCode" Content="Export Barcode" Click="cmdExportBarCode_Click" Width="150"></Button>
+                <Button x:Name="cmdExportQRCode" Content="Export QR Code" Click="cmdExportQRCode_Click" Width="150"></Button>
+
             </StackPanel>
             <Label x:Name="lblProgress" Margin="10,10" Content="Progress Status : "></Label>
             <ProgressBar x:Name="bar1" Value ="0"  Maximum="100" Margin="10,10"></ProgressBar>

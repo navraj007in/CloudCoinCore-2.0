@@ -684,6 +684,21 @@ namespace CloudCoinClient
 
         }
 
+        private byte[] GenerateQRCodeZXing(string data)
+        {
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.QR_CODE
+                //Options = new EncodingOptions { Width = 200, Height = 50 } //optional
+            };
+            var imgBitmap = writer.Write(data);
+            using (var stream = new MemoryStream())
+            {
+                imgBitmap.Save(stream, ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
+
         private byte[] GenerateBarCodeZXing(string data)
         {
             var writer = new BarcodeWriter
@@ -762,6 +777,30 @@ namespace CloudCoinClient
 
             }
 
+        }
+
+        private void cmdExportQRCode_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = FS.BankFolder;
+            openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    var bankCoins = FS.LoadCoin(openFileDialog.FileName);
+                    var barcode = GenerateQRCodeZXing(bankCoins.GetCSV());
+                    System.Drawing.Image x = (Bitmap)((new ImageConverter()).ConvertFrom(barcode));
+
+                    x.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
+                    Process.Start(saveFileDialog.FileName);
+
+                }
+
+            }
         }
     }
 }
