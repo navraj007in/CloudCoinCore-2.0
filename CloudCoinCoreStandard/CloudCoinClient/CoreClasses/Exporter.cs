@@ -628,7 +628,7 @@ namespace CloudCoinCore
         {
             if (File.Exists(bankFileName))//If the file is a bank file, export a good bank coin
             {
-                CloudCoin jpgCoin = this.fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                CloudCoin jpgCoin = this.fileSystem.LoadCoin(bankFileName);
                 if (this.fileSystem.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
                 {
                     File.Delete(bankFileName);//Delete the files if they have been written to
@@ -636,7 +636,7 @@ namespace CloudCoinCore
             }
             else if (File.Exists(partialFileName))//If the file is a bank file, export a good bank coin
             {
-                CloudCoin jpgCoin = this.fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                CloudCoin jpgCoin = this.fileSystem.LoadCoin(partialFileName);
                 if (this.fileSystem.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
                 {
                     File.Delete(partialFileName);//Delete the files if they have been written to
@@ -644,7 +644,7 @@ namespace CloudCoinCore
             }
             else//Export a fracked coin. 
             {
-                CloudCoin jpgCoin = fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                CloudCoin jpgCoin = fileSystem.LoadCoin(frackedFileName);
                 if (this.fileSystem.writeJpeg(jpgCoin, tag))
                 {
                     File.Delete(frackedFileName);//Delete the files if they have been written to
