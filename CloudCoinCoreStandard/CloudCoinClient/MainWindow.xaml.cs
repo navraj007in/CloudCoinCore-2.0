@@ -631,12 +631,14 @@ namespace CloudCoinClient
 
         private void cmdListSerials_Click(object sender, RoutedEventArgs e)
         {
+            // Show Dialog to Select the Folder for which you want to list Serial numbers of CloudCoins
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
                 dialog.SelectedPath = FS.RootPath;
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
+                    // Load the Coins in the Selected folders
                     var csv = new StringBuilder();
                     var coins = FS.LoadFolderCoins(dialog.SelectedPath).OrderBy(x=>x.sn);
 
@@ -647,8 +649,10 @@ namespace CloudCoinClient
                         headeranstring += "an" + (i+1) + ",";
                     }
 
+                    // Write the Header Record
                     csv.AppendLine(headerLine + headeranstring);
 
+                    // Write the Coin Serial Numbers
                     foreach (var coin in coins)
                     {
                         string anstring = "";
@@ -660,13 +664,9 @@ namespace CloudCoinClient
                         csv.AppendLine(newLine);
 
                     }
-                    //in your loop
-                    File.WriteAllText(dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "coins" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() + ".csv", csv.ToString());
+                    File.WriteAllText(dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "coinserails" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() + ".csv", csv.ToString());
                     Process.Start(dialog.SelectedPath);
-                    //after your loop
-                    //Save the Coins to File system
-                    //FS.WriteCoinsToFile(bankCoins, dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar + "backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower());
-                    //MessageBox.Show("Backup completed successfully.");
+
                 }
             }
 

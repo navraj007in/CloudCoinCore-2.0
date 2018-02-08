@@ -146,6 +146,7 @@ namespace CloudCoinCore
             String frackedFileName;
             String partialFileName;
             string denomination;
+            Stack stack = new Stack();
 
             // Put all the JSON together and add header and footer
             for (int i = 0; (i < bankedFileNames.Length); i++)
@@ -163,7 +164,8 @@ namespace CloudCoinCore
 
                     if (File.Exists(bankFileName)) // Is it a bank file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                        
+                        CloudCoin coinNote = fileSystem.LoadCoin(bankFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
@@ -171,7 +173,7 @@ namespace CloudCoinCore
                     }
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CloudCoin coinNote = fileSystem.LoadCoin(partialFileName);
                         //coinNote = fileSystem.loa
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
@@ -180,7 +182,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(frackedFileName);
                         coinNote.aoid = null;
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = frackedFileName;
@@ -200,7 +202,7 @@ namespace CloudCoinCore
 
                     if (File.Exists(bankFileName))
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(bankFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
@@ -208,7 +210,7 @@ namespace CloudCoinCore
                     }
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CloudCoin coinNote = fileSystem.LoadCoin(partialFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = partialFileName;
@@ -216,7 +218,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(frackedFileName);
                         coinNote.aoid = null;
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = frackedFileName;
@@ -235,7 +237,7 @@ namespace CloudCoinCore
 
                     if (File.Exists(bankFileName))
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(bankFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
@@ -243,7 +245,7 @@ namespace CloudCoinCore
                     }
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CloudCoin coinNote = fileSystem.LoadCoin(partialFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = partialFileName;
@@ -251,7 +253,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(frackedFileName);
                         coinNote.aoid = null;
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = frackedFileName;
@@ -270,7 +272,7 @@ namespace CloudCoinCore
 
                     if (File.Exists(bankFileName))
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(bankFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
@@ -278,7 +280,7 @@ namespace CloudCoinCore
                     }
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CloudCoin coinNote = fileSystem.LoadCoin(partialFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = partialFileName;
@@ -286,7 +288,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(frackedFileName);
                         coinNote.aoid = null;
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = frackedFileName;
@@ -305,7 +307,7 @@ namespace CloudCoinCore
 
                     if (File.Exists(bankFileName))
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(bankFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(bankFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = bankFileName;
@@ -313,7 +315,7 @@ namespace CloudCoinCore
                     }
                     else if (File.Exists(partialFileName)) // Is it a partial file 
                     {
-                        CloudCoin coinNote = fileSystem.loadOneCloudCoinFromJsonFile(partialFileName);
+                        CloudCoin coinNote = fileSystem.LoadCoin(partialFileName);
                         coinNote.aoid = null;//Clear all owner data
                         json = json + fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = partialFileName;
@@ -321,7 +323,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        CloudCoin coinNote = this.fileSystem.loadOneCloudCoinFromJsonFile(frackedFileName);
+                        CloudCoin coinNote = this.fileSystem.LoadCoin(frackedFileName);
                         coinNote.aoid = null;
                         json = json + this.fileSystem.setJSON(coinNote);
                         coinsToDelete[c] = frackedFileName;
