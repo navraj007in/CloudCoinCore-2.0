@@ -7,6 +7,8 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Linq;
+using ZXing;
+using ZXing.Common;
 
 namespace CloudCoinCore
 {
@@ -45,6 +47,8 @@ namespace CloudCoinCore
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+       
 
         public static async Task<String> GetHtmlFromURL(String urlAddress)
         {

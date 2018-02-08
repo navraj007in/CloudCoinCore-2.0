@@ -18,6 +18,12 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.IO;
+using ZXing;
+using ZXing.Common;
+using SharpPdf417;
+using System.Drawing;
+using System.Drawing.Imaging;
+using Microsoft.Win32;
 
 namespace CloudCoinClient
 {
@@ -674,6 +680,86 @@ namespace CloudCoinClient
                     Process.Start(dialog.SelectedPath);
 
                 }
+            }
+
+        }
+
+        private byte[] GenerateBarCodeZXing(string data)
+        {
+            var writer = new BarcodeWriter
+            {
+                Format = BarcodeFormat.PDF_417,
+                Options = new EncodingOptions { Width = 200, Height = 50 } //optional
+            };
+            var imgBitmap = writer.Write(data);
+            using (var stream = new MemoryStream())
+            {
+                imgBitmap.Save(stream, ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
+
+        private byte[] GenerateBarCode(string data)
+        {
+            Pdf417Generator gen = new Pdf417Generator(data);
+            int bw = 2;
+            int bh = 2;
+            var barcode = gen.Encode();
+            var width = barcode.Columns * bh;
+            var height = barcode.Rows * bh;
+            Byte[] imgData;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (System.Drawing.Image bmp = new Bitmap(width, height))
+                {
+                    using (Graphics graphics = Graphics.FromImage(bmp))
+                    {
+
+
+                        int y = 0;
+                        for (int r = 0; r < barcode.Rows; ++r)
+                        {
+                            int x = 0;
+                            for (int c = 0; c < barcode.Columns; ++c)
+                            {
+                                if (barcode.RawData[r][c] == 1)
+                                {
+                                    graphics.FillRectangle(System.Drawing.Brushes.Black, x, y, bw, bh);
+                                }
+                                x += bw;
+                            }
+                            y += bh;
+                        }
+                    }
+                    bmp.Save(stream, ImageFormat.Png);
+                }
+
+                imgData = stream.ToArray();
+            }
+            return imgData;
+        }
+
+        private void cmdExportBarCode_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = FS.BankFolder;
+            openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    var bankCoins = FS.LoadCoin(openFileDialog.FileName);
+                    var barcode = GenerateBarCodeZXing(bankCoins.GetCSV());
+                    System.Drawing.Image x = (Bitmap)((new ImageConverter()).ConvertFrom(barcode));
+
+                    x.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
+                    Process.Start(saveFileDialog.FileName);
+
+                }
+
             }
 
         }

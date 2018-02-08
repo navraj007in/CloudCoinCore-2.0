@@ -138,6 +138,17 @@ namespace CloudCoinCore
             return pown.Count(x => x == character);
         }
 
+        public string GetCSV()
+        {
+            string csv = this.sn + ",";
+
+            for(int i=0;i<Config.NodeCount;i++)
+            {
+                csv += an[i]+ ",";
+            }
+            
+            return csv.Substring(0, csv.Length - 1);
+        }
         public bool isFracked()
         {
             //The coin is considered fracked if it has any fails
