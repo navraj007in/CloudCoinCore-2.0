@@ -54,6 +54,7 @@ namespace CloudCoinClient
             });
             // Load the Coins File system in Memory
             new Thread(delegate () {
+                updateLog("Loading File system\n");
                 Setup();
             }).Start();
         }
@@ -105,6 +106,7 @@ namespace CloudCoinClient
             {
                 ShowCoins();
                 enableUI();
+                updateLog("File system Loaded");
             });
 
 
@@ -182,6 +184,7 @@ namespace CloudCoinClient
 
         private async void detect()
         {
+            updateLog("Starting Multi Detect..");
             TimeSpan ts = new TimeSpan();
             DateTime before = DateTime.Now;
             DateTime after;
@@ -292,6 +295,7 @@ namespace CloudCoinClient
             App.Current.Dispatcher.Invoke(delegate
             {
                 enableUI();
+                ShowCoins();
             });
 
         }
@@ -436,6 +440,8 @@ namespace CloudCoinClient
             lblQtrs.Content = qtrCount * 25;
             lblHundreds.Content = hundredsCount * 100;
             lblTwoFifties.Content = twoFiftiesCount * 250;
+
+            lblNotesTotal.Text = "₡" + Convert.ToString(onesCount + fivesCount + qtrCount + hundredsCount + twoFiftiesCount);
         }
 
         public void export()
@@ -505,7 +511,7 @@ namespace CloudCoinClient
                 exporter.writeJSONFile(exp_1, exp_5, exp_25, exp_100, exp_250, tag);
             }
 
-
+            ShowCoins();
             //// end if type jpge or stack
 
             //RefreshCoins?.Invoke(this, new EventArgs());

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
                 xmlns:uc1="clr-namespace:LedControl"
  xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="800" Width="1205">
     <Window.Resources>
 
         <sys:Double x:Key="gapWidth">49</sys:Double>
@@ -109,7 +109,7 @@
                                 </Style>
                             </Button.Style>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="₡170.55" FontSize="28" x:Name="lblNotesTotal"   VerticalAlignment="Center" />
+                                <TextBlock Text="₡0" FontSize="28" x:Name="lblNotesTotal"   VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
                         <TextBlock TextAlignment="Center" FontFamily="Resources/#RalewayBold" Foreground="#a49afe" Margin="0,13,0,0" FontSize="16">Total In Bank</TextBlock>
