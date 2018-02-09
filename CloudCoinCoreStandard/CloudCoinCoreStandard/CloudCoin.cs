@@ -84,6 +84,11 @@ namespace CloudCoinCore
 
         }//end of constructor
 
+        public CloudCoin(string fileName)
+        {
+
+        }//end of constructor
+
         [JsonIgnore]
         public string FileName { get {
                 return this.getDenomination() + ".CloudCoin." + nn + "." + sn + ".";

@@ -169,16 +169,16 @@ namespace CloudCoinClient.CoreClasses
             {
                 if(coin.PassCount >= CloudCoinCore.Config.PassCount)
                 {
-                    writeCoin(coin, BankFolder);
+                    WriteCoin(coin, BankFolder);
                 }
                 else
                 {
-                    writeCoin(coin, CounterfeitFolder);
+                    WriteCoin(coin, CounterfeitFolder);
                 }
             }
         }
 
-        public void writeCoin(CloudCoin coin, string folder)
+        public void WriteCoin(CloudCoin coin, string folder)
         {
             var folderCoins = LoadFolderCoins(folder);
             string fileName = coin.FileName;
@@ -201,7 +201,7 @@ namespace CloudCoinClient.CoreClasses
             }
         }
 
-        public void moveCoins(IEnumerable<CloudCoin> coins,string sourceFolder, string targetFolder)
+        public void MoveCoins(IEnumerable<CloudCoin> coins,string sourceFolder, string targetFolder)
         {
             var folderCoins = LoadFolderCoins(targetFolder);
 
@@ -260,7 +260,7 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Serialize(writer, stack);
             }
         }
-        public void writeCoin(IEnumerable<CloudCoin> coins, string folder,bool writeAll=false)
+        public void WriteCoin(IEnumerable<CloudCoin> coins, string folder,bool writeAll=false)
         {
             if(writeAll)
             {

@@ -185,7 +185,7 @@ namespace CloudCoinCore
         {
             public Response[] responses;
         }
-        public async Task<MultiDetectResponse> multiDetect(int[] nn, int[] sn, String[] an, String[] pan, int[] d, int timeout)
+        public async Task<MultiDetectResponse> MultiDetect(int[] nn, int[] sn, String[] an, String[] pan, int[] d, int timeout)
         {
             /*PREPARE REQUEST*/
             Response[] response = new Response[nn.Length];
