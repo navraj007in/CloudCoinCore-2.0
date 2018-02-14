@@ -13,6 +13,7 @@ namespace CloudCoinCore
 {
     public abstract class IFileSystem
     {
+        public enum FileMoveOptions { Copy,Replace,Rename,Skip }
         public string RootPath { get; set; }
         public string ImportFolder { get; set; }
         public string ExportFolder { get; set; }
@@ -54,9 +55,24 @@ namespace CloudCoinCore
             for (int i = 0; i < files.Count(); i++)
             {
                 fnames[i] = Path.GetFileName(files.ElementAt(i));
-                var coins = Utils.LoadJson(files[i]);
-                if(coins !=null )
-                    folderCoins.AddRange(coins);
+                string ext = Path.GetExtension(files.ElementAt(i));
+                if(ext == ".stack")
+                {
+                    var coins = Utils.LoadJson(files[i]);
+                    if (coins != null)
+                        folderCoins.AddRange(coins);
+                }
+                if(ext == ".jpeg" || ext == ".jpg")
+                {
+                    try {
+                        var coin = loadOneCloudCoinFromJPEGFile(files[i]);
+                        folderCoins.Add(coin);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
             };
 
             return folderCoins;
@@ -144,7 +160,26 @@ namespace CloudCoinCore
             return returnCC;
         }//end load one CloudCoin from JSON
 
-   
+        public void MoveFile(string SourcePath,string TargetPath,FileMoveOptions options)
+        {
+            if(!File.Exists(TargetPath))
+                File.Move(SourcePath, TargetPath);
+            else
+            {
+                if(options== FileMoveOptions.Replace)
+                {
+                    File.Move(SourcePath, TargetPath);
+                }
+                if(options== FileMoveOptions.Rename)
+                {
+                    string targetFileName = Path.GetFileNameWithoutExtension(SourcePath);
+                    targetFileName += Utils.RandomString(8).ToLower() + ".stack";
+                    string targetPath = Path.GetDirectoryName(TargetPath) + Path.DirectorySeparatorChar + targetFileName;
+                    File.Move(SourcePath, targetPath);
+
+                }
+            }
+        }
       
         public String importJSON(String jsonfile)
         {
@@ -222,6 +257,8 @@ namespace CloudCoinCore
             return json;
         }
         // end get JSON
+
+        public abstract void MoveImportedFiles();
 
         public int ordinalIndexOf(String str, String substr, int n)
         {
@@ -437,6 +474,31 @@ namespace CloudCoinCore
 
             File.WriteAllText(folder + cc.FileName + ".stack", wholeJson);
         }//End Overwrite
+
+        public CloudCoin loadOneCloudCoinFromJPEGFile(String loadFilePath)
+        {
+            /* GET the first 455 bytes of he jpeg where the coin is located */
+            String wholeString = "";
+            byte[] jpegHeader = new byte[455];
+            Console.Out.WriteLine("Load file path " + loadFilePath);
+            using (FileStream fileStream = new FileStream(loadFilePath, FileMode.Open, FileAccess.Read))
+            {
+                try
+                {
+                    int count;                            // actual number of bytes read
+                    int sum = 0;                          // total number of bytes read
+
+                    // read until Read method returns 0 (end of the stream has been reached)
+                    while ((count = fileStream.Read(jpegHeader, sum, 455 - sum)) > 0)
+                        sum += count;  // sum is a buffer offset for next reading
+                }
+                finally { }
+            }
+            wholeString = bytesToHexString(jpegHeader);
+            CloudCoin returnCC = this.parseJpeg(wholeString);
+            // Console.Out.WriteLine("From FileUtils returnCC.fileName " + returnCC.fileName);
+            return returnCC;
+        }//end load one CloudCoin from JSON
 
         private CloudCoin parseJpeg(String wholeString)
         {

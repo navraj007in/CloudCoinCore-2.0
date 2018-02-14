@@ -236,13 +236,12 @@ namespace CloudCoinClient
                         coin.PassCount = countp;
                         coin.FailCount = countf;
                         CoinCount++;
+
+
                         updateLog("No. " + CoinCount + ". Coin Deteced. S. No. - " + coin.sn + ". Pass Count - " + coin.PassCount + ". Fail Count  - " + coin.FailCount + ". Result - " + coin.DetectionResult + "."+coin.pown);
-
-
                         Debug.WriteLine("Coin Deteced. S. No. - " + coin.sn + ". Pass Count - " + coin.PassCount + ". Fail Count  - " + coin.FailCount + ". Result - " + coin.DetectionResult);
                         //coin.sortToFolder();
                         pge.MinorProgress = (CoinCount) * 100 / totalCoinCount;
-                        //bar1.Value = pge.MinorProgress;
                         Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
                         raida.OnProgressChanged(pge);
                         j++;
@@ -264,13 +263,12 @@ namespace CloudCoinClient
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             raida.OnProgressChanged(pge);
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
-            
+
+            // Apply Sort to Folder to all detected coins at once.
+            updateLog("Starting Sort.....");
             detectedCoins.ForEach(x => x.sortToFolder());
-            //foreach (var coin in detectedCoins)
-            //{
-            //    //updateLog()
-            //    Debug.WriteLine(coin.sn + "-" + coin.pown + "-" + coin.folder);
-            //}
+            updateLog("Ended Sort........");
+
             var passedCoins = (from x in detectedCoins
                                where x.folder == FS.BankFolder
                                select x).ToList();
@@ -278,18 +276,33 @@ namespace CloudCoinClient
             var failedCoins = (from x in detectedCoins
                                where x.folder == FS.CounterfeitFolder
                                select x).ToList();
+            var lostCoins = (from x in detectedCoins
+                               where x.folder == FS.LostFolder
+                               select x).ToList();
+            var suspectCoins = (from x in detectedCoins
+                             where x.folder == FS.SuspectFolder
+                             select x).ToList();
 
             Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
             Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
             updateLog("Coin Detection finished.");
             updateLog("Total Passed Coins - " + passedCoins.Count() + "");
             updateLog("Total Failed Coins - " + failedCoins.Count() + "");
+            updateLog("Total Lost Coins - " + lostCoins.Count() + "");
+            updateLog("Total Suspect Coins - " + suspectCoins.Count() + "");
 
-
+            // Move Coins to their respective folders after sort
             FS.MoveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
             FS.WriteCoin(failedCoins, FS.CounterfeitFolder, true);
-            FS.RemoveCoins(failedCoins, FS.DetectedFolder);
+            FS.MoveCoins(lostCoins, FS.DetectedFolder, FS.LostFolder);
+            FS.MoveCoins(suspectCoins, FS.DetectedFolder, FS.SuspectFolder);
 
+            // Clean up Detected Folder
+            FS.RemoveCoins(failedCoins, FS.DetectedFolder);
+            FS.RemoveCoins(lostCoins, FS.DetectedFolder);
+            FS.RemoveCoins(suspectCoins, FS.DetectedFolder);
+
+            FS.MoveImportedFiles();
             //FileSystem.detectedCoins = FS.LoadFolderCoins(FS.RootPath + System.IO.Path.DirectorySeparatorChar + FS.DetectedFolder);
             after = DateTime.Now;
             ts = after.Subtract(before);
@@ -306,12 +319,83 @@ namespace CloudCoinClient
 
         }
 
-        
+        private bool PickFiles()
+        {
+            
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Cloudcoins (*.stack, *.jpg,*.jpeg)|*.stack;*.jpg;*.jpeg|Stack files (*.stack)|*.stack|Jpeg files (*.jpg)|*.jpg|All files (*.*)|*.*";
+                openFileDialog.InitialDirectory = FS.RootPath;
+                openFileDialog.Multiselect = true;
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    foreach (string filename in openFileDialog.FileNames)
+                    {
+                        try
+                        {
+                            if (!File.Exists(FS.ImportFolder + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(filename)))
+                                File.Move(filename, FS.ImportFolder + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(filename));
+                            else
+                            {
+                                string msg = "File " + filename + " already exists. Do you want to overwrite it?";
+                                MessageBoxResult result =
+                                  MessageBox.Show(
+                                    msg,
+                                    "CloudCoins",
+                                    MessageBoxButton.YesNo,
+                                    MessageBoxImage.Warning);
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    try
+                                    {
+                                        File.Delete(FS.ImportFolder + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(filename));
+                                        File.Move(filename, FS.ImportFolder + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(filename));
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                    }
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            updateLog(ex.Message);
+                        }
+                    }
+                }
+                else
+                    return false;
+            }
+            return true;
+        }
         private void cmdMultiDetect_Click(object sender, RoutedEventArgs e)
         {
             
             raida.ProgressChanged += Raida_ProgressChanged;
             cmdMultiDetect.IsEnabled = false;
+
+            // Check if There are already files in import folder
+            // if not then show file picker dialog
+
+            var files = Directory
+               .GetFiles(FS.ImportFolder)
+               .Where(file => CloudCoinCore.Config.allowedExtensions.Any(file.ToLower().EndsWith))
+               .ToList();
+
+            int filesCount = Directory.GetFiles(FS.ImportFolder).Length;
+            if (files.Count() == 0)
+            {
+                bool pickResult = PickFiles();
+                if (!pickResult)
+                {
+                    enableUI();
+                    return;
+                }
+            }
+
             // Load All Coins of Workspace File System
             new Thread(delegate () {
                 detect();
@@ -328,8 +412,15 @@ namespace CloudCoinClient
 
             App.Current.Dispatcher.Invoke(delegate
             {
-                bar1.Value = pge.MinorProgress;
-                lblProgress.Content = "Progress Status : " + pge.MinorProgress + " %";
+                try
+                {
+                    bar1.Value = pge.MinorProgress;
+                    lblProgress.Content = "Progress Status : " + pge.MinorProgress + " %";
+                }
+                catch (Exception ee)
+                {
+
+                }
             });
 
         }

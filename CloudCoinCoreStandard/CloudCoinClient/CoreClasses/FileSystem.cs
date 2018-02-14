@@ -136,6 +136,8 @@ namespace CloudCoinClient.CoreClasses
         
         public override void DetectPreProcessing()
         {
+            //Preprocess Coins before Detection Starts
+            //This moves all the coins from Import list into predetect list
             foreach(var coin in importCoins)
             {
                 string fileName = coin.FileName;
@@ -328,8 +330,21 @@ namespace CloudCoinClient.CoreClasses
                       .ToArray());
             return list;
         }
+       
 
+        public override void MoveImportedFiles()
+        {
+            var files = Directory
+              .GetFiles(ImportFolder)
+              .Where(file => CloudCoinCore.Config.allowedExtensions.Any(file.ToLower().EndsWith))
+              .ToList();
 
+            string[] fnames = new string[files.Count()];
+            for (int i = 0; i < files.Count(); i++)
+            {
+                MoveFile(files[i], ImportedFolder + Path.DirectorySeparatorChar + Path.GetFileName(files[i]), FileMoveOptions.Rename);
+            }
+        }
     }
 
     
