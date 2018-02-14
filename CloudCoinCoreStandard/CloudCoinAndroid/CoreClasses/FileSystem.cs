@@ -302,6 +302,11 @@ namespace CloudCoinClient.CoreClasses
                       .ToArray());
             return list;
         }
+
+        public override void MoveImportedFiles()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
