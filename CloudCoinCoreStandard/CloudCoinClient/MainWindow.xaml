@@ -7,7 +7,7 @@
         mc:Ignorable="d"
                 xmlns:uc1="clr-namespace:LedControl"
  xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="MainWindow" Height="800" Width="1205">
+        Title="MainWindow" Height="800" Width="1405">
     <Window.Resources>
 
         <sys:Double x:Key="gapWidth">49</sys:Double>

@@ -124,8 +124,8 @@ namespace CloudCoinCore
             int coinCount = m1 + m5 + m25 + m100 + m250;
             String[] coinsToDelete = new String[coinCount];
             String[] bankedFileNames = new DirectoryInfo(this.fileSystem.BankFolder).GetFiles().Select(o => o.Name).ToArray();//Get all names in bank folder
-            String[] frackedFileNames = new DirectoryInfo(this.fileSystem.BankFolder).GetFiles().Select(o => o.Name).ToArray(); ;
-            String[] partialFileNames = new DirectoryInfo(this.fileSystem.BankFolder).GetFiles().Select(o => o.Name).ToArray();
+            String[] frackedFileNames = new DirectoryInfo(this.fileSystem.FrackedFolder).GetFiles().Select(o => o.Name).ToArray(); ;
+            String[] partialFileNames = new DirectoryInfo(this.fileSystem.PartialFolder).GetFiles().Select(o => o.Name).ToArray();
             // Add the two arrays together
             var list = new List<String>();
             list.AddRange(bankedFileNames);
@@ -153,8 +153,8 @@ namespace CloudCoinCore
             {
                 denomination = bankedFileNames[i].Split('.')[0];
                 bankFileName = this.fileSystem.BankFolder + bankedFileNames[i];//File name in bank folder
-                frackedFileName = this.fileSystem.BankFolder + bankedFileNames[i];//File name in fracked folder
-                partialFileName = this.fileSystem.BankFolder + bankedFileNames[i];
+                frackedFileName = this.fileSystem.FrackedFolder + bankedFileNames[i];//File name in fracked folder
+                partialFileName = this.fileSystem.PartialFolder + bankedFileNames[i];
                 if (denomination == "1" && m1 > 0)
                 {
                     if (c != 0)//This is the json seperator between each coin. It is not needed on the first coin
