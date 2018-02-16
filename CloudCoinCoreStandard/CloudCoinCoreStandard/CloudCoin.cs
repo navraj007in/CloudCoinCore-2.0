@@ -145,7 +145,7 @@ namespace CloudCoinCore
 
         public string GetCSV()
         {
-            string csv = this.sn + ",";
+            string csv = this.sn + ","+ this.denomination+","+ this.nn + ",";
 
             for(int i=0;i<Config.NodeCount;i++)
             {

@@ -210,6 +210,8 @@
                 <Label Width="60" Content="25s"/>
                 <Label Width="60" Content="100s"/>
                 <Label Width="60" Content="250s"/>
+                <Label Width="60" Content="Tag"/>
+
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="0" Width="60" x:Name="txtExportOne"/>
@@ -218,7 +220,7 @@
                 <TextBox Text="0" Width="60" x:Name="txtExportHundred"/>
                 <TextBox Text="0" Width="60" x:Name="txtExportTwoFifties"/>
 
-                <TextBox Text="0" Width="60" x:Name="txtTag"/>
+                <TextBox Width="60" x:Name="txtTag"/>
             </StackPanel>
 
         </StackPanel>

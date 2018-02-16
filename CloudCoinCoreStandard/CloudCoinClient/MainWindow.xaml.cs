@@ -745,7 +745,7 @@ namespace CloudCoinClient
                     var csv = new StringBuilder();
                     var coins = FS.LoadFolderCoins(dialog.SelectedPath).OrderBy(x=>x.sn);
 
-                    var headerLine = string.Format("sn,denomination,");
+                    var headerLine = string.Format("sn,denomination,nn,");
                     string headeranstring = "";
                     for (int i = 0; i < CloudCoinCore.Config.NodeCount; i++)
                     {
@@ -763,7 +763,7 @@ namespace CloudCoinClient
                         {
                             anstring += coin.an[i] + ",";
                         }
-                        var newLine = string.Format("{0},{1},{2}", coin.sn, coin.denomination,anstring);
+                        var newLine = string.Format("{0},{1},{2},{3}", coin.sn, coin.denomination,coin.nn,anstring);
                         csv.AppendLine(newLine);
 
                     }
