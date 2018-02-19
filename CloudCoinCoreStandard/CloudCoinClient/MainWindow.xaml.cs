@@ -879,16 +879,31 @@ namespace CloudCoinClient
             OpenFileDialog openFileDialog = new OpenFileDialog();
             //openFileDialog.InitialDirectory = FS.BankFolder;
             openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+           
+
             //openFileDialog.ShowDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
-                if (saveFileDialog.ShowDialog() == true)
+                var coins = FS.LoadCoins(openFileDialog.FileName);
+                using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
                 {
 
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        //Save the Coins to File system
+                        string path = dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar;
+                        foreach (CloudCoin coin in coins)
+                        {
+                            var barcode = GenerateQRCodeZXing(coin.GetCSV());
+                            System.Drawing.Image x = (Bitmap)((new ImageConverter()).ConvertFrom(barcode));
 
+                            x.Save(path + coin.FileName + "qrcode.jpg", ImageFormat.Jpeg);
+                        }
+                        MessageBox.Show("QR Codes Generated successfully.");
+                    }
                 }
+
             }
         }
 
@@ -897,16 +912,31 @@ namespace CloudCoinClient
             OpenFileDialog openFileDialog = new OpenFileDialog();
             //openFileDialog.InitialDirectory = FS.BankFolder;
             openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+
+
             //openFileDialog.ShowDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
-                if (saveFileDialog.ShowDialog() == true)
+                var coins = FS.LoadCoins(openFileDialog.FileName);
+                using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
                 {
 
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        //Save the Coins to File system
+                        string path = dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar;
+                        foreach (CloudCoin coin in coins)
+                        {
+                            var barcode = GenerateBarCodeZXing(coin.GetCSV());
+                            System.Drawing.Image x = (Bitmap)((new ImageConverter()).ConvertFrom(barcode));
 
+                            x.Save(path + coin.FileName + "barcode.jpg", ImageFormat.Jpeg);
+                        }
+                        MessageBox.Show("QR Codes Generated successfully.");
+                    }
                 }
+
             }
         }
     }
