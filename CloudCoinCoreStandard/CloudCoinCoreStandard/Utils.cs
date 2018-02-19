@@ -31,7 +31,28 @@ namespace CloudCoinCore
             }
         }
 
+        public static StringBuilder CoinsToCSV(IEnumerable<CloudCoin> coins)
+        {
+            var csv = new StringBuilder();
 
+
+            var headerLine = string.Format("sn,denomination,nn,");
+            string headeranstring = "";
+            for (int i = 0; i < Config.NodeCount; i++)
+            {
+                headeranstring += "an" + (i + 1) + ",";
+            }
+
+            // Write the Header Record
+            csv.AppendLine(headerLine + headeranstring);
+
+            // Write the Coin Serial Numbers
+            foreach (var coin in coins)
+            {
+                csv.AppendLine(coin.GetCSV());
+            }
+            return csv;
+        }
         public static string WriteObjectToString()
         {
             MemoryStream ms = new MemoryStream();

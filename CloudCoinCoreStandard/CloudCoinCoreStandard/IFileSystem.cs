@@ -86,6 +86,14 @@ namespace CloudCoinCore
                 return coins[0];
             return null;
         }
+        public IEnumerable<CloudCoin> LoadCoins(string fileName)
+        {
+            var coins = Utils.LoadJson(fileName);
+
+            if (coins != null && coins.Length > 0)
+                return coins;
+            return null;
+        }
         public List<FileInfo> LoadFiles(string folder)
         {
             List<FileInfo> fileInfos = new List<FileInfo>();

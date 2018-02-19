@@ -33,7 +33,7 @@ namespace CloudCoinClient
     public partial class MainWindow : Window
     {
         string RootPath;
-        FileSystem FS ;
+        FileSystem FS;
         RAIDA raida;
         int onesCount = 0;
         int fivesCount = 0;
@@ -63,6 +63,24 @@ namespace CloudCoinClient
                 updateLog("Loading File system\n");
                 Setup();
             }).Start();
+        }
+
+        public void RefreshScreen()
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                disableUI();
+            });
+            // Load the Coins File system in Memory
+            new Thread(delegate () {
+                updateLog("Loading File system\n");
+                FS.LoadFileSystem();
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    disableUI();
+                });
+            }).Start();
+
         }
 
         public void disableUI()
@@ -571,25 +589,7 @@ namespace CloudCoinClient
                 return;
             }
 
-            ////updateLog(Convert.ToString(bankTotals[1] + frackedTotals[1] + bankTotals[2] + frackedTotals[2] + bankTotals[3] + frackedTotals[3] + bankTotals[4] + frackedTotals[4] + bankTotals[5] + frackedTotals[5] + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]));
-
-            //if (((bankTotals[1] + frackedTotals[1]) + (bankTotals[2] + frackedTotals[2]) + (bankTotals[3] + frackedTotals[3]) + (bankTotals[4] + frackedTotals[4]) + (bankTotals[5] + frackedTotals[5]) + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]) > 1000)
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Red;
-            //    Console.Out.WriteLine("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
-            //    Console.Out.WriteLine("Do not export stack files with more than 1000 notes. .");
-            //    //updateLog("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
-            //    //updateLog("Do not export stack files with more than 1000 notes. .");
-
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //}//end if they have more than 1000 coins
-
-            //Console.Out.WriteLine("  Do you want to export your CloudCoin to (1)jpgs or (2) stack (JSON) file?");
-            int file_type = 0; //reader.readInt(1, 2);
-
-
-
-
+            int file_type = 0; 
 
             Exporter exporter = new Exporter(FS);
             //exporter.OnUpdateStatus += Exporter_OnUpdateStatus; ;
@@ -612,11 +612,13 @@ namespace CloudCoinClient
             //// end if type jpge or stack
 
             //RefreshCoins?.Invoke(this, new EventArgs());
-            ////updateLog("Exporting CloudCoins Completed.");
+            updateLog("Exporting CloudCoins Completed.");
             //showCoins();
-            //Process.Start(fileUtils.exportFolder);
+            Process.Start(FS.ExportFolder);
             //cmdExport.Content = "₡0";
             System.Windows.Forms.MessageBox.Show("Export completed.", "Cloudcoins", System.Windows.Forms.MessageBoxButtons.OK);
+            FS.LoadFileSystem();
+            //RefreshScreen();
         }// end export One
 
         public void export(string backupDir)
@@ -852,6 +854,59 @@ namespace CloudCoinClient
 
                 }
 
+            }
+        }
+
+        private void cmdStackToCSV_Click(object sender, RoutedEventArgs e)
+        {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                //openFileDialog.InitialDirectory = FS.BankFolder;
+                openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+                //openFileDialog.ShowDialog();
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+
+                    File.WriteAllText(saveFileDialog.FileName, Utils.CoinsToCSV(FS.LoadCoins(openFileDialog.FileName)).ToString());
+                    }
+                }
+            }
+        private void cmdStackToQR_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = FS.BankFolder;
+            openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+
+
+                }
+            }
+        }
+
+        private void cmdStackToBarCode_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = FS.BankFolder;
+            openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "jpeg files (*.jpeg)|*.jpeg|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+
+
+                }
             }
         }
     }

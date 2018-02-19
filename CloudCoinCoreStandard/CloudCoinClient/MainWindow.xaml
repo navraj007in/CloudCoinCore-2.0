@@ -163,7 +163,7 @@
                 <Button x:Name="cmdShow" Content="Show Status" Click="cmdShow_Click" Width="200"></Button>
                 <Button x:Name="cmdEcho" Content="Echo" Click="cmdEcho_Click" Width="150"></Button>
                 <Button x:Name="cmdDetect" Content="Detect" Click="cmdDetect_Click" Width="150" Visibility="Collapsed"></Button>
-                <Button x:Name="cmdMultiDetect" Content="Import" Click="cmdMultiDetect_Click" Width="150"></Button>
+                <Button x:Name="cmdMultiDetect" Content="Detect" Click="cmdMultiDetect_Click" Width="150"></Button>
                 <Button x:Name="cmdWorkspace" Content="Change Workspace" Click="cmdWorkspace_Click" Width="150"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -172,6 +172,18 @@
                 <Button x:Name="cmdListSerials" Content="List Serials" Click="cmdListSerials_Click" Width="150"></Button>
                 <Button x:Name="cmdExportBarCode" Content="Export Barcode" Click="cmdExportBarCode_Click" Width="150"></Button>
                 <Button x:Name="cmdExportQRCode" Content="Export QR Code" Click="cmdExportQRCode_Click" Width="150"></Button>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="cmdStackToCSV" Content="Stack to CSV" Click="cmdStackToCSV_Click" Width="150"></Button>
+                <Button x:Name="cmdStackToQR" Content="Stack to QR Code" Click="cmdStackToQR_Click" Width="150"></Button>
+                <Button x:Name="cmdStackToBarCode" Content="Stack to Bar Code" Click="cmdStackToBarCode_Click" Width="150"></Button>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="cmdImportCSV" Content="Import CSV" Click="cmdShowFolders_Click" Width="150"></Button>
+                <Button x:Name="cmdImportQR" Content="Import QR Code" Click="cmdShowFolders_Click" Width="150"></Button>
+                <Button x:Name="cmdImport2DBarCode" Content="Import Bar Code" Click="cmdShowFolders_Click" Width="150"></Button>
 
             </StackPanel>
             <Label x:Name="lblProgress" Margin="10,10" Content="Progress Status : "></Label>
