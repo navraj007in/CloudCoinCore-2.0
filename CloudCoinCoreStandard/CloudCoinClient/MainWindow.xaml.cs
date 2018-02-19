@@ -871,6 +871,7 @@ namespace CloudCoinClient
                     {
 
                     File.WriteAllText(saveFileDialog.FileName, Utils.CoinsToCSV(FS.LoadCoins(openFileDialog.FileName)).ToString());
+                    Process.Start(saveFileDialog.FileName);
                     }
                 }
             }
@@ -901,6 +902,7 @@ namespace CloudCoinClient
                             x.Save(path + coin.FileName + "qrcode.jpg", ImageFormat.Jpeg);
                         }
                         MessageBox.Show("QR Codes Generated successfully.");
+                        Process.Start(path);
                     }
                 }
 
@@ -933,10 +935,45 @@ namespace CloudCoinClient
 
                             x.Save(path + coin.FileName + "barcode.jpg", ImageFormat.Jpeg);
                         }
-                        MessageBox.Show("QR Codes Generated successfully.");
+                        MessageBox.Show("Bar Codes Generated successfully.");
+                        Process.Start(path);
                     }
                 }
 
+            }
+        }
+
+        private void cmdCSVToStack_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = FS.BankFolder;
+            openFileDialog.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            var coins = new List<CloudCoin>();
+
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string csvFile = openFileDialog.FileName;
+                string[] lines = File.ReadAllLines(csvFile);
+                int i = 0;
+                foreach(string line in lines)
+                {
+                    if(i>0)
+                    {
+                        var coin = CloudCoin.FromCSV(line);
+                        if (coin != null)
+                            coins.Add(coin);
+                    }
+                    i++;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    FS.WriteToFile(coins, saveFileDialog.FileName);
+                    Process.Start(saveFileDialog.FileName);
+                }
+                    
             }
         }
     }

@@ -178,7 +178,7 @@
                 <Button x:Name="cmdStackToCSV" Content="Stack to CSV" Click="cmdStackToCSV_Click" Width="150"></Button>
                 <Button x:Name="cmdStackToQR" Content="Stack to QR Code" Click="cmdStackToQR_Click" Width="150"></Button>
                 <Button x:Name="cmdStackToBarCode" Content="Stack to Bar Code" Click="cmdStackToBarCode_Click" Width="150"></Button>
-
+                <Button x:Name="cmdCSVToStack" Content="CSV to Stack" Click="cmdCSVToStack_Click" Width="150"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="cmdImportCSV" Content="Import CSV" Click="cmdShowFolders_Click" Width="150"></Button>

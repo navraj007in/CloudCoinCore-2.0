@@ -89,6 +89,31 @@ namespace CloudCoinCore
 
         }//end of constructor
 
+        public static CloudCoin FromCSV(string csvLine)
+        {
+            try
+            {
+                CloudCoin coin = new CloudCoin();
+                string[] values = csvLine.Split(',');
+                Debug.WriteLine(values[0]);
+                coin.sn = Convert.ToInt32( values[0]);
+                coin.nn = Convert.ToInt32(values[1]);
+                coin.denomination = Convert.ToInt16(values[1]);
+                coin.an = new List<string>();
+                for(int i=0;i<Config.NodeCount;i ++)
+                {
+                    coin.an.Add(values[i+3]);
+                }
+
+                return coin;
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return null;
+        }
         [JsonIgnore]
         public string FileName { get {
                 return this.getDenomination() + ".CloudCoin." + nn + "." + sn + ".";

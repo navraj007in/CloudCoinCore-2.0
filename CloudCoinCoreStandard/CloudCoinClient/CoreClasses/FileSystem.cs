@@ -262,6 +262,19 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Serialize(writer, stack);
             }
         }
+
+        public void WriteToFile(IEnumerable<CloudCoin> coins, string fileName)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            Stack stack = new Stack(coins.ToArray());
+            using (StreamWriter sw = new StreamWriter(fileName ))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, stack);
+            }
+        }
         public void WriteCoin(IEnumerable<CloudCoin> coins, string folder,bool writeAll=false)
         {
             if(writeAll)
