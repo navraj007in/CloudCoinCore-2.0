@@ -197,7 +197,7 @@
 
                     </TextBlock>
 
-                    <Button Content="Close this Pupup" Click="Button_Click"/>
+                    <Button Content="Close this Pupup" />
 
                 </StackPanel>
 

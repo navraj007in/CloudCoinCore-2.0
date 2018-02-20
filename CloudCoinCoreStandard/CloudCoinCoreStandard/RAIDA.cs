@@ -98,7 +98,7 @@ namespace CloudCoinCore
             //List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
             for (int i = 0; i < coins.Length; i++)//For every coin
             {
-                coins[i].setAnsToPans();
+                coins[i].GeneratePAN();
                 nns[i] = coins[i].nn;
                 sns[i] = coins[i].sn;
                 dens[i] = coins[i].denomination;

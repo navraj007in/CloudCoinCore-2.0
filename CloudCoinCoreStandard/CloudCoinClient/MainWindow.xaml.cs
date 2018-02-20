@@ -231,8 +231,9 @@ namespace CloudCoinClient
             {
                 //Pick up 200 Coins and send them to RAIDA
                 var coins = predetectCoins.Skip(i * CloudCoinCore.Config.MultiDetectLoad).Take(200);
+                coins.ToList().ForEach(x => x.pown = "");
                 raida.coins = coins;
-
+                
                 var tasks = raida.GetMultiDetectTasks(coins.ToArray(), CloudCoinCore.Config.milliSecondsToTimeOut);
                 try
                 {
@@ -268,7 +269,7 @@ namespace CloudCoinClient
                     Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
                     raida.OnProgressChanged(pge);
                     FS.WriteCoin(coins, FS.DetectedFolder);
-
+                    FS.RemoveCoins(coins, FS.PreDetectFolder);
                 }
                 catch (Exception ex)
                 {

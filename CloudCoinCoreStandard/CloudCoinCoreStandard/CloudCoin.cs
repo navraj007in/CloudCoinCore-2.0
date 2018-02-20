@@ -463,7 +463,7 @@ namespace CloudCoinCore
 
             if (!isFracked())
             {
-                folder = RAIDA.GetInstance().FS.BankFolder;
+                folder = RAIDA.GetInstance().FS.FrackedFolder;
                 return;
             }//if is has no failes but some undetected but is gradable
 
