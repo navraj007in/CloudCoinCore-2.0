@@ -976,5 +976,39 @@ namespace CloudCoinClient
                     
             }
         }
+
+        private void cmdRecover_Click(object sender, RoutedEventArgs e)
+        {
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = @FS.BankFolder;
+            openFileDialog.Filter = "stack files (*.stack)|*.stack|All files (*.*)|*.*";
+            //var coins = new List<CloudCoin>();
+
+            //openFileDialog.ShowDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var coins = FS.LoadCoins(openFileDialog.FileName);
+                if(coins!=null)
+                {
+                    foreach(var coin in coins)
+                    {
+                        for (int i = 0; i <coin.an.Count;i++)
+                        {
+                            Debug.WriteLine("AN"+ i + ": " +coin.an[i]);
+                            if(coin.pan[i]!= "" && coin.pan[i] !=null)
+                                coin.an[i] = coin.pan[i];
+                        }
+                        for (int i = 0; i < coin.an.Count; i++)
+                        {
+                            Debug.WriteLine("PAN" + i + ": " + coin.pan[i]);
+                        }
+
+                    }
+                    FS.WriteCoinsToFile(coins, FS.ImportFolder + coins.Count() + ".CloudCoins.recovery"+ Utils.RandomString(8).ToLower() + "");
+                    detect();
+                }
+            }
+        }
     }
 }

@@ -184,6 +184,7 @@
                 <Button x:Name="cmdImportCSV" Content="Import CSV" Click="cmdShowFolders_Click" Width="150"></Button>
                 <Button x:Name="cmdImportQR" Content="Import QR Code" Click="cmdShowFolders_Click" Width="150"></Button>
                 <Button x:Name="cmdImport2DBarCode" Content="Import Bar Code" Click="cmdShowFolders_Click" Width="150"></Button>
+                <Button x:Name="cmdRecover" Content="Recover Coins" Click="cmdRecover_Click" Width="150"></Button>
 
             </StackPanel>
             <Label x:Name="lblProgress" Margin="10,10" Content="Progress Status : "></Label>
