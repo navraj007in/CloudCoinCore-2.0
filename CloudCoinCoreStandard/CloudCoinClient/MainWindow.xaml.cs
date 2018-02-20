@@ -251,8 +251,8 @@ namespace CloudCoinClient
                         }
                         int countp = coin.response.Where(x => x.outcome == "pass").Count();
                         int countf = coin.response.Where(x => x.outcome == "fail").Count();
-                        coin.PassCount = countp;
-                        coin.FailCount = countf;
+                        coin.PassCount = coin.pown.Count(x => x == 'p');
+                        coin.FailCount = coin.pown.Count(x => x == 'f');
                         CoinCount++;
 
 
@@ -281,6 +281,9 @@ namespace CloudCoinClient
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             raida.OnProgressChanged(pge);
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
+            detectedCoins.ForEach(x => x.setAnsToPansIfPassed());
+            detectedCoins.ForEach(x => x.calculateHP());
+            detectedCoins.ForEach(x => x.calcExpirationDate());
 
             // Apply Sort to Folder to all detected coins at once.
             updateLog("Starting Sort.....");
@@ -977,6 +980,24 @@ namespace CloudCoinClient
             }
         }
 
+        private void RecoverCoins(IEnumerable<CloudCoin> coins, bool UsePANS)
+        {
+            foreach (var coin in coins)
+            {
+                for (int i = 0; i < coin.an.Count; i++)
+                {
+                    Debug.WriteLine("AN" + i + ": " + coin.an[i]);
+                    if (coin.pan[i] != "" && coin.pan[i] != null && UsePANS)
+                        coin.an[i] = coin.pan[i];
+                }
+                for (int i = 0; i < coin.an.Count; i++)
+                {
+                    Debug.WriteLine("PAN" + i + ": " + coin.pan[i]);
+                }
+
+            }
+            FS.WriteCoinsToFile(coins, FS.ImportFolder + coins.Count() + ".CloudCoins.recovery." + Utils.RandomString(8).ToLower() + "");
+        }
         private void cmdRecover_Click(object sender, RoutedEventArgs e)
         {
 
@@ -991,21 +1012,7 @@ namespace CloudCoinClient
                 var coins = FS.LoadCoins(openFileDialog.FileName);
                 if(coins!=null)
                 {
-                    foreach(var coin in coins)
-                    {
-                        for (int i = 0; i <coin.an.Count;i++)
-                        {
-                            Debug.WriteLine("AN"+ i + ": " +coin.an[i]);
-                            if(coin.pan[i]!= "" && coin.pan[i] !=null)
-                                coin.an[i] = coin.pan[i];
-                        }
-                        for (int i = 0; i < coin.an.Count; i++)
-                        {
-                            Debug.WriteLine("PAN" + i + ": " + coin.pan[i]);
-                        }
-
-                    }
-                    FS.WriteCoinsToFile(coins, FS.ImportFolder + coins.Count() + ".CloudCoins.recovery"+ Utils.RandomString(8).ToLower() + "");
+                    RecoverCoins(coins, true);
                     detect();
                 }
             }

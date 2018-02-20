@@ -187,6 +187,21 @@
                 <Button x:Name="cmdRecover" Content="Recover Coins" Click="cmdRecover_Click" Width="150"></Button>
 
             </StackPanel>
+            <Popup Placement="Bottom" AllowsTransparency="True"  PopupAnimation="Fade" x:Name="pup" VerticalOffset="-100">
+
+                <StackPanel>
+
+                    <TextBlock Name="McTextBlock" Background="Black" Foreground="White" >
+
+          This is popup text
+
+                    </TextBlock>
+
+                    <Button Content="Close this Pupup" Click="Button_Click"/>
+
+                </StackPanel>
+
+            </Popup>
             <Label x:Name="lblProgress" Margin="10,10" Content="Progress Status : "></Label>
             <ProgressBar x:Name="bar1" Value ="0"  Maximum="100" Margin="10,10"></ProgressBar>
             <ProgressBar x:Name="bar2" Value="0" Maximum="100" Margin="10,10"></ProgressBar>
