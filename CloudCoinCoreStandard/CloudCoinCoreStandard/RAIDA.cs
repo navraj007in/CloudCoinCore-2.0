@@ -160,10 +160,10 @@ namespace CloudCoinCore
             Debug.WriteLine("Pass Count -" +counts.Count());
             Debug.WriteLine("Fail Count -" + countsf.Count());
 
-            coin.setAnsToPansIfPassed();
-            coin.calculateHP();
+            coin.SetAnsToPansIfPassed();
+            coin.CalculateHP();
 
-            coin.calcExpirationDate();
+            coin.CalcExpirationDate();
             coin.grade();
             DetectEventArgs de = new DetectEventArgs(coin);
             OnCoinDetected(de);

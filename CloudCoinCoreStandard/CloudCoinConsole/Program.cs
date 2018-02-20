@@ -175,7 +175,7 @@ namespace CloudCoinConsole
 
             // Apply Sort to Folder to all detected coins at once.
             updateLog("Starting Sort.....");
-            detectedCoins.ForEach(x => x.sortToFolder());
+            detectedCoins.ForEach(x => x.SortToFolder());
             updateLog("Ended Sort........");
 
             var passedCoins = (from x in detectedCoins

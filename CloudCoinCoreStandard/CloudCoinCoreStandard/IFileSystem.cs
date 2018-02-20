@@ -255,7 +255,7 @@ namespace CloudCoinCore
             // End of ans
             //CoinUtils cu = new CoinUtils(cc);
             //cu.calcExpirationDate();
-            cc.calcExpirationDate();
+            cc.CalcExpirationDate();
             json += tab + tab + quote + "ed" + quote + ":" + quote + cc.ed + quote + "," + Environment.NewLine; // "ed":"9-2016",
             if (string.IsNullOrEmpty(cc.pown)) { cc.pown = "uuuuuuuuuuuuuuuuuuuuuuuuu"; }//Set pown to unknow if it is not set. 
             json += tab + tab + quote + "pown" + quote + ":" + quote + cc.pown + quote + "," + Environment.NewLine;// "pown":"uuupppppffpppppfuuf",
@@ -299,7 +299,7 @@ namespace CloudCoinCore
                                                          //     switch () { }//end switch pown char
                                                          // }//end for each pown
             cloudCoinStr += "00"; // HC: Has comments. 00 = No
-            cc.calcExpirationDate();
+            cc.CalcExpirationDate();
             cloudCoinStr += cc.edHex; // 01;//Expiration date Sep 2016 (one month after zero month)
             cloudCoinStr += "01";//  cc.nn;//network number
             String hexSN = cc.sn.ToString("X6");

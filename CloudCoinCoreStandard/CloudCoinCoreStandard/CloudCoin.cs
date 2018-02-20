@@ -324,7 +324,7 @@ namespace CloudCoinCore
             }// end for 25 ans
         }// end setAnsToPans
 
-        public void setAnsToPansIfPassed(bool partial = false)
+        public void SetAnsToPansIfPassed(bool partial = false)
         {
             // now set all ans that passed to the new pans
             char[] pownArray = pown.ToCharArray();
@@ -346,7 +346,7 @@ namespace CloudCoinCore
             }// for each guid in coin
         }// end set ans to pans if passed
 
-        public void calculateHP()
+        public void CalculateHP()
         {
             hp = Config.NodeCount;
             char[] pownArray = pown.ToCharArray();
@@ -378,9 +378,9 @@ namespace CloudCoinCore
         public void doPostProcessing()
         {
             setPastStatus();
-            setAnsToPansIfPassed();
-            calculateHP();
-            calcExpirationDate();
+            SetAnsToPansIfPassed();
+            CalculateHP();
+            CalcExpirationDate();
             grade();
         }
         public bool setPastStatus()
@@ -443,7 +443,7 @@ namespace CloudCoinCore
             pastPown = pown;
         }//end record pown
 
-        public void sortToFolder()
+        public void SortToFolder()
         {
             //figures out which folder to put it in. 
             if (isPerfect())
@@ -690,7 +690,7 @@ namespace CloudCoinCore
             return this.gradeStatus;
         }// end gradeStatus
 
-        public void calcExpirationDate()
+        public void CalcExpirationDate()
         {
             DateTime expirationDate = DateTime.Today.AddYears(Config.YEARSTILEXPIRE);
             ed = (expirationDate.Month + "-" + expirationDate.Year);

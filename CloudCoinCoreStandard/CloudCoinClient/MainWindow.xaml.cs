@@ -282,17 +282,21 @@ namespace CloudCoinClient
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             raida.OnProgressChanged(pge);
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
-            detectedCoins.ForEach(x => x.setAnsToPansIfPassed());
-            detectedCoins.ForEach(x => x.calculateHP());
-            detectedCoins.ForEach(x => x.calcExpirationDate());
+            detectedCoins.ForEach(x => x.SetAnsToPansIfPassed());
+            detectedCoins.ForEach(x => x.CalculateHP());
+            detectedCoins.ForEach(x => x.CalcExpirationDate());
 
             // Apply Sort to Folder to all detected coins at once.
             updateLog("Starting Sort.....");
-            detectedCoins.ForEach(x => x.sortToFolder());
+            detectedCoins.ForEach(x => x.SortToFolder());
             updateLog("Ended Sort........");
 
             var passedCoins = (from x in detectedCoins
                                where x.folder == FS.BankFolder
+                               select x).ToList();
+
+            var frackedCoins = (from x in detectedCoins
+                               where x.folder == FS.FrackedFolder
                                select x).ToList();
 
             var failedCoins = (from x in detectedCoins
@@ -308,13 +312,14 @@ namespace CloudCoinClient
             Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
             Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
             updateLog("Coin Detection finished.");
-            updateLog("Total Passed Coins - " + passedCoins.Count() + "");
-            updateLog("Total Failed Coins - " + failedCoins.Count() + "");
-            updateLog("Total Lost Coins - " + lostCoins.Count() + "");
-            updateLog("Total Suspect Coins - " + suspectCoins.Count() + "");
+            updateLog("Total Passed Coins : " + (passedCoins.Count() + frackedCoins.Count()) + "");
+            updateLog("Total Failed Coins : " + failedCoins.Count() + "");
+            updateLog("Total Lost Coins : " + lostCoins.Count() + "");
+            updateLog("Total Suspect Coins : " + suspectCoins.Count() + "");
 
             // Move Coins to their respective folders after sort
             FS.MoveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
+            FS.MoveCoins(frackedCoins, FS.DetectedFolder, FS.FrackedFolder);
             FS.WriteCoin(failedCoins, FS.CounterfeitFolder, true);
             FS.MoveCoins(lostCoins, FS.DetectedFolder, FS.LostFolder);
             FS.MoveCoins(suspectCoins, FS.DetectedFolder, FS.SuspectFolder);
