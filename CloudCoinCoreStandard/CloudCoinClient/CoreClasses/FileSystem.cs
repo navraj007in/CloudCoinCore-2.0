@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace CloudCoinClient.CoreClasses
 {
@@ -32,7 +33,7 @@ namespace CloudCoinClient.CoreClasses
         public FileSystem(string RootPath)
         {
             this.RootPath = RootPath;
-            ImportFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_IMPORT + Path.DirectorySeparatorChar;
+            ImportFolder = RootPath  + Config.TAG_IMPORT + Path.DirectorySeparatorChar;
             ExportFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_EXPORT + Path.DirectorySeparatorChar;
             ImportedFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_IMPORTED + Path.DirectorySeparatorChar;
             TemplateFolder = RootPath + Path.DirectorySeparatorChar + Config.TAG_TEMPLATES + Path.DirectorySeparatorChar;
@@ -133,7 +134,62 @@ namespace CloudCoinClient.CoreClasses
 
         }
 
-        
+        private bool importJPEG(String fileName)//Move one jpeg to suspect folder. 
+        {
+            bool isSuccessful = false;
+            // Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
+            Debug.WriteLine("Trying to load: " + ImportFolder + fileName);
+            try
+            {
+                //  Console.Out.WriteLine("Loading coin: " + fileUtils.importFolder + fileName);
+                //CloudCoin tempCoin = this.fileUtils.loadOneCloudCoinFromJPEGFile( fileUtils.importFolder + fileName );
+
+                /*Begin import from jpeg*/
+
+                /* GET the first 455 bytes of he jpeg where the coin is located */
+                String wholeString = "";
+                byte[] jpegHeader = new byte[455];
+                // Console.Out.WriteLine("Load file path " + fileUtils.importFolder + fileName);
+                FileStream fileStream = new FileStream(ImportFolder + fileName, FileMode.Open, FileAccess.Read);
+                try
+                {
+                    int count;                            // actual number of bytes read
+                    int sum = 0;                          // total number of bytes read
+
+                    // read until Read method returns 0 (end of the stream has been reached)
+                    while ((count = fileStream.Read(jpegHeader, sum, 455 - sum)) > 0)
+                        sum += count;  // sum is a buffer offset for next reading
+                }
+                finally
+                {
+                    fileStream.Close();
+                }
+                wholeString = bytesToHexString(jpegHeader);
+
+                CloudCoin tempCoin = parseJpeg(wholeString);
+                // Console.Out.WriteLine("From FileUtils returnCC.fileName " + tempCoin.fileName);
+
+                /*end import from jpeg file */
+
+
+
+                //   Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
+
+                writeTo(SuspectFolder, tempCoin);
+                return true;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.Out.WriteLine("File not found: " + fileName + ex);
+                //CoreLogger.Log("File not found: " + fileName + ex);
+            }
+            catch (IOException ioex)
+            {
+                Console.Out.WriteLine("IO Exception:" + fileName + ioex);
+                //CoreLogger.Log("IO Exception:" + fileName + ioex);
+            }// end try catch
+            return isSuccessful;
+        }
         public override void DetectPreProcessing()
         {
             //Preprocess Coins before Detection Starts

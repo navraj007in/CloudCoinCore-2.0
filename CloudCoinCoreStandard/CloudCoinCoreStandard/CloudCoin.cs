@@ -70,7 +70,7 @@ namespace CloudCoinCore
         //Constructors
         public CloudCoin()
         {
-
+            an = new List<string>();
         }//end of constructor
 
         public CloudCoin(int nn, int sn, List<string> an, string ed, string pown, List<string> aoid)

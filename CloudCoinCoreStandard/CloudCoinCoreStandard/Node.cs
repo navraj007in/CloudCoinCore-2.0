@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
@@ -372,6 +373,8 @@ namespace CloudCoinCore
             return multiResponse;
         }//End multi detect
 
+             
+         
         //int[] nn, int[] sn, String[] an, String[] pan, int[] d, int timeout
         public async Task<MultiDetectResponse> MultiDetect()
         {
@@ -578,4 +581,6 @@ namespace CloudCoinCore
         }//End multi detect
 
     }
+  
+
 }
