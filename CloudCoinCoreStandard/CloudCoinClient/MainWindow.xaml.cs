@@ -235,11 +235,6 @@ namespace CloudCoinClient
             var newCoins = from x in predetectCoins where !snList.Contains(x.sn) select x;
             var existingCoins = from x in predetectCoins where snList.Contains(x.sn) select x;
 
-            foreach(var coin in newCoins)
-            {
-                updateLog("Found new coin :" + coin.sn +".Adding to detect list.");
-            }
-
             foreach (var coin in existingCoins)
             {
                 updateLog("Found existing coin :" + coin.sn + ". Skipping.");
@@ -348,6 +343,8 @@ namespace CloudCoinClient
             updateLog("Total Failed Coins : " + failedCoins.Count() + "");
             updateLog("Total Lost Coins : " + lostCoins.Count() + "");
             updateLog("Total Suspect Coins : " + suspectCoins.Count() + "");
+            updateLog("Total Skipped Coins : " + existingCoins.Count() + "");
+
 
             // Move Coins to their respective folders after sort
             FS.MoveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
