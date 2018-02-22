@@ -217,8 +217,40 @@ namespace CloudCoinClient
             // Prepare Coins for Import
             FS.DetectPreProcessing();
 
-            var predetectCoins = FS.LoadFolderCoins(FS.PreDetectFolder);
+            IEnumerable<CloudCoin>  predetectCoins = FS.LoadFolderCoins(FS.PreDetectFolder);
             FileSystem.predetectCoins = predetectCoins;
+
+            IEnumerable<CloudCoin> bankCoins = FileSystem.bankCoins;
+            IEnumerable<CloudCoin> frackedCoins1 = FileSystem.frackedCoins;
+
+            var bCoins = bankCoins.ToList();
+            bCoins.AddRange(frackedCoins1);
+            //bankCoins.ToList().AddRange(frackedCoins1);
+
+            var totalBankCoins = bCoins;
+
+            var snList = (from x in totalBankCoins
+                          select x.sn).ToList();
+
+            var newCoins = from x in predetectCoins where !snList.Contains(x.sn) select x;
+            var existingCoins = from x in predetectCoins where snList.Contains(x.sn) select x;
+
+            foreach(var coin in newCoins)
+            {
+                updateLog("Found new coin :" + coin.sn +".Adding to detect list.");
+            }
+
+            foreach (var coin in existingCoins)
+            {
+                updateLog("Found existing coin :" + coin.sn + ". Skipping.");
+                FS.MoveFile(FS.PreDetectFolder + coin.FileName + ".stack", FS.TrashFolder + coin.FileName + ".stack",IFileSystem.FileMoveOptions.Replace);
+            }
+
+            predetectCoins = newCoins;
+            //return;
+
+
+          
 
             // Process Coins in Lots of 200. Can be changed from Config File
             int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;

@@ -65,7 +65,7 @@ namespace CloudCoinCore
                 if(ext == ".jpeg" || ext == ".jpg")
                 {
                     try {
-                        var coin = importJPEG(files[i]);
+                        var coin = ReadJPEG(files[i]);
                         folderCoins.Add(coin);
                     }
                     catch (Exception e)
@@ -78,7 +78,7 @@ namespace CloudCoinCore
             return folderCoins;
         }
 
-        private CloudCoin importJPEG(String fileName)//Move one jpeg to suspect folder. 
+        private CloudCoin ReadJPEG(String fileName)//Move one jpeg to suspect folder. 
         {
            // bool isSuccessful = false;
             // Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
@@ -120,7 +120,7 @@ namespace CloudCoinCore
 
                 //   Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
 
-                writeTo(SuspectFolder, tempCoin);
+                //writeTo(SuspectFolder, tempCoin);
                 return tempCoin;
             }
             catch (FileNotFoundException ex)
@@ -234,6 +234,7 @@ namespace CloudCoinCore
             {
                 if(options== FileMoveOptions.Replace)
                 {
+                    File.Delete(TargetPath);
                     File.Move(SourcePath, TargetPath);
                 }
                 if(options== FileMoveOptions.Rename)
