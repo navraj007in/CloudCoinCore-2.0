@@ -309,6 +309,8 @@ namespace CloudCoinClient
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             raida.OnProgressChanged(pge);
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
+            detectedCoins.ForEach(x => x.pown = "ffffffppppppppppppppppppp");
+
             detectedCoins.ForEach(x => x.SetAnsToPansIfPassed());
             detectedCoins.ForEach(x => x.CalculateHP());
             detectedCoins.ForEach(x => x.CalcExpirationDate());
@@ -335,7 +337,9 @@ namespace CloudCoinClient
             var suspectCoins = (from x in detectedCoins
                              where x.folder == FS.SuspectFolder
                              select x).ToList();
-
+            var dangerousCoins = (from x in detectedCoins
+                                where x.folder == FS.DangerousFolder
+                                select x).ToList();
             Debug.WriteLine("Total Passed Coins - " + passedCoins.Count());
             Debug.WriteLine("Total Failed Coins - " + failedCoins.Count());
             updateLog("Coin Detection finished.");
@@ -352,6 +356,7 @@ namespace CloudCoinClient
             FS.WriteCoin(failedCoins, FS.CounterfeitFolder, true);
             FS.MoveCoins(lostCoins, FS.DetectedFolder, FS.LostFolder);
             FS.MoveCoins(suspectCoins, FS.DetectedFolder, FS.SuspectFolder);
+            FS.MoveCoins(dangerousCoins, FS.DetectedFolder, FS.DangerousFolder);
 
             // Clean up Detected Folder
             FS.RemoveCoins(failedCoins, FS.DetectedFolder);
@@ -369,6 +374,7 @@ namespace CloudCoinClient
             
             App.Current.Dispatcher.Invoke(delegate
             {
+                FS.LoadFileSystem();
                 enableUI();
                 ShowCoins();
             });
