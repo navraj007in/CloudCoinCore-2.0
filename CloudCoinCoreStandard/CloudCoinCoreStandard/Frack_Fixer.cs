@@ -28,10 +28,11 @@ namespace CloudCoinCore
 
         public string fixOneGuidCorner(int raida_ID, CloudCoin cc, int corner, int[] trustedTriad)
         {
+            RAIDA raida = RAIDA.GetInstance();
             CoinUtils cu = new CoinUtils(cc);
 
             /*1. WILL THE BROKEN RAIDA FIX? check to see if it has problems echo, detect, or fix. */
-            if (RAIDA_Status.failsFix[raida_ID] || RAIDA_Status.failsEcho[raida_ID] || RAIDA_Status.failsEcho[raida_ID])
+            if (raida.nodes[raida_ID].FailsFix || raida.nodes[raida_ID].FailsEcho || raida.nodes[raida_ID].FailsEcho)
             {
                 Console.Out.WriteLine("RAIDA Fails Echo or Fix. Try again when RAIDA online.");
                 return "RAIDA Fails Echo or Fix. Try again when RAIDA online.";
@@ -40,18 +41,18 @@ namespace CloudCoinCore
             {
                 /*2. ARE ALL TRUSTED RAIDA IN THE CORNER READY TO HELP?*/
 
-                if (raida.nodes[trustedTriad[0]].RAIDANodeStatus == NodeStatus.Ready || !RAIDA_Status.failsDetect[trustedTriad[0]] || !RAIDA_Status.failsEcho[trustedTriad[1]] || !RAIDA_Status.failsDetect[trustedTriad[1]] || !RAIDA_Status.failsEcho[trustedTriad[2]] || !RAIDA_Status.failsDetect[trustedTriad[2]])
+                if (!raida.nodes[trustedTriad[0]].FailsEcho || !raida.nodes[trustedTriad[0]].FailsDetect || !raida.nodes[trustedTriad[1]].FailsEcho || !!raida.nodes[trustedTriad[1]].FailsDetect || !raida.nodes[trustedTriad[2]].FailsEcho || !raida.nodes[trustedTriad[2]].FailsDetect)
                 {
                     /*3. GET TICKETS AND UPDATE RAIDA STATUS TICKETS*/
                     string[] ans = { cc.an[trustedTriad[0]], cc.an[trustedTriad[1]], cc.an[trustedTriad[2]] };
                     raida.get_Tickets(trustedTriad, ans, cc.nn, cc.sn, cu.getDenomination(), 3000);
                     
                     /*4. ARE ALL TICKETS GOOD?*/
-                    if (RAIDA_Status.hasTicket[trustedTriad[0]] && RAIDA_Status.hasTicket[trustedTriad[0]] && RAIDA_Status.hasTicket[trustedTriad[0]])
+                    if (raida.nodes[trustedTriad[0]].HasTicket && raida.nodes[trustedTriad[1]].HasTicket && raida.nodes[trustedTriad[2]].HasTicket)
                     {
                         /*5.T YES, so REQUEST FIX*/
                         //DetectionAgent da = new DetectionAgent(raida_ID, 5000);
-                        Response fixResponse = RAIDA.GetInstance().nodes[raida_ID].Fix(trustedTriad, RAIDA_Status.tickets[trustedTriad[0]], RAIDA_Status.tickets[trustedTriad[1]], RAIDA_Status.tickets[trustedTriad[2]], cc.an[raida_ID]).Result;
+                        Response fixResponse = RAIDA.GetInstance().nodes[raida_ID].Fix(trustedTriad, raida.nodes[trustedTriad[0]].ticket, raida.nodes[trustedTriad[1]].ticket, raida.nodes[trustedTriad[2]].ticket, cc.an[raida_ID]).Result;
                         /*6. DID THE FIX WORK?*/
                         if (fixResponse.success)
                         {
@@ -206,9 +207,14 @@ namespace CloudCoinCore
             CoinUtils cu = new CoinUtils(brokeCoin);
 
             /*0. RESET TICKETS IN RAIDA STATUS TO EMPTY*/
-            RAIDA_Status.resetTickets();
+
+            //RAIDA_Status.resetTickets();
+            RAIDA.GetInstance().nodes.ToList().ForEach(x => x.ResetTicket());
+
             /*0. RESET THE DETECTION to TRUE if it is a new COIN */
-            RAIDA_Status.newCoin();
+            RAIDA.GetInstance().nodes.ToList().ForEach(x => x.NewCoin());
+
+            //RAIDA_Status.newCoin();
 
             cu.setAnsToPans();// Make sure we set the RAIDA to the cc ans and not new pans. 
             DateTime before = DateTime.Now;

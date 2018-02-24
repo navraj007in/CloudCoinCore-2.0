@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Compile Remove="DetectionAgent.cs" />
+    <Compile Remove="RAIDA_Status.cs" />
   </ItemGroup>
 
   <ItemGroup>

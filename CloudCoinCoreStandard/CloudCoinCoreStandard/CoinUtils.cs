@@ -487,7 +487,7 @@ namespace CloudCoinCore
                 {
                     cc.an[i] = pans[i];
                 }
-                else if (pownArray[i] == 'u' && !RAIDA_Status.failsEcho[i] && partial == false)//Timed out but there server echoed. So it probably changed the PAN just too slow of a response
+                else if (pownArray[i] == 'u' && ! RAIDA.GetInstance().nodes[i].FailsEcho && partial == false)//Timed out but there server echoed. So it probably changed the PAN just too slow of a response
                 {
                     cc.an[i] = pans[i];
                 }

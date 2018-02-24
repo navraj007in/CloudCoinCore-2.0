@@ -658,6 +658,7 @@ namespace CloudCoinCore
         */
         public async Task<Response> GetTicket(int nn, int sn, String an, int d)
         {
+            RAIDA raida = RAIDA.GetInstance();
             Response get_ticketResponse = new Response();
             get_ticketResponse.fullRequest = fullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
             DateTime before = DateTime.Now;
@@ -676,16 +677,16 @@ namespace CloudCoinCore
                     int endTicket = Utils.ordinalIndexOf(message, "\"", 4) - startTicket;
                     get_ticketResponse.outcome = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
                     get_ticketResponse.success = true;
-                    RAIDA_Status.hasTicket[NodeNumber] = true;
-                    RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Success;
-                    RAIDA_Status.tickets[NodeNumber] = get_ticketResponse.outcome;
+                    HasTicket = true;
+                    ticketHistory = TicketHistory.Success;
+                    ticket = get_ticketResponse.outcome;
 
                 }
                 else
                 {
                     get_ticketResponse.success = false;
-                    RAIDA_Status.hasTicket[NodeNumber] = false;
-                    RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Failed;
+                    HasTicket = false;
+                    ticketHistory = TicketHistory.Failed;
                 }//end if
 
             }
@@ -694,8 +695,8 @@ namespace CloudCoinCore
                 get_ticketResponse.outcome = "error";
                 get_ticketResponse.fullResponse = ex.InnerException.Message;
                 get_ticketResponse.success = false;
-                RAIDA_Status.hasTicket[NodeNumber] = false;
-                RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Failed;
+                HasTicket = false;
+                ticketHistory = TicketHistory.Failed;
             }//end try catch
             return get_ticketResponse;
         }//end get ticket
