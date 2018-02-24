@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using Microsoft.Win32;
 
+
 namespace CloudCoinClient
 {
     /// <summary>
@@ -34,6 +35,7 @@ namespace CloudCoinClient
     {
         string RootPath;
         FileSystem FS;
+        Founders.FileUtils fileUtils;
         RAIDA raida;
         int onesCount = 0;
         int fivesCount = 0;
@@ -99,6 +101,12 @@ namespace CloudCoinClient
             cmdShow.IsEnabled = true;
         }
 
+        private void fix()
+        {
+            Founders.Frack_Fixer fixer = new Founders.Frack_Fixer(fileUtils, CloudCoinCore.Config.milliSecondsToTimeOut);
+            fixer.fixAll();
+            //stopwatch.Stop();
+        }
         public void Setup()
         {
             if (Properties.Settings.Default.WorkSpace == "")
@@ -110,6 +118,7 @@ namespace CloudCoinClient
                 RootPath = Properties.Settings.Default.WorkSpace;
             }
             FS = new FileSystem(RootPath);
+            fileUtils = Founders.FileUtils.GetInstance(RootPath);
 
             // Create the Folder Structure
             FS.CreateFolderStructure();
@@ -125,6 +134,8 @@ namespace CloudCoinClient
             FS.LoadFileSystem();
             //FS.LoadFolderCoins(FS.CounterfeitFolder);
             //Load Local Coins
+
+
 
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -347,7 +358,7 @@ namespace CloudCoinClient
             updateLog("Total Lost Coins : " + lostCoins.Count() + "");
             updateLog("Total Suspect Coins : " + suspectCoins.Count() + "");
             updateLog("Total Skipped Coins : " + existingCoins.Count() + "");
-
+            updateLog("Total Dangerous Coins : " + dangerousCoins.Count() + "");
 
             // Move Coins to their respective folders after sort
             FS.MoveCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);

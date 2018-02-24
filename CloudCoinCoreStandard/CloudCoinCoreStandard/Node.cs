@@ -14,6 +14,7 @@ namespace CloudCoinCore
         Ready,
         NotReady,
     }
+    public enum TicketHistory { Untried, Failed, Success };
 
     public class Node
     {
@@ -24,11 +25,17 @@ namespace CloudCoinCore
          * */
 
         public int NodeNumber;
+        public int EchoTime = 0;
         public String fullUrl;
         public int readTimeout;
         public NodeStatus RAIDANodeStatus = NodeStatus.NotReady;
+        public bool FailsDetect = false;
+        public bool FailsFix = false;
+        public bool FailsEcho = false;
+        public bool HasTicket = false;
+        public TicketHistory ticketHistory = TicketHistory.Untried;
         public MultiDetectResponse multiResponse = new MultiDetectResponse();
-
+        public String ticket = "";
         //Constructor
         public Node(int NodeNumber)
         {
@@ -41,6 +48,14 @@ namespace CloudCoinCore
         {
             return "https://RAIDA" + (NodeNumber-1) + ".cloudcoin.global/service/";
         }
+
+        public  void ResetTicket()
+        {
+                HasTicket = false;
+                ticketHistory = TicketHistory.Untried;
+                ticket = "";
+        }
+
 
         public async Task<Response> Echo()
         {
@@ -182,6 +197,13 @@ namespace CloudCoinCore
             return detectResponse;
         }//end detect
 
+        public void NewCoin()
+        {
+            HasTicket = false;
+            ticketHistory = TicketHistory.Untried;
+            ticket = "";
+            FailsDetect = false;
+        }
         public class MultiDetectResponse
         {
             public Response[] responses;
@@ -254,6 +276,7 @@ namespace CloudCoinCore
                             response[i].fullResponse = json.StatusCode.ToString();
                             response[i].success = false;
                             response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                            FailsDetect = true;
                             //RAIDA_Status.failsDetect[RAIDANumber] = true;
                         }//end for every CloudCoin note
                         multiResponse.responses = response;
@@ -275,6 +298,7 @@ namespace CloudCoinCore
                     response[i].fullResponse = ex.Message;
                     response[i].success = false;
                     response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                    FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }//end for every CloudCoin note
                 multiResponse.responses = response;
@@ -580,7 +604,103 @@ namespace CloudCoinCore
             return null;
         }//End multi detect
 
+        /**
+        * Method FIX
+        * Repairs a fracked RAIDA
+        * @param triad three ints trusted server RAIDA numbers
+        * @param m1 string ticket from the first trusted server
+        * @param m2 string ticket from the second trusted server
+        * @param m3 string ticket from the third trusted server
+        * @param pan string proposed authenticity number (to replace the wrong AN the RAIDA has)
+        * @return string status sent back from the server: sucess, fail or error. 
+        */
+        public async Task<Response> Fix(int[] triad, String m1, String m2, String m3, String pan)
+        {
+            Response fixResponse = new Response();
+            DateTime before = DateTime.Now;
+            fixResponse.fullRequest = fullUrl + "fix?fromserver1=" + triad[0] + "&message1=" + m1 + "&fromserver2=" + triad[1] + "&message2=" + m2 + "&fromserver3=" + triad[2] + "&message3=" + m3 + "&pan=" + pan;
+            DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
+            fixResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
+
+            try
+            {
+                fixResponse.fullResponse = await Utils.GetHtmlFromURL(fixResponse.fullRequest);
+                if (fixResponse.fullResponse.Contains("success"))
+                {
+                    fixResponse.outcome = "success";
+                    fixResponse.success = true;
+                }
+                else
+                {
+                    fixResponse.outcome = "fail";
+                    fixResponse.success = false;
+                }
+            }
+            catch (Exception ex)
+            {//quit
+                fixResponse.outcome = "error";
+                fixResponse.fullResponse = ex.InnerException.Message;
+                fixResponse.success = false;
+            }
+            return fixResponse;
+        }//end fixit
+
+
+        /**
+        * Method GET TICKET
+        * Returns an ticket from a trusted server
+        * @param nn  int that is the coin's Network Number 
+        * @param sn  int that is the coin's Serial Number
+        * @param an String that is the coin's Authenticity Number (GUID)
+        * @param pan String that is the Proposed Authenticity Number to replace the AN.
+        * @param d int that is the Denomination of the Coin
+        * @return Response object. 
+        */
+        public async Task<Response> GetTicket(int nn, int sn, String an, int d)
+        {
+            Response get_ticketResponse = new Response();
+            get_ticketResponse.fullRequest = fullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
+            DateTime before = DateTime.Now;
+
+            try
+            {
+                get_ticketResponse.fullResponse = await Utils.GetHtmlFromURL(get_ticketResponse.fullRequest);
+                DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
+                get_ticketResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
+
+                if (get_ticketResponse.fullResponse.Contains("ticket"))
+                {
+                    String[] KeyPairs = get_ticketResponse.fullResponse.Split(',');
+                    String message = KeyPairs[3];
+                    int startTicket = Utils.ordinalIndexOf(message, "\"", 3) + 2;
+                    int endTicket = Utils.ordinalIndexOf(message, "\"", 4) - startTicket;
+                    get_ticketResponse.outcome = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
+                    get_ticketResponse.success = true;
+                    RAIDA_Status.hasTicket[NodeNumber] = true;
+                    RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Success;
+                    RAIDA_Status.tickets[NodeNumber] = get_ticketResponse.outcome;
+
+                }
+                else
+                {
+                    get_ticketResponse.success = false;
+                    RAIDA_Status.hasTicket[NodeNumber] = false;
+                    RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Failed;
+                }//end if
+
+            }
+            catch (Exception ex)
+            {
+                get_ticketResponse.outcome = "error";
+                get_ticketResponse.fullResponse = ex.InnerException.Message;
+                get_ticketResponse.success = false;
+                RAIDA_Status.hasTicket[NodeNumber] = false;
+                RAIDA_Status.ticketHistory[NodeNumber] = RAIDA_Status.TicketHistory.Failed;
+            }//end try catch
+            return get_ticketResponse;
+        }//end get ticket
+
     }
-  
+
 
 }

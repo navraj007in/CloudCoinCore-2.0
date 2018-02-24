@@ -133,8 +133,32 @@ namespace CloudCoinCore
 
             return detectTasks;
         }
+        public void get_Tickets(int[] triad, String[] ans, int nn, int sn, int denomination, int milliSecondsToTimeOut)
+        {
+            //Console.WriteLine("Get Tickets called. ");
+            var t00 = get_Ticket(0, triad[00], nn, sn, ans[00], denomination);
+            var t01 = get_Ticket(1, triad[01], nn, sn, ans[01], denomination);
+            var t02 = get_Ticket(2, triad[02], nn, sn, ans[02], denomination);
+
+            var taskList = new List<Task> { t00, t01, t02 };
+            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
+            try
+            {
+                //  CoreLogger.Log(sn + " get ticket:" + triad[00] + " " + responseArray[triad[00]].fullResponse);
+                // CoreLogger.Log(sn + " get ticket:" + triad[01] + " " + responseArray[triad[01]].fullResponse);
+                //  CoreLogger.Log(sn + " get ticket:" + triad[02] + " " + responseArray[triad[02]].fullResponse);
+            }
+            catch { }
+            //Get data from the detection agents
+        }//end detect coin
+
+        public async Task get_Ticket(int i, int raidaID, int nn, int sn, String an, int d)
+        {
+            //DetectionAgent da = new DetectionAgent(raidaID, 5000);
+            responseArray[raidaID] = await nodes[raidaID].GetTicket(nn, sn, an, d);
 
 
+        }//end get ticket
         public Response[] responseArray = new Response[25];
 
         public async Task DetectCoin(CloudCoin coin, int milliSecondsToTimeOut)
@@ -165,6 +189,7 @@ namespace CloudCoinCore
 
             coin.CalcExpirationDate();
             coin.grade();
+            coin.SortToFolder();
             DetectEventArgs de = new DetectEventArgs(coin);
             OnCoinDetected(de);
 

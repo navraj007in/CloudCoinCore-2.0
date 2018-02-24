@@ -109,6 +109,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CoinsFix\CoinUtils.cs" />
+    <Compile Include="CoinsFix\DetectionAgent.cs" />
+    <Compile Include="CoinsFix\FileUtils.cs" />
+    <Compile Include="CoinsFix\FixitHelper.cs" />
+    <Compile Include="CoinsFix\Frack_Fixer.cs" />
+    <Compile Include="CoinsFix\KeyboardReader.cs" />
+    <Compile Include="CoinsFix\Logger.cs" />
+    <Compile Include="CoinsFix\RAIDA.cs" />
+    <Compile Include="CoinsFix\RAIDA_Status.cs" />
+    <Compile Include="CoinsFix\Response.cs" />
+    <Compile Include="CoinsFix\Stack.cs" />
     <Compile Include="CoreClasses\ClientNode.cs" />
     <Compile Include="CoreClasses\Exporter.cs" />
     <Compile Include="CoreClasses\FixItHelper.cs" />
@@ -369,9 +380,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CoinsFix\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SkiaSharp.1.59.3\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.59.3\build\net45\SkiaSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
