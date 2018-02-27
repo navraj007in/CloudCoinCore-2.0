@@ -35,7 +35,7 @@ namespace CloudCoinClient
     {
         string RootPath;
         FileSystem FS;
-        Founders.FileUtils fileUtils;
+        FileSystem fileUtils;
         RAIDA raida;
         int onesCount = 0;
         int fivesCount = 0;
@@ -103,7 +103,7 @@ namespace CloudCoinClient
 
         private void fix()
         {
-            Founders.Frack_Fixer fixer = new Founders.Frack_Fixer(fileUtils, CloudCoinCore.Config.milliSecondsToTimeOut);
+            Frack_Fixer fixer = new Frack_Fixer(fileUtils, CloudCoinCore.Config.milliSecondsToTimeOut);
             fixer.fixAll();
             //stopwatch.Stop();
         }
@@ -118,7 +118,7 @@ namespace CloudCoinClient
                 RootPath = Properties.Settings.Default.WorkSpace;
             }
             FS = new FileSystem(RootPath);
-            fileUtils = Founders.FileUtils.GetInstance(RootPath);
+            fileUtils = FS;
 
             // Create the Folder Structure
             FS.CreateFolderStructure();
@@ -135,7 +135,32 @@ namespace CloudCoinClient
             //FS.LoadFolderCoins(FS.CounterfeitFolder);
             //Load Local Coins
 
+            var lostresult = MessageBox.Show("We found some lost coins in your file System. Do you want to detect them again?", "Lost Coins found!", MessageBoxButton.YesNo);
 
+            if(lostresult == MessageBoxResult.Yes)
+            {
+                FS.MoveCoins(FileSystem.lostCoins, FS.LostFolder, FS.PreDetectFolder);
+                FileSystem.predetectCoins = FS.LoadFolderCoins(FS.PreDetectFolder);
+                FileSystem.lostCoins = FS.LoadFolderCoins(FS.LostFolder);
+            }
+
+            if (FileSystem.predetectCoins.Count() + FileSystem.suspectCoins.Count() > 0)
+            {
+                var result = MessageBox.Show("There are undetected coins in your file System. Do you want to resume?", "Un Imported Coins found!", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    FS.MoveCoins(FileSystem.predetectCoins, FS.SuspectFolder, FS.PreDetectFolder);
+                    detect();
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
+            }
 
             App.Current.Dispatcher.Invoke(delegate
             {
