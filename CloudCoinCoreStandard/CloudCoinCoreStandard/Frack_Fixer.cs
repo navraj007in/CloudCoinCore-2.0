@@ -52,7 +52,7 @@ namespace CloudCoinCore
                     {
                         /*5.T YES, so REQUEST FIX*/
                         //DetectionAgent da = new DetectionAgent(raida_ID, 5000);
-                        Response fixResponse = RAIDA.GetInstance().nodes[raida_ID].Fix(trustedTriad, raida.nodes[trustedTriad[0]].ticket, raida.nodes[trustedTriad[1]].ticket, raida.nodes[trustedTriad[2]].ticket, cc.an[raida_ID]).Result;
+                        Response fixResponse = RAIDA.GetInstance().nodes[raida_ID].Fix(trustedTriad, raida.nodes[trustedTriad[0]].Ticket, raida.nodes[trustedTriad[1]].Ticket, raida.nodes[trustedTriad[2]].Ticket, cc.an[raida_ID]).Result;
                         /*6. DID THE FIX WORK?*/
                         if (fixResponse.success)
                         {

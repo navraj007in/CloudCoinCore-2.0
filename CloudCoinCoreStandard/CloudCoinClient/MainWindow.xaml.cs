@@ -65,6 +65,10 @@ namespace CloudCoinClient
                 updateLog("Loading File system\n");
                 Setup();
             }).Start();
+
+            RecoverCoinForm form = new RecoverCoinForm();
+            form.Show();
+
         }
 
         public void RefreshScreen()
@@ -134,7 +138,7 @@ namespace CloudCoinClient
             FS.LoadFileSystem();
             //FS.LoadFolderCoins(FS.CounterfeitFolder);
             //Load Local Coins
-
+            RecoverCoinForm.FS = FS;
             var lostresult = MessageBox.Show("We found some lost coins in your file System. Do you want to detect them again?", "Lost Coins found!", MessageBoxButton.YesNo);
 
             if(lostresult == MessageBoxResult.Yes)
@@ -164,9 +168,16 @@ namespace CloudCoinClient
 
             App.Current.Dispatcher.Invoke(delegate
             {
-                ShowCoins();
-                enableUI();
-                updateLog("File system Loaded");
+                try
+                {
+                    ShowCoins();
+                    enableUI();
+                    updateLog("File system Loaded");
+                }
+                catch (Exception e)
+                {
+                    updateLog(e.Message);
+                }
             });
 
 
@@ -310,7 +321,7 @@ namespace CloudCoinClient
                         //coin.pown = "";
                         for (int k = 0; k < CloudCoinCore.Config.NodeCount; k++)
                         {
-                            coin.response[k] = raida.nodes[k].multiResponse.responses[j];
+                            coin.response[k] = raida.nodes[k].MultiResponse.responses[j];
                             coin.pown += coin.response[k].outcome.Substring(0, 1);
                         }
                         int countp = coin.response.Where(x => x.outcome == "pass").Count();

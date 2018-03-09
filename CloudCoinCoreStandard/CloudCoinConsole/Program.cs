@@ -137,7 +137,7 @@ namespace CloudCoinConsole
                         //coin.pown = "";
                         for (int k = 0; k < CloudCoinCore.Config.NodeCount; k++)
                         {
-                            coin.response[k] = raida.nodes[k].multiResponse.responses[j];
+                            coin.response[k] = raida.nodes[k].MultiResponse.responses[j];
                             coin.pown += coin.response[k].outcome.Substring(0, 1);
                         }
                         int countp = coin.response.Where(x => x.outcome == "pass").Count();

@@ -26,42 +26,44 @@ namespace CloudCoinCore
 
         public int NodeNumber;
         public int EchoTime = 0;
-        public String fullUrl;
-        public int readTimeout;
+        public int MultiDetectTime = 0;
+        public String FullUrl;
+        public int ReadTimeout;
         public NodeStatus RAIDANodeStatus = NodeStatus.NotReady;
         public bool FailsDetect = false;
         public bool FailsFix = false;
         public bool FailsEcho = false;
         public bool HasTicket = false;
         public TicketHistory ticketHistory = TicketHistory.Untried;
-        public MultiDetectResponse multiResponse = new MultiDetectResponse();
-        public String ticket = "";
+        public MultiDetectResponse MultiResponse = new MultiDetectResponse();
+        public String Ticket = "";
         //Constructor
         public Node(int NodeNumber)
         {
             this.NodeNumber = NodeNumber;
-            fullUrl = GetFullURL();
-            Debug.WriteLine(fullUrl);
+            FullUrl = GetFullURL();
+            Debug.WriteLine(FullUrl);
         }
 
         public String GetFullURL()
         {
-            return "https://RAIDA" + (NodeNumber-1) + ".cloudcoin.global/service/";
+            return "https://RAIDA" + (NodeNumber - 1) + ".cloudcoin.global/service/";
         }
 
-        public  void ResetTicket()
+        public void ResetTicket()
         {
-                HasTicket = false;
-                ticketHistory = TicketHistory.Untried;
-                ticket = "";
+            HasTicket = false;
+            ticketHistory = TicketHistory.Untried;
+            Ticket = "";
         }
 
 
         public async Task<Response> Echo()
         {
             Response echoResponse = new Response();
-            echoResponse.fullRequest = this.fullUrl + "echo?b=t";
+            echoResponse.fullRequest = this.FullUrl + "echo?b=t";
             DateTime before = DateTime.Now;
+            FailsEcho = true;
             //RAIDA_Status.failsEcho[raidaID] = true;
             try
             {
@@ -72,6 +74,7 @@ namespace CloudCoinCore
                     echoResponse.success = true;
                     echoResponse.outcome = "ready";
                     this.RAIDANodeStatus = NodeStatus.Ready;
+                    FailsEcho = false;
                     //RAIDA_Status.failsEcho[raidaID] = false;
                 }
                 else
@@ -79,6 +82,7 @@ namespace CloudCoinCore
                     this.RAIDANodeStatus = NodeStatus.NotReady;
                     echoResponse.success = false;
                     echoResponse.outcome = "error";
+                    FailsEcho = true;
                     //RAIDA_Status.failsEcho[raidaID] = true;
                 }
             }
@@ -87,13 +91,15 @@ namespace CloudCoinCore
                 echoResponse.outcome = "error";
                 echoResponse.success = false;
                 this.RAIDANodeStatus = NodeStatus.NotReady;
+                FailsEcho = true;
                 //RAIDA_Status.failsEcho[raidaID] = true;
                 if (ex.InnerException != null)
                     echoResponse.fullResponse = ex.InnerException.Message;
-                Debug.WriteLine("Error---"+ ex.Message);
+                Debug.WriteLine("Error---" + ex.Message);
             }
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             echoResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
+            EchoTime = Convert.ToInt32(ts.Milliseconds);
             //Debug.WriteLine("Echo Complete-Node No.-" + NodeNumber + ".Status-" + RAIDANodeStatus);
             return echoResponse;
         }//end detect
@@ -102,7 +108,7 @@ namespace CloudCoinCore
         {
             CloudCoin coin = RAIDA.GetInstance().coin;
             Response detectResponse = new Response();
-            detectResponse.fullRequest = this.fullUrl + "detect?nn=" + coin.nn + "&sn=" + coin.sn + "&an=" + coin.an[NodeNumber-1] + "&pan=" + coin.pan[NodeNumber-1] + "&denomination=" + coin.denomination + "&b=t";
+            detectResponse.fullRequest = this.FullUrl + "detect?nn=" + coin.nn + "&sn=" + coin.sn + "&an=" + coin.an[NodeNumber - 1] + "&pan=" + coin.pan[NodeNumber - 1] + "&denomination=" + coin.denomination + "&b=t";
             DateTime before = DateTime.Now;
             coin.setAnsToPans();
             try
@@ -111,18 +117,21 @@ namespace CloudCoinCore
 
                 DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
                 detectResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
-                coin.response[this.NodeNumber-1] = detectResponse;
+                coin.response[this.NodeNumber - 1] = detectResponse;
 
                 if (detectResponse.fullResponse.Contains("pass"))
                 {
                     detectResponse.outcome = "pass";
                     detectResponse.success = true;
+                    FailsDetect = false;
                 }
                 else if (detectResponse.fullResponse.Contains("fail") && detectResponse.fullResponse.Length < 200)//less than 200 incase their is a fail message inside errored page
                 {
                     detectResponse.outcome = "fail";
                     detectResponse.success = false;
                     RAIDANodeStatus = NodeStatus.Ready;
+                    FailsDetect = true;
+
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }
                 else
@@ -130,6 +139,7 @@ namespace CloudCoinCore
                     detectResponse.outcome = "error";
                     detectResponse.success = false;
                     RAIDANodeStatus = NodeStatus.NotReady;
+                    FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }
 
@@ -156,13 +166,13 @@ namespace CloudCoinCore
         public async Task<Response> Detect(CloudCoin coin)
         {
             Response detectResponse = new Response();
-            detectResponse.fullRequest = this.fullUrl + "detect?nn=" + coin.nn + "&sn=" + coin.sn + "&an=" + coin.an[NodeNumber] + "&pan=" + coin.pan[NodeNumber] + "&denomination=" + coin.denomination + "&b=t";
+            detectResponse.fullRequest = this.FullUrl + "detect?nn=" + coin.nn + "&sn=" + coin.sn + "&an=" + coin.an[NodeNumber] + "&pan=" + coin.pan[NodeNumber] + "&denomination=" + coin.denomination + "&b=t";
             DateTime before = DateTime.Now;
             coin.setAnsToPans();
             try
             {
                 detectResponse.fullResponse = await Utils.GetHtmlFromURL(detectResponse.fullRequest);
-                
+
                 DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
                 detectResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
                 coin.response[this.NodeNumber] = detectResponse;
@@ -177,6 +187,7 @@ namespace CloudCoinCore
                     detectResponse.outcome = "fail";
                     detectResponse.success = false;
                     RAIDANodeStatus = NodeStatus.Ready;
+                    FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }
                 else
@@ -184,6 +195,7 @@ namespace CloudCoinCore
                     detectResponse.outcome = "error";
                     detectResponse.success = false;
                     RAIDANodeStatus = NodeStatus.NotReady;
+                    FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }
 
@@ -201,7 +213,7 @@ namespace CloudCoinCore
         {
             HasTicket = false;
             ticketHistory = TicketHistory.Untried;
-            ticket = "";
+            Ticket = "";
             FailsDetect = false;
         }
         public class MultiDetectResponse
@@ -217,7 +229,7 @@ namespace CloudCoinCore
                 response[i] = new Response();
             }
 
-            multiResponse.responses = new Response[nn.Length];
+            MultiResponse.responses = new Response[nn.Length];
 
             //Create List of KeyValuePairs to use as the POST data
             List<KeyValuePair<string, string>> postVariables = new List<KeyValuePair<string, string>>();
@@ -232,7 +244,7 @@ namespace CloudCoinCore
                 postVariables.Add(new KeyValuePair<string, string>("denomination[]", d[i].ToString()));
                 //Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
 
-                response[i].fullRequest = this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
+                response[i].fullRequest = this.FullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
             }
 
             //convert postVariables to an object of FormUrlEncodedContent
@@ -256,7 +268,7 @@ namespace CloudCoinCore
                 using (client)
                 {
                     // Console.Write("postHtml await for response: ");
-                    json = await client.PostAsync(fullUrl + "multi_detect", dataContent);
+                    json = await client.PostAsync(FullUrl + "multi_detect", dataContent);
 
                     //Console.Write(".");
                     if (json.IsSuccessStatusCode)//200 status good
@@ -279,8 +291,8 @@ namespace CloudCoinCore
                             FailsDetect = true;
                             //RAIDA_Status.failsDetect[RAIDANumber] = true;
                         }//end for every CloudCoin note
-                        multiResponse.responses = response;
-                        return multiResponse;//END IF THE REQUEST GOT AN ERROR
+                        MultiResponse.responses = response;
+                        return MultiResponse;//END IF THE REQUEST GOT AN ERROR
 
                     }//end else 404 or 500
 
@@ -301,9 +313,9 @@ namespace CloudCoinCore
                     FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }//end for every CloudCoin note
-                multiResponse.responses = response;
+                MultiResponse.responses = response;
 
-                return multiResponse;//END IF THE REQUEST FAILED
+                return MultiResponse;//END IF THE REQUEST FAILED
             }
             catch (Exception ex)//Request failed with some kind of error that did not provide a response. 
             {
@@ -316,10 +328,11 @@ namespace CloudCoinCore
                     response[i].fullResponse = ex.Message;
                     response[i].success = false;
                     response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                    FailsDetect = true;
                     //RAIDA_Status.failsDetect[RAIDANumber] = true;
                 }//end for every CloudCoin note
-                multiResponse.responses = response;
-                return multiResponse;//END IF THE REQUEST FAILED
+                MultiResponse.responses = response;
+                return MultiResponse;//END IF THE REQUEST FAILED
             }//end catch request attmept
 
 
@@ -392,13 +405,13 @@ namespace CloudCoinCore
             }//End Else not a dud
              //Break the respons into sub responses. 
              //RAIDA_Status.multiDetectTime[NodeNumber] = Convert.ToInt32(ts.Milliseconds);
-            multiResponse.responses = response;
-
-            return multiResponse;
+            MultiResponse.responses = response;
+            MultiDetectTime = Convert.ToInt32(ts.Milliseconds);
+            return MultiResponse;
         }//End multi detect
 
-             
-         
+
+
         //int[] nn, int[] sn, String[] an, String[] pan, int[] d, int timeout
         public async Task<MultiDetectResponse> MultiDetect()
         {
@@ -406,19 +419,19 @@ namespace CloudCoinCore
             try
             {
 
-            var raida = RAIDA.GetInstance();
-            int[] nn = raida.multiRequest.nn;
-            int[] sn = raida.multiRequest.sn;
-            String[] an = raida.multiRequest.an[NodeNumber-1];
-            String[] pan = raida.multiRequest.pan[NodeNumber-1];
-            int[] d = raida.multiRequest.d;
-            int timeout = raida.multiRequest.timeout;
+                var raida = RAIDA.GetInstance();
+                int[] nn = raida.multiRequest.nn;
+                int[] sn = raida.multiRequest.sn;
+                String[] an = raida.multiRequest.an[NodeNumber - 1];
+                String[] pan = raida.multiRequest.pan[NodeNumber - 1];
+                int[] d = raida.multiRequest.d;
+                int timeout = raida.multiRequest.timeout;
 
-            Response[] response = new Response[nn.Length];
-            for (int i = 0; i < nn.Length; i++)
-            {
-                response[i] = new Response();
-            }
+                Response[] response = new Response[nn.Length];
+                for (int i = 0; i < nn.Length; i++)
+                {
+                    response[i] = new Response();
+                }
 
                 //Create List of KeyValuePairs to use as the POST data
                 List<KeyValuePair<string, string>> postVariables = new List<KeyValuePair<string, string>>();
@@ -431,9 +444,9 @@ namespace CloudCoinCore
                     postVariables.Add(new KeyValuePair<string, string>("ans[]", an[i]));
                     postVariables.Add(new KeyValuePair<string, string>("pans[]", pan[i]));
                     postVariables.Add(new KeyValuePair<string, string>("denomination[]", d[i].ToString()));
-                   // Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
+                    // Debug.WriteLine("url is " + this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i]);
 
-                    response[i].fullRequest = this.fullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
+                    response[i].fullRequest = this.FullUrl + "detect?nns[]=" + nn[i] + "&sns[]=" + sn[i] + "&ans[]=" + an[i] + "&pans[]=" + pan[i] + "&denomination[]=" + d[i];//Record what was sent
                 }
 
                 //convert postVariables to an object of FormUrlEncodedContent
@@ -457,7 +470,7 @@ namespace CloudCoinCore
                     using (client)
                     {
                         // Console.Write("postHtml await for response: ");
-                        json = await client.PostAsync(fullUrl + "multi_detect", dataContent);
+                        json = await client.PostAsync(FullUrl + "multi_detect", dataContent);
 
                         //Console.Write(".");
                         if (json.IsSuccessStatusCode)//200 status good
@@ -477,10 +490,11 @@ namespace CloudCoinCore
                                 response[i].fullResponse = json.StatusCode.ToString();
                                 response[i].success = false;
                                 response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                                FailsDetect = true;
                                 //RAIDA_Status.failsDetect[RAIDANumber] = true;
                             }//end for every CloudCoin note
-                            multiResponse.responses = response;
-                            return multiResponse;//END IF THE REQUEST GOT AN ERROR
+                            MultiResponse.responses = response;
+                            return MultiResponse;//END IF THE REQUEST GOT AN ERROR
 
                         }//end else 404 or 500
 
@@ -498,11 +512,12 @@ namespace CloudCoinCore
                         response[i].fullResponse = ex.Message;
                         response[i].success = false;
                         response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                        FailsDetect = true;
                         //RAIDA_Status.failsDetect[RAIDANumber] = true;
                     }//end for every CloudCoin note
-                    multiResponse.responses = response;
+                    MultiResponse.responses = response;
 
-                    return multiResponse;//END IF THE REQUEST FAILED
+                    return MultiResponse;//END IF THE REQUEST FAILED
                 }
                 catch (Exception ex)//Request failed with some kind of error that did not provide a response. 
                 {
@@ -515,10 +530,11 @@ namespace CloudCoinCore
                         response[i].fullResponse = ex.Message;
                         response[i].success = false;
                         response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                        FailsDetect = true;
                         //RAIDA_Status.failsDetect[RAIDANumber] = true;
                     }//end for every CloudCoin note
-                    multiResponse.responses = response;
-                    return multiResponse;//END IF THE REQUEST FAILED
+                    MultiResponse.responses = response;
+                    return MultiResponse;//END IF THE REQUEST FAILED
                 }//end catch request attmept
 
 
@@ -590,9 +606,9 @@ namespace CloudCoinCore
 
                 }//End Else not a dud
                  //Break the respons into sub responses. 
-                 //RAIDA_Status.multiDetectTime[NodeNumber] = Convert.ToInt32(ts.Milliseconds);
-                multiResponse.responses = response;
-                return multiResponse;
+                MultiDetectTime = Convert.ToInt32(ts.Milliseconds);
+                MultiResponse.responses = response;
+                return MultiResponse;
 
             }
             catch (Exception e)
@@ -618,7 +634,7 @@ namespace CloudCoinCore
         {
             Response fixResponse = new Response();
             DateTime before = DateTime.Now;
-            fixResponse.fullRequest = fullUrl + "fix?fromserver1=" + triad[0] + "&message1=" + m1 + "&fromserver2=" + triad[1] + "&message2=" + m2 + "&fromserver3=" + triad[2] + "&message3=" + m3 + "&pan=" + pan;
+            fixResponse.fullRequest = FullUrl + "fix?fromserver1=" + triad[0] + "&message1=" + m1 + "&fromserver2=" + triad[1] + "&message2=" + m2 + "&fromserver3=" + triad[2] + "&message3=" + m3 + "&pan=" + pan;
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             fixResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
 
@@ -660,7 +676,7 @@ namespace CloudCoinCore
         {
             RAIDA raida = RAIDA.GetInstance();
             Response get_ticketResponse = new Response();
-            get_ticketResponse.fullRequest = fullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
+            get_ticketResponse.fullRequest = FullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
             DateTime before = DateTime.Now;
 
             try
@@ -679,7 +695,7 @@ namespace CloudCoinCore
                     get_ticketResponse.success = true;
                     HasTicket = true;
                     ticketHistory = TicketHistory.Success;
-                    ticket = get_ticketResponse.outcome;
+                    Ticket = get_ticketResponse.outcome;
 
                 }
                 else

@@ -94,9 +94,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="zxing, Version=0.16.2.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZXing.Net.0.16.2\lib\net461\zxing.dll</HintPath>
     </Reference>
@@ -117,6 +119,12 @@
       <DependentUpon>NoteUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProgressEventArgs.cs" />
+    <Compile Include="RecoverCoinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RecoverCoinForm.Designer.cs">
+      <DependentUpon>RecoverCoinForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ColorToSCBrushConverter.cs" />
     <Compile Include="UserControls\ImageButton.cs" />
     <Compile Include="UserControls\IncrementUserControl.xaml.cs">
@@ -340,6 +348,9 @@
     <Resource Include="Images\x.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="RecoverCoinForm.resx">
+      <DependentUpon>RecoverCoinForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Templates\jpeg1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
