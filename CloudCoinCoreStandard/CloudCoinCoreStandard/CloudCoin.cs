@@ -18,7 +18,7 @@ namespace CloudCoinCore
         [JsonIgnore]
         public string folder;
         [JsonIgnore]
-        public Response[] response= new Response[Config.NodeCount];
+        public Response[] response = new Response[Config.NodeCount];
         [JsonIgnore]
         public String[] gradeStatus = new String[3];// What passed, what failed, what was undetected
         //Fields
@@ -26,7 +26,7 @@ namespace CloudCoinCore
         public int nn { get; set; }
 
         [JsonProperty("sn")]
-        public int sn { get { return pSN;  } set { pSN = value; denomination = getDenomination(); } }
+        public int sn { get { return pSN; } set { pSN = value; denomination = getDenomination(); } }
 
         [JsonProperty("an")]
         public List<string> an { get; set; }
@@ -60,7 +60,7 @@ namespace CloudCoinCore
         public DetectionStatus DetectResult { get; set; }
         public int PassCount { get { return passCount; } set { passCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
         private int passCount = 0;
-        private int failCount = 0; 
+        private int failCount = 0;
         public int FailCount { get { return failCount; } set { failCount = value; if (passCount >= Config.PassCount) DetectionResult = "Pass"; else DetectionResult = "Fail"; } }
 
         public enum Folder { Suspect, Counterfeit, Fracked, Bank, Trash };
@@ -88,7 +88,6 @@ namespace CloudCoinCore
         {
 
         }//end of constructor
-
         public static CloudCoin FromCSV(string csvLine)
         {
             try
@@ -96,13 +95,13 @@ namespace CloudCoinCore
                 CloudCoin coin = new CloudCoin();
                 string[] values = csvLine.Split(',');
                 Debug.WriteLine(values[0]);
-                coin.sn = Convert.ToInt32( values[0]);
+                coin.sn = Convert.ToInt32(values[0]);
                 coin.nn = Convert.ToInt32(values[1]);
                 coin.denomination = Convert.ToInt16(values[1]);
                 coin.an = new List<string>();
-                for(int i=0;i<Config.NodeCount;i ++)
+                for (int i = 0; i < Config.NodeCount; i++)
                 {
-                    coin.an.Add(values[i+3]);
+                    coin.an.Add(values[i + 3]);
                 }
 
                 return coin;
@@ -115,7 +114,10 @@ namespace CloudCoinCore
             return null;
         }
         [JsonIgnore]
-        public string FileName { get {
+        public string FileName
+        {
+            get
+            {
                 return this.getDenomination() + ".CloudCoin." + nn + "." + sn + ".";
             }
         }
@@ -170,13 +172,13 @@ namespace CloudCoinCore
 
         public string GetCSV()
         {
-            string csv = this.sn + ","+ this.denomination+","+ this.nn + ",";
+            string csv = this.sn + ",";
 
-            for(int i=0;i<Config.NodeCount;i++)
+            for (int i = 0; i < Config.NodeCount; i++)
             {
-                csv += an[i]+ ",";
+                csv += an[i] + ",";
             }
-            
+
             return csv.Substring(0, csv.Length - 1);
         }
         public bool isFracked()
@@ -241,18 +243,19 @@ namespace CloudCoinCore
 
             CloudCoin cc = this;
             int i = 0;
-           
-            for(int j = 0; j < Config.NodeCount; j++)
+
+            for (int j = 0; j < Config.NodeCount; j++)
             {
                 Task t = Task.Factory.StartNew(() => raida.nodes[i].Detect(cc));
                 detectTaskList.Add(t);
             }
-                     
+
             return detectTaskList;
         }
         public void GeneratePAN()
         {
-            for (int i = 0; i < Config.NodeCount; i++) {
+            for (int i = 0; i < Config.NodeCount; i++)
+            {
                 pan[i] = this.generatePan();
             }
         }
@@ -316,7 +319,7 @@ namespace CloudCoinCore
         }//end is fixable
 
 
-        public void setAnsToPans()
+        public void SetAnsToPans()
         {
             for (int i = 0; (i < Config.NodeCount); i++)
             {
@@ -381,7 +384,7 @@ namespace CloudCoinCore
             SetAnsToPansIfPassed();
             CalculateHP();
             CalcExpirationDate();
-            grade();
+            //grade();
         }
         public bool setPastStatus()
         {
@@ -463,18 +466,18 @@ namespace CloudCoinCore
             //--------------------------------------
             /*Now look  at fracked coins*/
 
-            if(isGradablePass())
+            if (isGradablePass())
             {
-                if(!isFracked())
+                if (!isFracked())
                 {
                     folder = RAIDA.GetInstance().FS.BankFolder;
                     return;
                 }
                 else
                 {
-                    if(isDangerous())
+                    if (isDangerous())
                     {
-                        if(isFixable())
+                        if (isFixable())
                         {
                             recordPown();
                             folder = RAIDA.GetInstance().FS.DangerousFolder;
@@ -489,7 +492,7 @@ namespace CloudCoinCore
                     }
                     else
                     {
-                        if(!isFixable())
+                        if (!isFixable())
                         {
                             folder = RAIDA.GetInstance().FS.CounterfeitFolder;
                             return;
@@ -518,7 +521,6 @@ namespace CloudCoinCore
                 }
             }
         }//end sort folder
-
         public bool noResponses()
         {
             //Does the coin have no-responses from the RIDA. This means the RAIDA may be using its PAN or AN
@@ -557,7 +559,7 @@ namespace CloudCoinCore
             int failed = response.Where(x => x.outcome == "fail").Count();
             int other = total - passed - failed;
 
-            if(passed > Config.PassCount)
+            if (passed > Config.PassCount)
             {
                 DetectResult = DetectionStatus.Passed;
             }
@@ -746,8 +748,8 @@ namespace CloudCoinCore
     public struct DetectionResult
     {
         public DetectionStatus Result;
-        public int PassCount ;
-        public int FailCount ;
+        public int PassCount;
+        public int FailCount;
         public int OtherCount;
 
         public int Description;

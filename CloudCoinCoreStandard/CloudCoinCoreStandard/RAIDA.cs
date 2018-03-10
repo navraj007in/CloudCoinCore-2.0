@@ -99,7 +99,7 @@ namespace CloudCoinCore
             for (int i = 0; i < coins.Length; i++)//For every coin
             {
                 //coins[i].GeneratePAN();
-                coins[i].setAnsToPans();
+                coins[i].SetAnsToPans();
                 nns[i] = coins[i].nn;
                 sns[i] = coins[i].sn;
                 dens[i] = coins[i].denomination;
@@ -162,6 +162,30 @@ namespace CloudCoinCore
         }//end get ticket
         public Response[] responseArray = new Response[25];
 
+        public void GetTickets(int[] triad, String[] ans, int nn, int sn, int denomination, int milliSecondsToTimeOut)
+        {
+            //Console.WriteLine("Get Tickets called. ");
+            var t00 = GetTicket(0, triad[00], nn, sn, ans[00], denomination);
+            var t01 = GetTicket(1, triad[01], nn, sn, ans[01], denomination);
+            var t02 = GetTicket(2, triad[02], nn, sn, ans[02], denomination);
+
+            var taskList = new List<Task> { t00, t01, t02 };
+            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
+            try
+            {
+                //  CoreLogger.Log(sn + " get ticket:" + triad[00] + " " + responseArray[triad[00]].fullResponse);
+                // CoreLogger.Log(sn + " get ticket:" + triad[01] + " " + responseArray[triad[01]].fullResponse);
+                //  CoreLogger.Log(sn + " get ticket:" + triad[02] + " " + responseArray[triad[02]].fullResponse);
+            }
+            catch { }
+            //Get data from the detection agents
+        }//end detect coin
+
+        public async Task GetTicket(int i, int raidaID, int nn, int sn, String an, int d)
+        {
+            responseArray[raidaID] = await nodes[raidaID].GetTicket(nn, sn, an, d);
+        }//end get ticket
+        
         public async Task DetectCoin(CloudCoin coin, int milliSecondsToTimeOut)
         {
             //Task.WaitAll(coin.detectTaskList.ToArray(),Config.milliSecondsToTimeOut);
@@ -197,12 +221,19 @@ namespace CloudCoinCore
         }//end detect coin
 
         public event EventHandler ProgressChanged;
+        public event EventHandler LoggerHandler;
+
         public int ReadyCount { get { return nodes.Where(x => x.RAIDANodeStatus == NodeStatus.Ready).Count(); } }
         public int NotReadyCount { get { return nodes.Where(x => x.RAIDANodeStatus == NodeStatus.NotReady).Count(); } }
 
         public virtual void OnProgressChanged(ProgressChangedEventArgs e)
         {
             ProgressChanged?.Invoke(this, e);
+        }
+
+        public void OnLogRecieved(ProgressChangedEventArgs e)
+        {
+            LoggerHandler?.Invoke(this, e);
         }
 
         public event EventHandler CoinDetected;
@@ -212,6 +243,7 @@ namespace CloudCoinCore
             CoinDetected?.Invoke(this, e);
         }
         public Response[,] responseArrayMulti;
+
 
     }
 }

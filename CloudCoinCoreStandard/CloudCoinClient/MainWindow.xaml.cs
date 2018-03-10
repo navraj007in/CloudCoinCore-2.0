@@ -108,7 +108,7 @@ namespace CloudCoinClient
         private void fix()
         {
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, CloudCoinCore.Config.milliSecondsToTimeOut);
-            fixer.fixAll();
+            fixer.FixAll();
             //stopwatch.Stop();
         }
         public void Setup()
@@ -232,7 +232,7 @@ namespace CloudCoinClient
             foreach (var coin in FileSystem.importCoins)
             {
                 // coin.GeneratePAN();
-                coin.setAnsToPans();
+                coin.SetAnsToPans();
                 raida.coin = coin;
                 var tasks = raida.GetDetectTasks(coin);
                 await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
