@@ -72,8 +72,8 @@ namespace CloudCoinCore
 
 
 
-    
-        public List<Func<Task>> GetMultiDetectTasks(CloudCoin[] coins, int milliSecondsToTimeOut)
+
+        public List<Func<Task>> GetMultiDetectTasks(CloudCoin[] coins, int milliSecondsToTimeOut, bool changeANs = true)
         {
             this.coins = coins;
 
@@ -92,14 +92,17 @@ namespace CloudCoinCore
             {
 
             };
-            
+
             List<Func<Task>> multiTaskList = new List<Func<Task>>();
 
             //List<Task<Response[]>> multiTaskList = new List<Task<Response[]>>();
             for (int i = 0; i < coins.Length; i++)//For every coin
             {
-                //coins[i].GeneratePAN();
-                coins[i].SetAnsToPans();
+                if (changeANs)
+                    coins[i].GeneratePAN();
+                else
+                    coins[i].SetAnsToPans();
+                //coins[i].setAnsToPans();
                 nns[i] = coins[i].nn;
                 sns[i] = coins[i].sn;
                 dens[i] = coins[i].denomination;
@@ -109,7 +112,7 @@ namespace CloudCoinCore
             multiRequest.timeout = Config.milliSecondsToTimeOut;
             for (int nodeNumber = 0; nodeNumber < Config.NodeCount; nodeNumber++)
             {
-                
+
                 ans[nodeNumber] = new String[coins.Length];
                 pans[nodeNumber] = new String[coins.Length];
 
@@ -134,32 +137,8 @@ namespace CloudCoinCore
 
             return detectTasks;
         }
-        public void get_Tickets(int[] triad, String[] ans, int nn, int sn, int denomination, int milliSecondsToTimeOut)
-        {
-            //Console.WriteLine("Get Tickets called. ");
-            var t00 = get_Ticket(0, triad[00], nn, sn, ans[00], denomination);
-            var t01 = get_Ticket(1, triad[01], nn, sn, ans[01], denomination);
-            var t02 = get_Ticket(2, triad[02], nn, sn, ans[02], denomination);
-
-            var taskList = new List<Task> { t00, t01, t02 };
-            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
-            try
-            {
-                //  CoreLogger.Log(sn + " get ticket:" + triad[00] + " " + responseArray[triad[00]].fullResponse);
-                // CoreLogger.Log(sn + " get ticket:" + triad[01] + " " + responseArray[triad[01]].fullResponse);
-                //  CoreLogger.Log(sn + " get ticket:" + triad[02] + " " + responseArray[triad[02]].fullResponse);
-            }
-            catch { }
-            //Get data from the detection agents
-        }//end detect coin
-
-        public async Task get_Ticket(int i, int raidaID, int nn, int sn, String an, int d)
-        {
-            //DetectionAgent da = new DetectionAgent(raidaID, 5000);
-            responseArray[raidaID] = await nodes[raidaID].GetTicket(nn, sn, an, d);
-
-
-        }//end get ticket
+       
+       
         public Response[] responseArray = new Response[25];
 
         public void GetTickets(int[] triad, String[] ans, int nn, int sn, int denomination, int milliSecondsToTimeOut)

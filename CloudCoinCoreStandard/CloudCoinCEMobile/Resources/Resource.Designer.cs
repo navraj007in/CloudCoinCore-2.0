@@ -45,7 +45,13 @@ namespace CloudCoinCEMobile
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Icon = 2130837504;
+			public const int backicons = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int Icon = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int launcher = 2130837506;
 			
 			static Drawable()
 			{
