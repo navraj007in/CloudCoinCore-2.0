@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="CloudCoinCE.NoteUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CloudCoinCE"
+             mc:Ignorable="d" 
+             Name="myNote"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Image Source="{Binding Path=Source,ElementName=myNote}" x:Name="imgNote"></Image>
+        <Image Source="Images\Moneyband_0.png" MaxHeight="50" Stretch="Fill" VerticalAlignment="Bottom" Margin="0,0,0,30"/>
+        <Image Source="Images\Layer_1.png" MaxWidth="30" VerticalAlignment="Bottom" Margin="10,0,0,40" HorizontalAlignment="Left" x:Name="imgSymbol" MinHeight="30" Stretch="Fill" Height="30"></Image>
+        <Label Content="X"  FontSize="22"  HorizontalAlignment="Center" Foreground="#A499FF" VerticalAlignment="Bottom" Margin="0,0,0,35" />
+        <Label Content="0"  FontSize="22" x:Name="lblNoteCount" Foreground="#24DF9B"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,35" />
+
+    </Grid>
+</UserControl>

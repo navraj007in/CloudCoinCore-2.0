@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:CloudCoinCE.UserControls">
+
+    <Style TargetType="{x:Type local:ImageButton}">
+        <Setter Property="Background" Value="#4C50AB"/>
+        <Setter Property="Foreground" Value="#ffd321" />
+        <Setter Property="BorderBrush" Value="#5a5fc9" />
+        <Setter Property="Template" >
+            <Setter.Value >
+                <ControlTemplate TargetType="{x:Type local:ImageButton}" >
+                    <Border Name="PART_Border" CornerRadius="{TemplateBinding CornerRadius}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"  Background="{TemplateBinding Background}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Name="PART_ImageNormal" Margin="2,0,15,0" Source="{TemplateBinding Image}" 
+                                       Width="{TemplateBinding ImageWidth}" 
+                                       Height="{TemplateBinding ImageHeight}"
+                                       VerticalAlignment="Center" />
+                            <Image Name="PART_ImageHover" Visibility="Collapsed" Margin="2,0,15,0" Source="{TemplateBinding ImageHover}" 
+                                       Width="{TemplateBinding ImageWidth}" 
+                                       Height="{TemplateBinding ImageHeight}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Content}" Style="{DynamicResource RalewayBold}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Border.IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#22DF9F"/>
+                            <Setter Property="Foreground" Value="#ffffff"/>
+                            <Setter TargetName="PART_ImageNormal" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="PART_ImageHover" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate >
+            </Setter.Value >
+        </Setter >
+        
+    </Style>
+
+</ResourceDictionary>
