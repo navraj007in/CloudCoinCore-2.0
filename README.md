@@ -67,60 +67,102 @@ By default, all parts of the AN are random numbers.
 
 ## Hashing:
 When embedding any information in the AN, such as a Password, PIN, Iris Code, or Email Address, this information must be a hash (using MD5) of the information - not the raw information along with the serial number of the coin. The hash must be done by concatenating the serial number of the CloudCoin with the data. So, suppose that we wanted to embed the pin number "1265" with the CloudCoin serial number "13,465,444".  The string "13465444" would be concatenated with "1265" to become "134654441265".
+
 Then it will be run against a MD5 has to become:
+
 `
 "134654441265" = 1448D3DC1CA9F647AB4841E12AA4FB7D
 `
-Spanning:
+## Spanning:
 Spanning is when a number is spanned or distributed among many RAIDA. Spanning stops anyone from gaining information if one of the RAIDA should be compromised. The rules of spanning are that you each character in the hash will be sent to a different RAIDA and then that will be looped until each RAIDA has 4 bytes or 8 characters. So the following code will be 
 
 Here is the distribution of this hash: 1111222233334444555566667777
 `
 RAIDA ID Data put in AN
+
 00:17655432
+
 01:17665433
+
 02:17765443
+
 03:11765543
+
 04:21766543
+
 05:21776544
+
 06:21176554
+
 07:22176654
+
 08:32177654
+
 09:32117655
+
 10:32217665
+
 11:33217765
+
 12:43211765
+
 13:43221766
+
 14:43321776
+
 15:44321176
+
 16:54322176
+
 17:54332177
+
 18:54432117
+
 19:55432217
+
 20:65433217
+
 21:65543211
+
 22:65543221
+
 23:66543321
+
 24:76544321
 `
 
 
 
-1st: Password.
-2nd: PIN
-3rd: Biometric
-4th: UserEmail or Contact info
+
+## CloudCoin Password:
+Default: A random number that should always be stored in the CloudCoin file. 
+
+0a7b49629f2540e7a5af0285eb449fdc
 
 
-## CloudCoin Part:
-A random number that should always be stored in the CloudCoin file. This number is unique for each RAIDA. 
-Unless using "Store in Mind" and then it is a user password that is spanned accross all RAIDA. 
+Override: Using "Store in Mind", the user can create a hash of the serial number and a password. This hash is spanned accross all RAIDA so that this number is unique for each RAIDA. The cloudcoin will show --------- (hyphens) when the a user password is used. 
+
+--------9f2540e7a5af0285eb449fdc
+
 
 ## PIN
-This is the either a random number or a PIN number that has been hashed with the serial number. 
-The hash will have been done on the client side. The PIN is spanned across all RAIDA with the same serial number. 
+Default: A random number that should always be stored in the CloudCoin file. 
 
+Override: The user can create a hash of the serial number and a PIN number. This hash is spanned accross all RAIDA so that this number is unique for each RAIDA. The cloudcoin will show --------- (hyphens) when the PIN is used. 
+
+0a7b4962--------a5af0285eb449fdc
 
 ## Biometric
-This is either a random number or a hash of a persons' biometric data with the serial number of the CloudCoin. If it is a biometric hash, that has will have been done on the client's side. 
-The biometric hash id spanned across all RAIDA. 
+Default: A random number that should always be stored in the CloudCoin file. 
+
+Override: The user can create a hash of the serial number and Biometric data. This hash is spanned accross all RAIDA so that this number is unique for each RAIDA. The cloudcoin will show --------- (hyphens) when the Biometric data is used. 
+
+0a7b49629f2540e7--------eb449fdc
+
+
+## Email
+Default: A random number that should always be stored in the CloudCoin file. 
+
+Override: The user can create a hash of the serial number and Biometric data. This hash is spanned accross all RAIDA so that this number is unique for each RAIDA. The cloudcoin will show --------- (hyphens) when the Biometric data is used. 
+
+0a7b49629f2540e7a5af0285--------
