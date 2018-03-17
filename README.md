@@ -54,13 +54,15 @@ dffa2104aa6e4196be3661c06c66b82b
 An AN (Authenticity Number) is 16 byte number show as a 32 character hexadecimal string. It should only contain characters 0-1 and A-F. It can be uppercase or lowercase (case insensitive).  
 
 
-Example of an AN number that has been separated by hyphens for human readability (ANs are not sent with hyphens)
-`
-dffa2104-aa6e4196-be3661c0-6c66b82b
-`
+
 
 ## Parts:
 The AN is divided into four parts. Each part is 4 bytes long and show with 8 hexadecimal characters. The names are the parts in order are:  Password, PIN, Biometric and Email. 
+
+Example of an AN number that has been separated by parts (hyphens) for readability (ANs are not sent with hyphens)
+`
+dffa2104-aa6e4196-be3661c0-6c66b82b
+`
 
 ## Default AN:
 By default, all parts of the AN are random numbers.
