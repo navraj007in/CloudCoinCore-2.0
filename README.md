@@ -62,20 +62,20 @@ dffa2104-aa6e4196-be3661c0-6c66b82b
 ## Parts:
 The AN is divided into four parts. Each part is 4 bytes long and show with 8 hexadecimal characters. The names are the parts in order are:  Password, PIN, Biometric and Email. 
 
-Default AN:
+## Default AN:
 By default, all parts of the AN are random numbers.
 
-Hashing:
+## Hashing:
 When embedding any information in the AN, such as a Password, PIN, Iris Code, or Email Address, this information must be a hash (using MD5) of the information - not the raw information along with the serial number of the coin. The hash must be done by concatenating the serial number of the CloudCoin with the data. So, suppose that we wanted to embed the pin number "1265" with the CloudCoin serial number "13,465,444".  The string "13465444" would be concatenated with "1265" to become "134654441265".
 Then it will be run against a MD5 has to become:
-
+`
 "134654441265" = 1448D3DC1CA9F647AB4841E12AA4FB7D
-
+`
 Spanning:
 Spanning is when a number is spanned or distributed among many RAIDA. Spanning stops anyone from gaining information if one of the RAIDA should be compromised. The rules of spanning are that you each character in the hash will be sent to a different RAIDA and then that will be looped until each RAIDA has 4 bytes or 8 characters. So the following code will be 
 
 Here is the distribution of this hash: 1111222233334444555566667777
-
+`
 RAIDA ID Data put in AN
 00:17655432
 01:17665433
@@ -102,25 +102,25 @@ RAIDA ID Data put in AN
 22:65543221
 23:66543321
 24:76544321
+`
 
 
 
-
-1st: CloudCoin Part.
+1st: Password.
 2nd: PIN
 3rd: Biometric
 4th: UserEmail or Contact info
 
 
-CloudCoin Part:
+## CloudCoin Part:
 A random number that should always be stored in the CloudCoin file. This number is unique for each RAIDA. 
 Unless using "Store in Mind" and then it is a user password that is spanned accross all RAIDA. 
 
-PIN
+## PIN
 This is the either a random number or a PIN number that has been hashed with the serial number. 
 The hash will have been done on the client side. The PIN is spanned across all RAIDA with the same serial number. 
 
 
-Biometric
+## Biometric
 This is either a random number or a hash of a persons' biometric data with the serial number of the CloudCoin. If it is a biometric hash, that has will have been done on the client's side. 
 The biometric hash id spanned across all RAIDA. 
