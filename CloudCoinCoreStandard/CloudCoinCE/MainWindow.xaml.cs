@@ -21,6 +21,7 @@ using CloudCoinIE;
 using Microsoft.Win32;
 using CloudCoinCore;
 using CloudCoinCE.CoreClasses;
+
 namespace CloudCoinCE
 {
     /// <summary>
@@ -28,10 +29,7 @@ namespace CloudCoinCE
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly BackgroundWorker worker = new BackgroundWorker();
         public EventHandler RefreshCoins;
-
-        public static string[] countries = new String[] { "Australia", "Macedonia", "Philippines", "Serbia", "Bulgaria", "Russia", "Switzerland", "United Kingdom", "Punjab", "India", "Croatia", "USA", "India", "Taiwan", "Moscow", "St.Petersburg", "Columbia", "Singapore", "Germany", "Canada", "Venezuela", "Hyperbad", "USA", "Ukraine", "Luxenburg" };
 
         #region CoreVariables
         CloudCoinCore.RAIDA raidaCore = CloudCoinCore.RAIDA.GetInstance();
@@ -54,29 +52,12 @@ namespace CloudCoinCE
         public static int exportJpegStack = 2;
         public static string exportTag = "";
         //SimpleLogger logger = new SimpleLogger();
+        Frack_Fixer fixer;
         
-        CloudCoinCore.Frack_Fixer fixer;
-
         #endregion
-        public static String rootFolder = AppDomain.CurrentDomain.BaseDirectory;
-        public static String importFolder = rootFolder + "Import" + System.IO.Path.DirectorySeparatorChar;
-        public static String importedFolder = rootFolder + "Imported" + System.IO.Path.DirectorySeparatorChar;
-        public static String trashFolder = rootFolder + "Trash" + System.IO.Path.DirectorySeparatorChar;
-        public static String suspectFolder = rootFolder + "Suspect" + System.IO.Path.DirectorySeparatorChar;
-        public static String frackedFolder = rootFolder + "Fracked" + System.IO.Path.DirectorySeparatorChar;
-        public static String bankFolder = rootFolder + "Bank" + System.IO.Path.DirectorySeparatorChar;
-        public static String templateFolder = rootFolder + "Templates" + System.IO.Path.DirectorySeparatorChar;
-        public static String counterfeitFolder = rootFolder + "Counterfeit" + System.IO.Path.DirectorySeparatorChar;
-        public static String directoryFolder = rootFolder + "Directory" + System.IO.Path.DirectorySeparatorChar;
-        public static String exportFolder = rootFolder + "Export" + System.IO.Path.DirectorySeparatorChar;
-        public static String languageFolder = rootFolder + "Language" + System.IO.Path.DirectorySeparatorChar;
-        public static String partialFolder = rootFolder + "Partial" + System.IO.Path.DirectorySeparatorChar;
-        public static String detectedFolder = rootFolder + "Detected" + System.IO.Path.DirectorySeparatorChar;
-        public static String logsFolder = rootFolder + "Logs" + System.IO.Path.DirectorySeparatorChar;
-
-       
-        //FileUtils fileUtils = FileUtils.GetInstance(rootFolder);
+        public static String RootFolder = AppDomain.CurrentDomain.BaseDirectory;
         
+              
         public MainWindow()
         {
             ShowDisclaimer();
@@ -86,64 +67,61 @@ namespace CloudCoinCE
             //fileUtils.CreateDirectoryStructure();
             //loadJson();
             printWelcome();
-            noteOne.NoteCount = "1";
-            noteFive.NoteCount = "5";
-            noteQtr.NoteCount = "10";
-            noteHundred.NoteCount = "100";
-            noteTwoFifty.NoteCount = "250";
-
-            raida1.IsActive = true;
-            raida2.IsActive = true;
-            raida3.IsActive = true;
-            raida4.IsActive = true;
-            raida5.IsActive = true;
-            raida6.IsActive = true;
-            raida7.IsActive = true;
-            raida8.IsActive = true;
-            raida9.IsActive = true;
-            raida10.IsActive = true;
-            raida11.IsActive = true;
-            raida12.IsActive = true;
-            raida13.IsActive = true;
-            raida14.IsActive = true;
-            raida15.IsActive = true;
-            raida16.IsActive = true;
-            raida17.IsActive = true;
-            raida18.IsActive = true;
-            raida19.IsActive = true;
-            raida20.IsActive = true;
-            raida21.IsActive = true;
-            raida22.IsActive = true;
-            raida23.IsActive = true;
-            raida24.IsActive = true;
-            raida25.IsActive = true;
-
-
-            //new Thread(delegate () {
-            //    echoRaida();
-            //}).Start();
-
-            worker.DoWork += Worker_DoWork; ;
-            worker.RunWorkerCompleted += Worker_RunWorkerCompleted; ;
-            //worker.RunWorkerAsync();
+            noteOne.NoteCount = "0";
+            noteFive.NoteCount = "0";
+            noteQtr.NoteCount = "0";
+            noteHundred.NoteCount = "0";
+            noteTwoFifty.NoteCount = "0";
+            fixer = new Frack_Fixer(FS, CloudCoinCore.Config.milliSecondsToTimeOut);
+            setLEDStatus(true);
             SetLEDFlashing(true);
             Echo();
             showCoins();
-
+            ShowCoins();
             new Thread(delegate () {
-                //fix();
+                Fix();
             }).Start();
 
             resumeImport();
         }
 
+        private void setLEDStatus(bool IsActive)
+        {
+            raida1.IsActive = IsActive;
+            raida2.IsActive = IsActive;
+            raida3.IsActive = IsActive;
+            raida4.IsActive = IsActive;
+            raida5.IsActive = IsActive;
+            raida6.IsActive = IsActive;
+            raida7.IsActive = IsActive;
+            raida8.IsActive = IsActive;
+            raida9.IsActive = IsActive;
+            raida10.IsActive = IsActive;
+            raida11.IsActive = IsActive;
+            raida12.IsActive = IsActive;
+            raida13.IsActive = IsActive;
+            raida14.IsActive = IsActive;
+            raida15.IsActive = IsActive;
+            raida16.IsActive = IsActive;
+            raida17.IsActive = IsActive;
+            raida18.IsActive = IsActive;
+            raida19.IsActive = IsActive;
+            raida20.IsActive = IsActive;
+            raida21.IsActive = IsActive;
+            raida22.IsActive = IsActive;
+            raida23.IsActive = IsActive;
+            raida24.IsActive = IsActive;
+            raida25.IsActive = IsActive;
+
+        }
         public async void Echo(bool resumeFix = false)
         {
             DisableUI();
             var echos = raidaCore.GetEchoTasks();
+            printLineDots();
             updateLog("\tEcho RAIDA");
-            updateLog("----------------------------------");
-
+            //updateLog("----------------------------------");
+            printLineDots();
             await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
             //MessageBox.Show("Finished Echo");
             // lblReady.Content = raida.ReadyCount;
@@ -162,7 +140,7 @@ namespace CloudCoinCE
 
             updateLog("\tReady Nodes : " + Convert.ToString(raidaCore.ReadyCount) + "");
             updateLog("\tNot Ready Nodes : " + Convert.ToString(raidaCore.NotReadyCount) + "");
-            updateLog("----------------------------------");
+            printLineDots();
 
             this.Dispatcher.Invoke(() => {
                 //updateLEDs(RAIDA_Status.failsEcho);
@@ -178,7 +156,6 @@ namespace CloudCoinCE
 
         private void Fix()
         {
-            //Frack_Fixer fixer = new Frack_Fixer(FS,CloudCoinCore.Config.milliSecondsToTimeOut);
             fixer.continueExecution = true;
             fixer.IsFixing = true;
             fixer.FixAll();
@@ -204,7 +181,7 @@ namespace CloudCoinCE
         private void resumeImport()
         {
 
-            int count = Directory.GetFiles(MainWindow.suspectFolder).Length;
+            int count = Directory.GetFiles(FS.SuspectFolder).Length;
             if (count > 0)
             {
                 new Thread(() =>
@@ -526,6 +503,11 @@ namespace CloudCoinCE
 
         public void Export(string tag, int exp_1, int exp_5, int exp_25, int exp_100, int exp_250)
         {
+            if (rdbJpeg.IsChecked == true)
+                exportJpegStack = 1;
+            else
+                exportJpegStack = 2;
+
             fixer.continueExecution = false;
             if (fixer.IsFixing)
             {
@@ -610,8 +592,6 @@ namespace CloudCoinCE
                 return;
             }
 
-            //updateLog(Convert.ToString(bankTotals[1] + frackedTotals[1] + bankTotals[2] + frackedTotals[2] + bankTotals[3] + frackedTotals[3] + bankTotals[4] + frackedTotals[4] + bankTotals[5] + frackedTotals[5] + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]));
-
             if (((bankTotals[1] + frackedTotals[1]) + (bankTotals[2] + frackedTotals[2]) + (bankTotals[3] + frackedTotals[3]) + (bankTotals[4] + frackedTotals[4]) + (bankTotals[5] + frackedTotals[5]) + partialTotals[1] + partialTotals[2] + partialTotals[3] + partialTotals[4] + partialTotals[5]) > 1000)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -621,8 +601,6 @@ namespace CloudCoinCE
                 printLineDots();
                 Console.Out.WriteLine("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
                 Console.Out.WriteLine("Do not export stack files with more than 1000 notes. .");
-                //updateLog("Warning: You have more than 1000 Notes in your bank. Stack files should not have more than 1000 Notes in them.");
-                //updateLog("Do not export stack files with more than 1000 notes. .");
 
                 Console.ForegroundColor = ConsoleColor.White;
             }//end if they have more than 1000 coins
@@ -630,11 +608,8 @@ namespace CloudCoinCE
             int file_type = 0; //reader.readInt(1, 2);
 
             Exporter exporter = new Exporter(FS);
-            //exporter.OnUpdateStatus +=  ;
             file_type = exportJpegStack;
 
-            //String tag = txtTag.StringValue;// reader.readString();
-            //Console.Out.WriteLine(("Exporting to:" + exportFolder));
 
             if (file_type == 1)
             {
@@ -651,11 +626,14 @@ namespace CloudCoinCE
                       + " coins in Total of " + String.Format("{0:n}", exportTotal) + " CC into " +
                       " " + FS.ExportFolder + " .");
             printLineDots();
+            txtTag.Text = "";
+            ShowCoins();
+
             //NSWorkspace.SharedWorkspace.SelectFile(FS.ExportFolder,
             //                                     FS.ExportFolder);
             Process.Start(FS.ExportFolder);
 
-            showCoins();
+            ShowCoins();
             Task.Run(() => {
                 Fix();
             });
@@ -700,23 +678,46 @@ namespace CloudCoinCE
 
         }// end show
 
-        private void updateNotes()
+        private void ShowCoins()
         {
+            var bankCoins = FS.LoadFolderCoins(FS.BankFolder);
+            var frackedCoins = FS.LoadFolderCoins(FS.FrackedFolder);
+
+            bankCoins.AddRange(frackedCoins);
+
+            onesCount = (from x in bankCoins
+                         where x.denomination == 1
+                         select x).Count();
+            fivesCount = (from x in bankCoins
+                          where x.denomination == 5
+                          select x).Count();
+            qtrCount = (from x in bankCoins
+                        where x.denomination == 25
+                        select x).Count();
+            hundredsCount = (from x in bankCoins
+                             where x.denomination == 100
+                             select x).Count();
+            twoFiftiesCount = (from x in bankCoins
+                               where x.denomination == 250
+                               select x).Count();
+
             App.Current.Dispatcher.Invoke(delegate
             {
-                noteOne.lblNoteCount.Content = Convert.ToString(bankTotals[1] + frackedTotals[1] + partialTotals[1]);
-                noteFive.lblNoteCount.Content = Convert.ToString(bankTotals[2] + frackedTotals[2] + partialTotals[2]);
-                noteQtr.lblNoteCount.Content = Convert.ToString(bankTotals[3] + frackedTotals[3] + partialTotals[3]);
-                noteHundred.lblNoteCount.Content = Convert.ToString(bankTotals[4] + frackedTotals[4] + partialTotals[4]);
-                noteTwoFifty.lblNoteCount.Content = Convert.ToString(bankTotals[5] + frackedTotals[5] + partialTotals[5]);
+                noteOne.lblNoteCount.Content = Convert.ToString(onesCount);
+                noteFive.lblNoteCount.Content = Convert.ToString(fivesCount);
+                noteQtr.lblNoteCount.Content = Convert.ToString(qtrCount);
+                noteHundred.lblNoteCount.Content = Convert.ToString(hundredsCount);
+                noteTwoFifty.lblNoteCount.Content = Convert.ToString(twoFiftiesCount);
 
-				updOne.Max = (bankTotals[1] + frackedTotals[1] + partialTotals[1]);
-				updFive.Max = (bankTotals[2] + frackedTotals[2] + partialTotals[2]);
-                updQtr.Max = (bankTotals[3] + frackedTotals[3] + partialTotals[3]);
-                updHundred.Max = (bankTotals[4] + frackedTotals[4] + partialTotals[4]);
-                updTwoFifty.Max = (bankTotals[5] + frackedTotals[5] + partialTotals[5]);
+				updOne.Max = onesCount;
+				updFive.Max = fivesCount;
+                updQtr.Max = qtrCount;
+                updHundred.Max = hundredsCount;
+                updTwoFifty.Max = twoFiftiesCount;
 
+                int totalAmount = onesCount + (fivesCount * 5) + (qtrCount * 25) + (hundredsCount * 100) + (twoFiftiesCount * 250);
 
+                lblNotesTotal.Text = "₡" + totalAmount;
             });
 
         }
@@ -885,12 +886,37 @@ namespace CloudCoinCE
         }
         private void backup()
         {
+            var bankCoins = FS.LoadFolderCoins(FS.BankFolder);
+            var frackedCoins = FS.LoadFolderCoins(FS.FrackedFolder);
+            var partialCoins = FS.LoadFolderCoins(FS.PartialFolder);
+
+            // Add them all up in a single list for backup
+
+            bankCoins.AddRange(frackedCoins);
+            bankCoins.AddRange(partialCoins);
+
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    string backupFileName = "backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower();
+                    FS.WriteCoinsToFile(bankCoins, dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar +
+                                        backupFileName);
+                    printLineDots();
+                    updateLog("Backup file " + backupFileName + " saved to " + dialog.SelectedPath + " .");
+                    printLineDots();
+
+                    MessageBox.Show("Backup completed successfully.");
+                }
+            }
 
         }
 
         private void cmdShowFolders_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(MainWindow.rootFolder);
+            Process.Start(MainWindow.RootFolder);
         }
 
         private void cmdRefresh_Click(object sender, RoutedEventArgs e)
@@ -902,8 +928,8 @@ namespace CloudCoinCE
 
         public void SetupFolders()
         {
-            rootFolder = getWorkspace();
-            FS = new FileSystem(rootFolder);
+            RootFolder = getWorkspace();
+            FS = new FileSystem(RootFolder);
 
             // Create the Folder Structure
             FS.CreateFolderStructure();
@@ -993,7 +1019,7 @@ namespace CloudCoinCE
 
         private void cmdPown_Click(object sender, RoutedEventArgs e)
         {
-            int count = Directory.GetFiles(MainWindow.importFolder).Length;
+            int count = Directory.GetFiles(FS.ImportFolder).Length;
             if (count == 0)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1229,7 +1255,7 @@ namespace CloudCoinCE
             updateLog("\tTotal Suspect Coins : " + suspectCoins.Count() + "");
             updateLog("\tTotal Skipped Coins : " + existingCoins.Count() + "");
             updateLog("\tTotal Dangerous Coins : " + dangerousCoins.Count() + "");
-
+            printLineDots();
 
             // Move Coins to their respective folders after sort
             FS.TransferCoins(passedCoins, FS.DetectedFolder, FS.BankFolder);
@@ -1255,6 +1281,7 @@ namespace CloudCoinCE
 
             Debug.WriteLine("Detection Completed in : " + ts.TotalMilliseconds / 1000);
             updateLog("Detection Completed in : " + ts.TotalMilliseconds / 1000);
+            printLineDots();
             //printLineDots();
             EnableUI();
             //ShowCoins();
@@ -1267,7 +1294,7 @@ namespace CloudCoinCE
 
         private void printLineDots()
         {
-            updateLog("****************************************************************************************************");
+            updateLog("********************************************************************************");
         }
 
         public void export()
@@ -1393,7 +1420,20 @@ namespace CloudCoinCE
             switch (rsltMessageBox)
             {
                 case MessageBoxResult.Yes:
-                    export();
+                    int exp_1 = Convert.ToInt16(updOne.Value);
+                    int exp_5 = Convert.ToInt16(updFive.Value);
+                    int exp_25 = Convert.ToInt16(updQtr.Value);
+                    int exp_100 = Convert.ToInt16(updHundred.Value);
+                    int exp_250 = Convert.ToInt16(updTwoFifty.Value);
+
+                    //Task.Run(() => {
+                        Export(txtTag.Text, exp_1,
+                               exp_5,
+                               exp_25,
+                               exp_100,
+                               exp_250);
+                   // });
+
                     break;
             }
         }
