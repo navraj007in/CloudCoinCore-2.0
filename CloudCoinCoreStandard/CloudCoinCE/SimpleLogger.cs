@@ -18,6 +18,24 @@ namespace CloudCoinCE
         /// </summary>
         /// <param name="append">True to append to existing log file, False to overwrite and create new log file</param>
 
+        public SimpleLogger(bool append = false)
+        {
+            DatetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+            Filename = "cloudcoince" + ".log";
+
+            // Log file header line
+            string logHeader = Filename + " is created.";
+            if (!File.Exists(Filename))
+            {
+                WriteLine(DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+            }
+            else
+            {
+                if (append == false)
+                    WriteLine(DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+            }
+        }
+
         public SimpleLogger(string FileName, bool append = false)
         {
             DatetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";

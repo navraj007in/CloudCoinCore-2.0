@@ -51,7 +51,7 @@ namespace CloudCoinCE
         public static int exportTwoFifties = 0;
         public static int exportJpegStack = 2;
         public static string exportTag = "";
-        //SimpleLogger logger = new SimpleLogger();
+        SimpleLogger logger = new SimpleLogger();
         Frack_Fixer fixer;
         
         #endregion
@@ -72,7 +72,10 @@ namespace CloudCoinCE
             noteQtr.NoteCount = "0";
             noteHundred.NoteCount = "0";
             noteTwoFifty.NoteCount = "0";
-            fixer = new Frack_Fixer(FS, CloudCoinCore.Config.milliSecondsToTimeOut);
+            logger = new SimpleLogger(FS.LogsFolder + "logs" + DateTime.Now.ToString("yyyyMMdd").ToLower() + ".log", true);
+            raidaCore.LoggerHandler += Raida_LogRecieved;
+
+            fixer = new Frack_Fixer(FS, Config.milliSecondsToTimeOut);
             setLEDStatus(true);
             SetLEDFlashing(true);
             Echo();
@@ -177,6 +180,14 @@ namespace CloudCoinCE
             showCoins();
         }
 
+        void Raida_LogRecieved(object sender, EventArgs e)
+        {
+            CloudCoinCore.ProgressChangedEventArgs pge = (CloudCoinCore.ProgressChangedEventArgs)e;
+            //DetectEventArgs eargs = e;
+            //updateLog(pge.MajorProgressMessage);
+            logger.Info(pge.MajorProgressMessage);
+            //Debug.WriteLine("Coin Detection Event Recieved - " + eargs.DetectedCoin.sn);
+        }
 
         private void resumeImport()
         {
@@ -663,6 +674,7 @@ namespace CloudCoinCE
             {
                 if(writeUI)
                     txtLogs.AppendText(logLine + Environment.NewLine);
+                logger.Info(logLine);
             });
 
         }
