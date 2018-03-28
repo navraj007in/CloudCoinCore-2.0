@@ -310,7 +310,7 @@ namespace CloudCoinCE
 
             // Load All Coins of Workspace File System
             new Thread(delegate () {
-                detect();
+                Detect();
             }).Start();
 
 
@@ -1388,17 +1388,6 @@ namespace CloudCoinCE
             cmdExport.Content = "₡0";
             //MessageBox.Show("Export completed.", "Cloudcoins", MessageBoxButtons.OK);
         }// end export One
-
-        public void multi_detect()
-        {
-
-        }//end multi detect
-
-        public void grade()
-        {
-
-        }//end detect
-
 
         
         private void txtLogs_TextChanged(object sender, TextChangedEventArgs e)

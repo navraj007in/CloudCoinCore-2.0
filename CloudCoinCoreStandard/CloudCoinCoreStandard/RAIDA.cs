@@ -21,7 +21,7 @@ namespace CloudCoinCore
         public CloudCoin coin;
         public IEnumerable<CloudCoin> coins;
         public MultiDetectRequest multiRequest;
-
+        public Network network;
         // Singleton Pattern implemented using private constructor 
         // This allows only one instance of RAIDA per application
 
@@ -36,6 +36,7 @@ namespace CloudCoinCore
         private RAIDA(Network network)
         {
             nodes = new Node[network.raida.Length];
+            this.network = network;
             for (int i = 0; i < nodes.Length; i++)
             {
                 nodes[i] = new Node(i + 1,network.raida[i]);

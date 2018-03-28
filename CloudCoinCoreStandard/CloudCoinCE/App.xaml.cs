@@ -42,9 +42,20 @@ namespace CloudCoinCE
             // Check if this was launched by double-clicking a doc. If so, use that as the
             // startup file name.
             //parseDirectoryJSON();
-            parseDirectoryJSON( loadDirectory());
+            string json = loadDirectory();
+            if(json == "")
+            {
+                MessageBox.Show("Directory could not be loaded.Trying to load backup!!");
+                parseDirectoryJSON();
+                System.Environment.Exit(1);
+            }
+            parseDirectoryJSON(json);
+            if(raida.network.raida.Count() == 0)
+            {
+                MessageBox.Show("No Valid Network found.Quitting!!");
+                System.Environment.Exit(1);
+            }
 
-            
             if (AppDomain.CurrentDomain.SetupInformation
                 .ActivationArguments != null)
                 if (AppDomain.CurrentDomain.SetupInformation
@@ -75,6 +86,16 @@ namespace CloudCoinCE
             base.OnStartup(e);
         }
 
+        private int GetNetworkNumber(RAIDADirectory dir)
+        {
+            if (CloudCoinCE.Properties.Settings.Default.NetworkNumber == 0)
+                return 0;
+            if (CloudCoinCE.Properties.Settings.Default.NetworkNumber > dir.networks.Count())
+                return 0;
+
+            return CloudCoinCE.Properties.Settings.Default.NetworkNumber-1;
+
+        }
         public void parseDirectoryJSON()
         {
             string json = File.ReadAllText(Environment.CurrentDirectory + @"\directory2.json");
@@ -82,43 +103,22 @@ namespace CloudCoinCE
             JavaScriptSerializer ser = new JavaScriptSerializer();
             var dict = ser.Deserialize<Dictionary<string, object>>(json);
 
-            //networks netw = ser.Deserialize<networks>(json);
-            //Dictionary<string,object> s = ser.DeserializeObject(json);
-            //dynamic blogObject = ser.Deserialize<dynamic>(json);
+
             RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
-            MessageBox.Show(dir.networks.Count() + " networks found");
 
-            raida = RAIDA.GetInstance(dir.networks[0]);
-            //dynamic usr = ser.DeserializeObject(json);
-            //string UserId = usr["directory"];
-            //MessageBox.Show(dict["diretory"]);
-            //var dict2 = dict["networks"];
-            //MessageBox.Show( netw.directory);
-            //JavaScriptSerializer json;
-
+            raida = RAIDA.GetInstance(dir.networks[GetNetworkNumber(dir)]);
         }
 
         public void parseDirectoryJSON(string json)
         {
-
             JavaScriptSerializer ser = new JavaScriptSerializer();
             var dict = ser.Deserialize<Dictionary<string, object>>(json);
 
-            //networks netw = ser.Deserialize<networks>(json);
-            //Dictionary<string,object> s = ser.DeserializeObject(json);
-            //dynamic blogObject = ser.Deserialize<dynamic>(json);
             RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
-            MessageBox.Show(dir.networks.Count() + " networks found");
 
-            raida = RAIDA.GetInstance(dir.networks[0]);
-            //dynamic usr = ser.DeserializeObject(json);
-            //string UserId = usr["directory"];
-            //MessageBox.Show(dict["diretory"]);
-            //var dict2 = dict["networks"];
-            //MessageBox.Show( netw.directory);
-            //JavaScriptSerializer json;
-
+            raida = RAIDA.GetInstance(dir.networks[GetNetworkNumber(dir)]);
         }
+
 
         public void setupFolders()
         {
@@ -168,34 +168,4 @@ namespace CloudCoinCE
 
     }
 
-    //public class Network
-    //{
-    //    public int nn { get; set; }
-    //    public RAIDAs[] raida { get; set; }
-    //}
-    //public class RAIDAs
-    //{
-    //    public int raida_index { get; set; }
-    //    public bool failsEcho { get; set; }
-    //    public bool failsDetect { get; set; }
-    //    public bool failsFix { get; set; }
-    //    public bool failsTicket { get; set; }
-    //    public string location { get; set; }
-    //    public NodeURL[] urls { get; set; }
-    //}
-    //public class RAIDADirectory
-    //{
-    //    public directory directory;
-    //}
-    //public class directory
-    //{
-    //    public Network[] networks { get; set; }
-    //}
-    //public class NodeURL
-    //{
-    //    public string url { get; set; }
-    //    public int? port { get; set; }
-    //    public int? milliseconds { get; set; }
-
-    //}
 }
