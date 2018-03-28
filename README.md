@@ -39,6 +39,7 @@ NOTE THE MOST IMPORTANT ARE THE TOP THREE
 
 17. Integration with Protonmail Bridge. Allows people to send CloudCoins directly from their desktop using protonmail if they have Protonmail bridge installed. 
 
+18. Coin Health Check- Add utility to check the health of existing bank coins. It will execute detect and return the status of the coins in the bank which can be exported into a csv file.
 
 
 
