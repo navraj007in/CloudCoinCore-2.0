@@ -356,7 +356,7 @@ namespace CloudCoinClient
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             raida.OnProgressChanged(pge);
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
-            
+            //detectedCoins.ForEach(x => x.pown = "pppppppdppppppppppppppppp");
             detectedCoins.ForEach(x => x.SetAnsToPansIfPassed());
             detectedCoins.ForEach(x => x.CalculateHP());
             detectedCoins.ForEach(x => x.CalcExpirationDate());

@@ -32,7 +32,7 @@ namespace CloudCoinCE
         public EventHandler RefreshCoins;
 
         #region CoreVariables
-        CloudCoinCore.RAIDA raidaCore = CloudCoinCore.RAIDA.GetInstance();
+        CloudCoinCore.RAIDA raidaCore = App.raida;
         CloudCoinCE.CoreClasses.FileSystem FS ;
         //string RootPath;
         //FileSystem FS;
@@ -149,6 +149,7 @@ namespace CloudCoinCE
                 //updateLEDs(RAIDA_Status.failsEcho);
             });
             SetLEDFlashing(false);
+            updateLEDs(null);
             EnableUI();
             if (resumeFix)
                 Task.Run(() => {
@@ -202,7 +203,7 @@ namespace CloudCoinCE
 
                    // echoRaida();
 
-                    int totalRAIDABad = 0;
+                    int totalRAIDABad = raidaCore.NotReadyCount;
                    
                     if (totalRAIDABad > 8)
                     {
@@ -1031,6 +1032,22 @@ namespace CloudCoinCE
 
         private void cmdPown_Click(object sender, RoutedEventArgs e)
         {
+            int totalRAIDABad = raidaCore.NotReadyCount;
+
+            if (totalRAIDABad > 8)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("You do not have enough RAIDA to perform an import operation.");
+                Console.Out.WriteLine("Check to make sure your internet is working.");
+                Console.Out.WriteLine("Make sure no routers at your work are blocking access to the RAIDA.");
+                Console.Out.WriteLine("Try to Echo RAIDA and see if the status has changed.");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                insufficientRAIDA();
+
+                return;
+            }
+
             int count = Directory.GetFiles(FS.ImportFolder).Length;
             if (count == 0)
             {
@@ -1081,21 +1098,6 @@ namespace CloudCoinCE
                     return;
             }
 
-            int totalRAIDABad = 0;
-            
-            if (totalRAIDABad > 8)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Out.WriteLine("You do not have enough RAIDA to perform an import operation.");
-                Console.Out.WriteLine("Check to make sure your internet is working.");
-                Console.Out.WriteLine("Make sure no routers at your work are blocking access to the RAIDA.");
-                Console.Out.WriteLine("Try to Echo RAIDA and see if the status has changed.");
-                Console.ForegroundColor = ConsoleColor.White;
-
-                insufficientRAIDA();
-
-                return;
-            }
             //cmdImport.IsEnabled = false;
             //cmdRestore.IsEnabled = false;
             //progressBar.Visibility = Visibility.Visible;
@@ -1225,6 +1227,7 @@ namespace CloudCoinCE
             printLineDots();
             updateLog("Starting Grading Coins..");
             var detectedCoins = FS.LoadFolderCoins(FS.DetectedFolder);
+            //detectedCoins.ForEach(x => x.pown = "pppppppdppppppppppppppppp");
             detectedCoins.ForEach(x => x.SetAnsToPansIfPassed());
             detectedCoins.ForEach(x => x.CalculateHP());
             detectedCoins.ForEach(x => x.CalcExpirationDate());
@@ -1301,7 +1304,7 @@ namespace CloudCoinCE
                 Fix();
             });
             FS.LoadFileSystem();
-
+            ShowCoins();
         }
 
         private void printLineDots()

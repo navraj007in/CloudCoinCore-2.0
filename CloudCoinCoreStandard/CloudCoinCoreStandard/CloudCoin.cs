@@ -264,6 +264,8 @@ namespace CloudCoinCore
         {
             //The coin is considered fixable if it has any of the patersns that would allow the new owner to fix fracked.
             //There are four of these patterns: One for each corner. 
+            string origPown = pown;
+            pown = pown.Replace('d', 'e').Replace('n', 'e').Replace('u', 'e');
             bool canFix = false;
             // Console.Out.WriteLine(cc.sn + " char count p =" + charCount(cc.pown, 'p'));
             if (charCount(pown, 'p') > 5)
@@ -315,6 +317,7 @@ namespace CloudCoinCore
                 canFix = false;
                 Console.Out.WriteLine("Not isFixable");
             }
+            pown = origPown;
             return canFix;
         }//end is fixable
 
@@ -332,7 +335,7 @@ namespace CloudCoinCore
             // now set all ans that passed to the new pans
             char[] pownArray = pown.ToCharArray();
 
-            for (int i = 0; (i < 25); i++)
+            for (int i = 0; (i < Config.NodeCount); i++)
             {
                 if (pownArray[i] == 'p')//1 means pass
                 {
@@ -449,6 +452,9 @@ namespace CloudCoinCore
         public void SortToFolder()
         {
             //figures out which folder to put it in. 
+            //pown = pown.Replace('d', 'e').Replace('n', 'e').Replace('u', 'e');
+            //pown = pown.Replace('n','e');
+            //pown = pown.Replace('u', 'e');
             if (isPerfect())
             {
                 folder = folder = RAIDA.GetInstance().FS.BankFolder;

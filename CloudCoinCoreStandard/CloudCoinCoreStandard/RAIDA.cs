@@ -5,6 +5,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Linq;
+using CloudCoinCoreDirectory;
 
 namespace CloudCoinCore
 {
@@ -31,6 +32,15 @@ namespace CloudCoinCore
                 nodes[i] = new Node(i+1);
             }                   
         }
+
+        private RAIDA(Network network)
+        {
+            nodes = new Node[network.raida.Length];
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                nodes[i] = new Node(i + 1,network.raida[i]);
+            }
+        }
         public static RAIDA GetInstance()
         {
             if (MainNetwork != null)
@@ -38,6 +48,14 @@ namespace CloudCoinCore
             else
             {
                 MainNetwork = new RAIDA();
+                return MainNetwork;
+            }
+        }
+
+        public static RAIDA GetInstance(Network network)
+        {
+            {
+                MainNetwork = new RAIDA(network);
                 return MainNetwork;
             }
         }

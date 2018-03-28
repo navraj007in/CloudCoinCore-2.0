@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CloudCoinCoreDirectory;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,11 +38,21 @@ namespace CloudCoinCore
         public TicketHistory ticketHistory = TicketHistory.Untried;
         public MultiDetectResponse MultiResponse = new MultiDetectResponse();
         public String Ticket = "";
+        RAIDANode node;
         //Constructor
         public Node(int NodeNumber)
         {
             this.NodeNumber = NodeNumber;
             FullUrl = GetFullURL();
+            Debug.WriteLine(FullUrl);
+        }
+
+        public Node(int NodeNumber,RAIDANode node)
+        {
+            this.NodeNumber = NodeNumber;
+            this.node = node;
+            FullUrl = GetFullURL();
+            FullUrl = "https://" +node.urls[0].url+"/service/";
             Debug.WriteLine(FullUrl);
         }
 

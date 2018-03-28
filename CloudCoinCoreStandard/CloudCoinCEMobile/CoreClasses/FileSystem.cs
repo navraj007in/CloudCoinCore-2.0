@@ -20,7 +20,7 @@ using System.Diagnostics;
 
 namespace CloudCoinCEMobile.CoreClasses
 {
-    class FileSystem : IFileSystem
+    public class FileSystem : IFileSystem
     {
         public static IEnumerable<CloudCoin> importCoins;
         public static IEnumerable<CloudCoin> exportCoins;
@@ -130,8 +130,8 @@ namespace CloudCoinCEMobile.CoreClasses
             exportCoins = LoadFolderCoins(ExportFolder);
             bankCoins = LoadFolderCoins(BankFolder);
             lostCoins = LoadFolderCoins(LostFolder);
-            importedCoins = LoadFolderCoins(ImportedFolder);
-            trashCoins = LoadFolderCoins(TrashFolder);
+            //importedCoins = LoadFolderCoins(ImportedFolder);
+            //trashCoins = LoadFolderCoins(TrashFolder);
             suspectCoins = LoadFolderCoins(SuspectFolder);
             detectedCoins = LoadFolderCoins(DetectedFolder);
             frackedCoins = LoadFolderCoins(FrackedFolder);
@@ -213,15 +213,7 @@ namespace CloudCoinCEMobile.CoreClasses
                     string suffix = Utils.RandomString(16);
                     fileName += suffix.ToLower();
                 }
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                Stack stack = new Stack(coin);
-                using (StreamWriter sw = new StreamWriter(PreDetectFolder + fileName + ".stack"))
-                using (JsonWriter writer = new JsonTextWriter(sw))
-                {
-                    serializer.Serialize(writer, stack);
-                }
+                
             }
         }
 
@@ -256,15 +248,7 @@ namespace CloudCoinCEMobile.CoreClasses
                 string suffix = Utils.RandomString(16);
                 fileName += suffix.ToLower();
             }
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-            Stack stack = new Stack(coin);
-            using (StreamWriter sw = new StreamWriter(folder + Path.DirectorySeparatorChar + fileName + ".stack"))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, stack);
-            }
+            
         }
 
         public void MoveCoins(IEnumerable<CloudCoin> coins, string sourceFolder, string targetFolder)
@@ -282,23 +266,7 @@ namespace CloudCoinCEMobile.CoreClasses
                     string suffix = Utils.RandomString(16);
                     fileName += suffix.ToLower();
                 }
-                try
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                    serializer.NullValueHandling = NullValueHandling.Ignore;
-                    Stack stack = new Stack(coin);
-                    using (StreamWriter sw = new StreamWriter(targetFolder + fileName + ".stack"))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
-                    {
-                        serializer.Serialize(writer, stack);
-                    }
-                    File.Delete(sourceFolder + coin.FileName + ".stack");
-                }
-                catch (Exception e)
-                {
-
-                }
+                
 
 
             }
@@ -314,72 +282,8 @@ namespace CloudCoinCEMobile.CoreClasses
             }
         }
 
-        public void WriteCoinsToFile(IEnumerable<CloudCoin> coins, string fileName)
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-            Stack stack = new Stack(coins.ToArray());
-            using (StreamWriter sw = new StreamWriter(fileName + ".stack"))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, stack);
-            }
-        }
-
-        public void WriteToFile(IEnumerable<CloudCoin> coins, string fileName)
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-            Stack stack = new Stack(coins.ToArray());
-            using (StreamWriter sw = new StreamWriter(fileName))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, stack);
-            }
-        }
-        public void WriteCoin(IEnumerable<CloudCoin> coins, string folder, bool writeAll = false)
-        {
-            if (writeAll)
-            {
-                string fileName = Utils.RandomString(16) + ".stack";
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                Stack stack = new Stack(coins.ToArray());
-                using (StreamWriter sw = new StreamWriter(folder + fileName + ".stack"))
-                using (JsonWriter writer = new JsonTextWriter(sw))
-                {
-                    serializer.Serialize(writer, stack);
-                }
-                return;
-            }
-            var folderCoins = LoadFolderCoins(folder);
-
-            foreach (var coin in coins)
-            {
-                string fileName = coin.FileName;
-                int coinExists = (from x in folderCoins
-                                  where x.sn == coin.sn
-                                  select x).Count();
-                if (coinExists > 0)
-                {
-                    string suffix = Utils.RandomString(16);
-                    fileName += suffix.ToLower();
-                }
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Converters.Add(new JavaScriptDateTimeConverter());
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                Stack stack = new Stack(coin);
-                using (StreamWriter sw = new StreamWriter(folder + fileName + ".stack"))
-                using (JsonWriter writer = new JsonTextWriter(sw))
-                {
-                    serializer.Serialize(writer, stack);
-                }
-
-            }
-        }
+        
+        
 
         public override void ClearCoins(string FolderName)
         {

@@ -18,7 +18,7 @@ namespace CloudCoinCEMobile
     [Application]
     public partial class CloudCoinApplication : Application
     {
-        string RootPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + System.IO.Path.DirectorySeparatorChar + "CloudCoin";
+        public static string RootPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + System.IO.Path.DirectorySeparatorChar + "CloudCoin";
         FileSystem FS ;
 
         public CloudCoinApplication(IntPtr handle, JniHandleOwnership ownerShip) : base(handle, ownerShip)
@@ -37,6 +37,7 @@ namespace CloudCoinCEMobile
             {
                 System.Diagnostics.Debug.WriteLine("Folder - " + dir);
             }
+            
         }
     }
 }

@@ -6,6 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using CloudCoinCE.Properties;
+using System.Web.Script.Serialization;
+using System.IO;
+using CloudCoinCore;
+using CloudCoinCoreDirectory;
+using System.Net;
+using System.Diagnostics;
 
 namespace CloudCoinCE
 {
@@ -29,41 +35,91 @@ namespace CloudCoinCE
         public static String partialFolder = rootFolder + "Partial" + System.IO.Path.DirectorySeparatorChar;
         public static String detectedFolder = rootFolder + "Detected" + System.IO.Path.DirectorySeparatorChar;
         public static String logsFolder = rootFolder + "Logs" + System.IO.Path.DirectorySeparatorChar;
+        public static RAIDA raida;// = RAIDA.GetInstance();
 
-        
         protected override void OnStartup(StartupEventArgs e)
         {
-        // Check if this was launched by double-clicking a doc. If so, use that as the
-        // startup file name.
-        if(AppDomain.CurrentDomain.SetupInformation
-            .ActivationArguments!=null)
-        if (AppDomain.CurrentDomain.SetupInformation
-            .ActivationArguments.ActivationData != null
-        &&  AppDomain.CurrentDomain.SetupInformation
-            .ActivationArguments.ActivationData.Length > 0)
+            // Check if this was launched by double-clicking a doc. If so, use that as the
+            // startup file name.
+            //parseDirectoryJSON();
+            parseDirectoryJSON( loadDirectory());
+
+            
+            if (AppDomain.CurrentDomain.SetupInformation
+                .ActivationArguments != null)
+                if (AppDomain.CurrentDomain.SetupInformation
+                    .ActivationArguments.ActivationData != null
+                && AppDomain.CurrentDomain.SetupInformation
+                    .ActivationArguments.ActivationData.Length > 0)
+                {
+                    string fname = "No filename given";
+                    try
+                    {
+                        fname = AppDomain.CurrentDomain.SetupInformation
+                                .ActivationArguments.ActivationData[0];
+
+                        // It comes in as a URI; this helps to convert it to a path.
+                        Uri uri = new Uri(fname);
+                        fname = uri.LocalPath;
+
+                        this.Properties["ArbitraryArgName"] = fname;
+                        // System.IO.File.Copy(fname, "");
+                    }
+                    catch (Exception ex)
+                    {
+                        // For some reason, this couldn't be read as a URI.
+                        // Do what you must...
+                    }
+                }
+
+            base.OnStartup(e);
+        }
+
+        public void parseDirectoryJSON()
         {
-           string fname = "No filename given";
-           try
-           {
-               fname = AppDomain.CurrentDomain.SetupInformation
-                       .ActivationArguments.ActivationData[0];
-               
-               // It comes in as a URI; this helps to convert it to a path.
-               Uri uri = new Uri(fname);
-               fname = uri.LocalPath;
-    
-               this.Properties["ArbitraryArgName"] = fname;
-                   // System.IO.File.Copy(fname, "");
-           }
-           catch (Exception ex)
-           {
-               // For some reason, this couldn't be read as a URI.
-               // Do what you must...
-           }
-       }
-    
-       base.OnStartup(e);
-   }
+            string json = File.ReadAllText(Environment.CurrentDirectory + @"\directory2.json");
+
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            var dict = ser.Deserialize<Dictionary<string, object>>(json);
+
+            //networks netw = ser.Deserialize<networks>(json);
+            //Dictionary<string,object> s = ser.DeserializeObject(json);
+            //dynamic blogObject = ser.Deserialize<dynamic>(json);
+            RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
+            MessageBox.Show(dir.networks.Count() + " networks found");
+
+            raida = RAIDA.GetInstance(dir.networks[0]);
+            //dynamic usr = ser.DeserializeObject(json);
+            //string UserId = usr["directory"];
+            //MessageBox.Show(dict["diretory"]);
+            //var dict2 = dict["networks"];
+            //MessageBox.Show( netw.directory);
+            //JavaScriptSerializer json;
+
+        }
+
+        public void parseDirectoryJSON(string json)
+        {
+
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            var dict = ser.Deserialize<Dictionary<string, object>>(json);
+
+            //networks netw = ser.Deserialize<networks>(json);
+            //Dictionary<string,object> s = ser.DeserializeObject(json);
+            //dynamic blogObject = ser.Deserialize<dynamic>(json);
+            RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
+            MessageBox.Show(dir.networks.Count() + " networks found");
+
+            raida = RAIDA.GetInstance(dir.networks[0]);
+            //dynamic usr = ser.DeserializeObject(json);
+            //string UserId = usr["directory"];
+            //MessageBox.Show(dict["diretory"]);
+            //var dict2 = dict["networks"];
+            //MessageBox.Show( netw.directory);
+            //JavaScriptSerializer json;
+
+        }
+
         public void setupFolders()
         {
             rootFolder = getWorkspace();
@@ -92,6 +148,54 @@ namespace CloudCoinCE
 
             return workspace;
         }
+        public string loadDirectory()
+        {
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    string s = client.DownloadString(Config.URL_DIRECTORY);
+                    return s;
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
+            return "";
+        }
+
 
     }
+
+    //public class Network
+    //{
+    //    public int nn { get; set; }
+    //    public RAIDAs[] raida { get; set; }
+    //}
+    //public class RAIDAs
+    //{
+    //    public int raida_index { get; set; }
+    //    public bool failsEcho { get; set; }
+    //    public bool failsDetect { get; set; }
+    //    public bool failsFix { get; set; }
+    //    public bool failsTicket { get; set; }
+    //    public string location { get; set; }
+    //    public NodeURL[] urls { get; set; }
+    //}
+    //public class RAIDADirectory
+    //{
+    //    public directory directory;
+    //}
+    //public class directory
+    //{
+    //    public Network[] networks { get; set; }
+    //}
+    //public class NodeURL
+    //{
+    //    public string url { get; set; }
+    //    public int? port { get; set; }
+    //    public int? milliseconds { get; set; }
+
+    //}
 }
