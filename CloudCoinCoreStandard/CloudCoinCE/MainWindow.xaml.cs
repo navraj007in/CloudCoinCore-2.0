@@ -1121,7 +1121,7 @@ namespace CloudCoinCE
 
             // Prepare Coins for Import
             FS.DetectPreProcessing();
-            FS.MoveCoins(FileSystem.suspectCoins, FS.SuspectFolder, FS.PreDetectFolder);
+            //FS.MoveCoins(FileSystem.suspectCoins, FS.SuspectFolder, FS.PreDetectFolder);
 
             IEnumerable<CloudCoin> predetectCoins = FS.LoadFolderCoins(FS.PreDetectFolder);
             FileSystem.predetectCoins = predetectCoins;
