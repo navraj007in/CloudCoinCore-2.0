@@ -25,7 +25,7 @@ namespace Celebrium.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("--")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string WorkSpace {
             get {
                 return ((string)(this["WorkSpace"]));
@@ -34,5 +34,7 @@ namespace Celebrium.Properties {
                 this["WorkSpace"] = value;
             }
         }
+
+        public int NetworkNumber { get; internal set; }
     }
 }
