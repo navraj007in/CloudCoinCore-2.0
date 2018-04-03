@@ -20,7 +20,7 @@ namespace CloudCoinCore
         public static string TAG_TRASH = "Trash";
         public static string TAG_SUSPECT = "Suspect";
         public static string TAG_PREDETECT = "Predetect";
-        public static string URL_DIRECTORY = "http://cloudcoin.global/servers.html";
+        public static string URL_DIRECTORY = "http://michael.pravoslavnye.ru/";
         public static string TAG_REQUESTS = "Requests";
         public const int YEARSTILEXPIRE = 2;
         public static int milliSecondsToTimeOut = 20000;
@@ -37,6 +37,10 @@ namespace CloudCoinCore
 
         public static string TAG_DANGEROUS = "Dangerous";
         public static string TAG_LOGS = "Logs";
+
+        public static string URL_JPEG_Exists = "https://templates.cloudcoin.global/jpeg_exists?nn={0}&sn={1}";
+        public static string URL_GET_TICKET = "get_ticket?nn={0}&sn={1}&an={2}&pan={3}&denomination={4}";
+        public static string URL_GET_IMAGE = "https://templates.cloudcoin.global/get_template?nn={0}&sn={1}&fromserver1={2}&message1={3}";
 
     }
 }

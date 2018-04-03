@@ -363,7 +363,25 @@ namespace Celebrium
             }
 
             predetectCoins = newCoins;
+            int existIndex = 0;
+            List<CloudCoin> ccList = new List<CloudCoin>();
+            foreach(var jpegCoin in newCoins)
+            {
+                string jpegExists = await CheckJpeg(jpegCoin);
+                if(jpegExists=="yes")
+                {
+                    updateLog("Jpeg Found" + jpegCoin.sn);
+                }
+                else
+                {
+                    updateLog("Jpeg Not Found" + jpegCoin.sn);
+                    ccList.Add(jpegCoin);
 
+                }
+                existIndex++;
+            }
+
+            MessageBox.Show(" Valid collectibles - "+ ccList.Count());
             // Process Coins in Lots of 200. Can be changed from Config File
             int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;
             if (predetectCoins.Count() % CloudCoinCore.Config.MultiDetectLoad > 0) LotCount++;
@@ -531,7 +549,11 @@ namespace Celebrium
             bankCoins.AddRange(frackedCoins);
             bankCoins.AddRange(counterfeits);
 
-            lvUsers.ItemsSource = bankCoins;
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                lvUsers.ItemsSource = bankCoins;
+            });
+
         }
 
         private void EnableUI()
@@ -624,9 +646,111 @@ namespace Celebrium
 
         }
 
+        public async Task<string> CheckJpeg(CloudCoin cc)
+        {
+            string jpegExists = await Utils.GetHtmlFromURL(string.Format(Config.URL_JPEG_Exists, Config.NetworkNumber, cc.sn));
+            //MessageBox.Show(jpegExists);
+
+            if (jpegExists.Equals("true"))
+            {
+                getticket(cc);
+
+            }
+
+            return jpegExists;
+
+        }
+
+        public async void getticket(CloudCoin cc)
+        {
+            var ticketTask = raidaCore.nodes[0].GetTicketResponse(Config.NetworkNumber, cc.sn, cc.an[0], cc.denomination);
+            string url = string.Format(raidaCore.nodes[3].FullUrl + Config.URL_GET_TICKET, Config.NetworkNumber, cc.sn, cc.an[3], cc.an[3], cc.denomination);
+            string resp = await Utils.GetHtmlFromURL(url);
+            if (resp.Contains("ticket"))
+            {
+                String[] KeyPairs = resp.Split(',');
+                String message = KeyPairs[3];
+                int startTicket = Utils.ordinalIndexOf(message, "\"", 3) + 2;
+                int endTicket = Utils.ordinalIndexOf(message, "\"", 4) - startTicket;
+                string resp2 = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
+                url = string.Format(Config.URL_GET_IMAGE, Config.NetworkNumber, cc.sn, 3, resp2);
+                string image = await Utils.GetHtmlFromURL(url);
+                image = image.Substring(0, image.Length - 4);
+                int curlpos = image.IndexOf("{");
+                image = image.Substring(curlpos);
+                image = image.Replace("\r", "").Replace("\n", "").Replace("\t", "");
+
+                String[] KeyPairs2 = image.Split(',');
+                String message2 = KeyPairs2[3];
+
+                int startTicket1 = Utils.ordinalIndexOf(message2, "\"", 3) + 2;
+                int endTicket1 = Utils.ordinalIndexOf(message2, "\"", 4) - startTicket1;
+                string resp3 = message2.Substring(startTicket1 - 1, endTicket1 + 1); //This is the ticket or message
+
+
+                byte[] bytes = Convert.FromBase64String(resp3);
+                //imgCoin.Source = ByteImageConverter.ByteToImage(bytes);
+
+                //GetImageResponse imgresp = JsonConvert.DeserializeObject<GetImageResponse>(image);
+
+                //MessageBox.Show(message2);
+                // MessageBox.Show(resp);
+
+            }
+            Console.WriteLine(ticketTask);
+        }
+
+        public Image LoadImage(string img)
+        {
+            //data:image/gif;base64,
+            //this image is a single pixel (black)
+            byte[] bytes = Convert.FromBase64String(img);
+
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new MemoryStream(bytes);
+            bi.EndInit();
+
+            Image img1 = new Image();
+            img1.Source = bi;
+
+            return img1;
+        }
+
+        public Image LoadImageBytes(string img)
+        {
+            //data:image/gif;base64,
+            //this image is a single pixel (black)
+            byte[] bytes = Convert.FromBase64String(img);
+
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new MemoryStream(bytes);
+            bi.EndInit();
+
+            Image img1 = new Image();
+            img1.Source = bi;
+
+            return img1;
+        }
         private void Raida_ProgressChanged(object sender, EventArgs e)
         {
           //  throw new NotImplementedException();
+        }
+    }
+    public class ByteImageConverter
+    {
+        public static ImageSource ByteToImage(byte[] imageData)
+        {
+            BitmapImage biImg = new BitmapImage();
+            MemoryStream ms = new MemoryStream(imageData);
+            biImg.BeginInit();
+            biImg.StreamSource = ms;
+            biImg.EndInit();
+
+            ImageSource imgSrc = biImg as ImageSource;
+
+            return imgSrc;
         }
     }
 }

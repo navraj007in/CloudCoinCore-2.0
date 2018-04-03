@@ -68,6 +68,52 @@ namespace CloudCoinCore
             Ticket = "";
         }
 
+        public async Task<string> GetTicketResponse(int nn, int sn, String an, int d)
+        {
+            RAIDA raida = RAIDA.GetInstance();
+            Response get_ticketResponse = new Response();
+            get_ticketResponse.fullRequest = FullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
+            DateTime before = DateTime.Now;
+
+            try
+            {
+                get_ticketResponse.fullResponse = await Utils.GetHtmlFromURL(get_ticketResponse.fullRequest);
+                Console.WriteLine(get_ticketResponse.fullResponse);
+                DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
+                get_ticketResponse.milliseconds = Convert.ToInt32(ts.Milliseconds);
+
+                if (get_ticketResponse.fullResponse.Contains("ticket"))
+                {
+                    String[] KeyPairs = get_ticketResponse.fullResponse.Split(',');
+                    String message = KeyPairs[3];
+                    int startTicket = Utils.ordinalIndexOf(message, "\"", 3) + 2;
+                    int endTicket = Utils.ordinalIndexOf(message, "\"", 4) - startTicket;
+                    get_ticketResponse.outcome = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
+                    get_ticketResponse.success = true;
+                    HasTicket = true;
+                    ticketHistory = TicketHistory.Success;
+                    Ticket = get_ticketResponse.outcome;
+
+                }
+                else
+                {
+                    get_ticketResponse.success = false;
+                    HasTicket = false;
+                    ticketHistory = TicketHistory.Failed;
+                }//end if
+
+            }
+            catch (Exception ex)
+            {
+                get_ticketResponse.outcome = "error";
+                get_ticketResponse.fullResponse = ex.InnerException.Message;
+                get_ticketResponse.success = false;
+                HasTicket = false;
+                ticketHistory = TicketHistory.Failed;
+            }//end try catch
+            //return get_ticketResponse;
+            return get_ticketResponse.fullResponse;
+        }//end get ticket
 
         public async Task<Response> Echo()
         {

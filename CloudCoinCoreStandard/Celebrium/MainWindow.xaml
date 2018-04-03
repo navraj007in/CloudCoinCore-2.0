@@ -34,7 +34,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Image x:Name="imgPreview"  Width="300" Height="300"></Image>
-                <ListView Margin="10" Name="lvUsers" Width="200">
+                <ListView Margin="10" Name="lvUsers" Width="200" MaxHeight="200">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Serial" Width="80" DisplayMemberBinding="{Binding sn}" />
