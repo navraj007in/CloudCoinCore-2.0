@@ -46,8 +46,17 @@ namespace CloudCoinCE
             if(json == "")
             {
                 MessageBox.Show("Directory could not be loaded.Trying to load backup!!");
-                parseDirectoryJSON();
-                System.Environment.Exit(1);
+                try
+                {
+                    parseDirectoryJSON();
+                }
+                catch (Exception exe)
+                {
+                    MessageBox.Show("Directory loading from backup failed.Quitting!!");
+                    Environment.Exit(1);
+
+                }
+
             }
             parseDirectoryJSON(json);
             if(raida.network.raida.Count() == 0)
@@ -98,15 +107,22 @@ namespace CloudCoinCE
         }
         public void parseDirectoryJSON()
         {
-            string json = File.ReadAllText(Environment.CurrentDirectory + @"\directory2.json");
+            try
+            {
+                string json = File.ReadAllText(Environment.CurrentDirectory + @"\directory2.json");
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            var dict = ser.Deserialize<Dictionary<string, object>>(json);
+                JavaScriptSerializer ser = new JavaScriptSerializer();
+                var dict = ser.Deserialize<Dictionary<string, object>>(json);
 
 
-            RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
+                RAIDADirectory dir = ser.Deserialize<RAIDADirectory>(json);
 
-            raida = RAIDA.GetInstance(dir.networks[GetNetworkNumber(dir)]);
+                raida = RAIDA.GetInstance(dir.networks[GetNetworkNumber(dir)]);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public void parseDirectoryJSON(string json)
