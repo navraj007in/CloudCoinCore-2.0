@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCoinCE-2.0", "CloudCoi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Celebrium", "Celebrium\Celebrium.csproj", "{600EE8D3-0913-438A-AA34-EAF70AAB8EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.Themes", "WPF.Themes\WPF.Themes.csproj", "{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,10 +55,6 @@ Global
 		{600EE8D3-0913-438A-AA34-EAF70AAB8EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600EE8D3-0913-438A-AA34-EAF70AAB8EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600EE8D3-0913-438A-AA34-EAF70AAB8EB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,6 +21,7 @@ using CloudCoinIE;
 using Microsoft.Win32;
 using CloudCoinCore;
 using CloudCoinCE.CoreClasses;
+using System.Deployment.Application;
 
 namespace CloudCoinCE
 {
@@ -823,12 +824,28 @@ namespace CloudCoinCE
            // echoRaida();
         }
 
+        public string GetVersion()
+        {
+            string version = null;
+            try
+            {
+                //// get deployment version
+                version = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch (InvalidDeploymentException)
+            {
+                //// you cannot read publish version when app isn't installed 
+                //// (e.g. during debug)
+                version = "not installed";
+            }
+            return version;
+        }
         private void printWelcome()
         {
             updateLog("CloudCoin Consumers Edition");
-            updateLog("Version " + DateTime.Now.ToShortDateString());
-            updateLog("Used to Authenticate ,Store,Payout CloudCoins");
-            updateLog("This Software is provided as is with all faults, defects and errors, and without warranty of any kind.Free from the CloudCoin Consortium.");
+            updateLog("Version " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            updateLog("Used to Authenticate, Store,Payout CloudCoins");
+            updateLog("This Software is provided as is, with all faults, defects, errors and without warranty of any kind. Free from the CloudCoin Consortium.");
         }
         private void loadJson()
         {

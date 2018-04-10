@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:CloudCoinCE"
         xmlns:uc1="clr-namespace:LedControl"
         xmlns:uc="clr-namespace:CloudCoinCE.UserControls"
-        mc:Ignorable="d" WindowState="Maximized" Background="#36347f" 
-        Title="CloudCoin Consumers Edition 1.0" Height="1080" Width="1920">
+        mc:Ignorable="d" WindowState="Normal" Background="#36347f" 
+        Title="CloudCoin Consumers Edition 1.0" Height="554" Width="1017">
 
     <Window.Resources>
 
@@ -130,7 +130,7 @@
 
             <StackPanel  Margin="{StaticResource Margin.Main.Top}" Grid.Column="1" Grid.Row="2" Height="780" Orientation="Vertical">
                 <StackPanel Height="60" Orientation="Horizontal"  >
-                    <uc:ImageButton x:Name="cmdPown" Click="cmdPown_Click" BorderThickness="1,1,0,1" Content="POWN NEW" ImageHover="Images/Addicon_white.png" Image="Images/Addicon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}" CornerRadius="{StaticResource CornerRadius.RoundLeft}" HorizontalAlignment="Center"></uc:ImageButton>
+                    <uc:ImageButton x:Name="cmdPown" Click="cmdPown_Click" BorderThickness="1,1,0,1" Content="IMPORT" ImageHover="Images/Addicon_white.png" Image="Images/Addicon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}" CornerRadius="{StaticResource CornerRadius.RoundLeft}" HorizontalAlignment="Center"></uc:ImageButton>
 
                     <Border BorderThickness="0,1,0,1" Background="#4C50AB" BorderBrush="#5a5fc9">
                         <StackPanel Orientation="Horizontal" >
@@ -148,7 +148,7 @@
                         </StackPanel>
                     </Border>
 
-                    <uc:ImageButton x:Name="cmdRefresh" Click="cmdRefresh_Click" BorderThickness="0,1,0,1" Content="REFRESH" ImageHover="Images/Refreshicon_white.png" Image="Images/Refreshicon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}"  HorizontalAlignment="Center"></uc:ImageButton>
+                    <uc:ImageButton x:Name="cmdRefresh" Click="cmdRefresh_Click" BorderThickness="0,1,0,1" Content="ECHO" ImageHover="Images/Refreshicon_white.png" Image="Images/Refreshicon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}"  HorizontalAlignment="Center"></uc:ImageButton>
 
                     <Border BorderThickness="0,1,0,1" Background="#4C50AB" BorderBrush="#5a5fc9">
                         <StackPanel Orientation="Horizontal" >
@@ -166,7 +166,7 @@
                         </StackPanel>
                     </Border>
 
-                    <uc:ImageButton x:Name="cmdWorkspace" Click="cmdWorkspace_Click" BorderThickness="0,1,1,1" Content="WORKSPACE" ImageHover="Images/Foldericon_white.png" Image="Images/Foldericon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}" CornerRadius="{StaticResource CornerRadius.RoundRight}" HorizontalAlignment="Center"></uc:ImageButton>
+                    <uc:ImageButton x:Name="cmdWorkspace" Click="cmdWorkspace_Click" BorderThickness="0,1,1,1" Content="CHANGE WORKSPACE" ImageHover="Images/Foldericon_white.png" Image="Images/Foldericon_yellow.png"  ImageWidth="25" Width="{StaticResource Button.Width.Header}" CornerRadius="{StaticResource CornerRadius.RoundRight}" HorizontalAlignment="Center"></uc:ImageButton>
 
 
                 </StackPanel>

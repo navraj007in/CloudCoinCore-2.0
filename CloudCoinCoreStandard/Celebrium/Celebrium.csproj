@@ -130,10 +130,6 @@
       <Project>{f8ca76b1-e464-4ff8-acd3-0e28c10b0ce1}</Project>
       <Name>CloudCoinCoreStandard</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WPF.Themes\WPF.Themes.csproj">
-      <Project>{cd3cd636-d63e-4bd5-9fe9-2b63da6f0616}</Project>
-      <Name>WPF.Themes</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
