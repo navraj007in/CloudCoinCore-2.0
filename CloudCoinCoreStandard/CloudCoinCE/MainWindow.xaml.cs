@@ -730,7 +730,6 @@ namespace CloudCoinCE
                 updTwoFifty.Max = twoFiftiesCount;
 
                 int totalAmount = onesCount + (fivesCount * 5) + (qtrCount * 25) + (hundredsCount * 100) + (twoFiftiesCount * 250);
-
                 lblNotesTotal.Text = "₡" + totalAmount;
             });
 
@@ -1419,6 +1418,7 @@ namespace CloudCoinCE
         int exportTotal = 0;
         public void updateExportTotal()
         {
+          
             exportTotal = updOne.val + (updFive.val *5) + (updQtr.val*25) + (updHundred.val*100) 
                 + (updTwoFifty.val*250);
 			cmdExport.Content = exportTotal.ToString();

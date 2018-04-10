@@ -89,7 +89,6 @@ namespace CloudCoinCE.UserControls
                 val++;
                 OnThresholdReached(EventArgs.Empty);
             }
-
         }
     }
 }

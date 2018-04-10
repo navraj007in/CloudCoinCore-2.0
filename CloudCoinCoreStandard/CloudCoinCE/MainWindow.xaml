@@ -173,7 +173,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <StackPanel Orientation="Vertical" >
                         <local:NoteUserControl x:Name="noteOne" NoteCount="10" Note="Images\Jpeg1.png" Symbol="Images\Layer_1.png" Margin="0,0,0,8" Width="190"  ></local:NoteUserControl>
-                        <uc:UpDownControl x:Name="updOne" HorizontalAlignment="Center" ThresholdReached="updOne_OnExportChanged" OnExportChanged="updOne_OnExportChanged" ></uc:UpDownControl>
+                        <uc:UpDownControl x:Name="updOne" Value="1000" HorizontalAlignment="Center" ThresholdReached="updOne_OnExportChanged" OnExportChanged="updOne_OnExportChanged" ></uc:UpDownControl>
                     </StackPanel>
                     <Border Width="{StaticResource gapWidth}" />
                     <StackPanel Orientation="Vertical">
