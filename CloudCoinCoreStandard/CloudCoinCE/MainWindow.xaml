@@ -8,7 +8,7 @@
         xmlns:uc1="clr-namespace:LedControl"
         xmlns:uc="clr-namespace:CloudCoinCE.UserControls"
         mc:Ignorable="d" WindowState="Normal" Background="#36347f" 
-        Title="CloudCoin Consumers Edition 1.0" Height="554" Width="1017">
+        Title="CloudCoin Consumers Edition" Height="554" Width="1017">
 
     <Window.Resources>
 

@@ -82,6 +82,8 @@ namespace CloudCoinCE
             Echo();
             showCoins();
             ShowCoins();
+            Title = "CloudCoin Consumers Edition " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
             new Thread(delegate () {
                 Fix();
             }).Start();

@@ -9,7 +9,7 @@
         Title="Disclaimer" Height="140" Width="500">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TextBlock  Margin ="2,5"  TextWrapping="Wrap" Text="CloudCoin Investor's Edition. V 9/11/2017. This software is provided as is with all faults, defects and errors, and without and warranty of any kind. Free from the CloudCoin Consortium" />
+            <TextBlock  Margin ="2,5" x:Name="txtDisclaimer" TextWrapping="Wrap" Text="CloudCoin Investor's Edition. V 9/11/2017. This software is provided as is with all faults, defects and errors, and without and warranty of any kind. Free from the CloudCoin Consortium" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Agree" x:Name="cmdAgree" Margin="0,2,5,5" Foreground="White" Width="80" Click="cmdAgree_Click"/>
                 <Button Content="Disagree" x:Name="cmdDisagree" Margin="0,2,5,5"  Foreground="White" Width="80" Click="cmdDisagree_Click"/>
