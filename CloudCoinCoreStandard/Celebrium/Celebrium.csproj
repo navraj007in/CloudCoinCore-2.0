@@ -131,5 +131,32 @@
       <Name>CloudCoinCoreStandard</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\activity_heading.png" />
+    <Resource Include="Images\activity_icon.png" />
+    <Resource Include="Images\add_icon.png" />
+    <Resource Include="Images\add_memo_title_vertical.png" />
+    <Resource Include="Images\archive_memo-tm_title_vertical.png" />
+    <Resource Include="Images\background.jpg" />
+    <Resource Include="Images\backup-icon.png" />
+    <Resource Include="Images\backup_memo_title_vertical.png" />
+    <Resource Include="Images\celebrium_logo.png" />
+    <Resource Include="Images\customer_support.png" />
+    <Resource Include="Images\digital_memo-tm_heading_vertical.png" />
+    <Resource Include="Images\export_icon.png" />
+    <Resource Include="Images\export_memo_heading_vertical.png" />
+    <Resource Include="Images\gear_icon_settings_workspace.png" />
+    <Resource Include="Images\login-security-check_heading.png" />
+    <Resource Include="Images\login_app_background.jpg" />
+    <Resource Include="Images\memo_vault_logo.png" />
+    <Resource Include="Images\news_button_static.png" />
+    <Resource Include="Images\raida_light_active.png" />
+    <Resource Include="Images\raida_light_down.png" />
+    <Resource Include="Images\raida_logo.png" />
+    <Resource Include="Images\select_file_graphic.png" />
+    <Resource Include="Images\shop_button.png" />
+    <Resource Include="Images\software_update_button.png" />
+    <Resource Include="Images\submit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

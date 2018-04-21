@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:Celebrium"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid Background="Black" ShowGridLines="True">
+    <Window.Background>
+        <ImageBrush ImageSource="/Images/background.jpg"/>
+    </Window.Background>
+    <Grid ShowGridLines="True"         
+>
+        
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <ProgressBar x:Name="raidaBar" Value="0" Maximum="25" Margin="10,10"></ProgressBar>
 
