@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Celebrium_WPF"
         xmlns:uc="clr-namespace:Celebrium_WPF.UserControls"
         xmlns:vw ="clr-namespace:Celebrium_WPF.Views"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowState="Maximized"
         Title="MainWindow" Height="813" Width="1452">
 
     <Grid>

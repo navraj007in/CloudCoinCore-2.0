@@ -95,7 +95,7 @@
                         <Rectangle Width="13" />
                         <Button Command="{Binding News}" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">NEWS</Button>
                     </StackPanel>
-                    <TextBlock Foreground="{DynamicResource Color.Text}" Padding="6" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="8" TextAlignment="Center">THESE BUTTONS WILL TAKE YOU TO CELEBRIUM SITE STORE AND NEWS PAGES</TextBlock>
+                    <!--<TextBlock Foreground="{DynamicResource Color.Text}" Padding="6" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="8" TextAlignment="Center">THESE BUTTONS WILL TAKE YOU TO CELEBRIUM SITE STORE AND NEWS PAGES</TextBlock>-->
                 </StackPanel>
                 <Image Grid.Column="2" Source="/Celebrium_WPF;component/Resources/Images/celebrium_logo.png" Stretch="None" Margin="0,-50,30,0"/>
             </Grid>
