@@ -93,12 +93,12 @@ namespace CloudCoinCore
                 }
                 catch (FileNotFoundException ex)
                 {
-                    Console.Out.WriteLine(ex);
+                    Console.Out.WriteLine(ex.Message);
                     //CoreLogger.Log(ex.ToString());
                 }
                 catch (IOException ioex)
                 {
-                    Console.Out.WriteLine(ioex);
+                    Console.Out.WriteLine(ioex.Message);
                     //CoreLogger.Log(ioex.ToString());
                 }//end catch 
             }// for each 1 note  

@@ -639,7 +639,7 @@ namespace CloudCoinCE
             updateLog("Export of the CloudCoins Completed.");
             updateLog("\tExported " + String.Format("{0:n0}", (exp_1 + exp_5 + exp_25 + exp_100 + exp_250))
                       + " coins in Total of " + String.Format("{0:n}", exportTotal) + " CC into " +
-                      " " + FS.ExportFolder + " .");
+                      " " + FS.ExportFolder + " ");
             printLineDots();
             txtTag.Text = "";
             ShowCoins();

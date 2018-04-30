@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:locVM="clr-namespace:Celebrium_WPF.ViewModels"
+                    xmlns:locV="clr-namespace:Celebrium_WPF.Views"
+                    xmlns:local="clr-namespace:Celebrium_WPF">
+
+    <Style x:Key="RalewayBold">
+        <Setter Property="TextElement.FontFamily" Value="Resources/Fonts/#RidleyGrotesk-Bold" />
+        <Setter Property="TextElement.FontSize" Value="16"/>
+        <Setter Property="TextBlock.Foreground" Value="White"/>
+    </Style>
+    <SolidColorBrush x:Key="Color.Yellow" Color="#FFEEBC41"/>
+    <SolidColorBrush x:Key="Color.Text" Color="White"/>
+    <SolidColorBrush x:Key="Color.Gray" Color="#FFB3B3B3"/>
+
+    <sys:Double x:Key="Login.Gap" >16</sys:Double>
+
+    <sys:Double x:Key="Button.Width.Header">228</sys:Double>
+    <CornerRadius x:Key="CornerRadius.RoundLeft" TopLeft="4" BottomLeft="4"></CornerRadius>
+    <CornerRadius x:Key="CornerRadius.RoundRight" TopRight="4" BottomRight="4"></CornerRadius>
+
+
+    <DataTemplate  DataType="{x:Type locVM:MainAppViewModel}">
+        <locV:MainAppView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type locVM:LoginViewModel}">
+        <locV:LoginView />
+    </DataTemplate>
+    
+    <DataTemplate  DataType="{x:Type locVM:StoriesViewModel}">
+        <locV:StoriesView />
+    </DataTemplate>
+
+    <DataTemplate  DataType="{x:Type locVM:StoryViewModel}">
+        <locV:StoryView />
+    </DataTemplate>
+
+    <DataTemplate  DataType="{x:Type locVM:AddCollectableViewModel}">
+        <locV:AddCollectableView />
+    </DataTemplate>
+
+    <DataTemplate  DataType="{x:Type locVM:BackUpCollectableViewModel}">
+        <locV:BackUpCollectableView /> <!-- Change this to the appropriate view that will be created later if needed-->
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="Celebrium_WPF.Views.AddCollectableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Celebrium_WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="450">
+    <Grid>
+        <StackPanel Orientation="Vertical"  Width="420" VerticalAlignment="Center">
+            <Button Command="{Binding GoBack}" Width="120" Height="30" Style="{StaticResource YellowButton}">Back</Button>
+            <Rectangle Grid.Row="1" Height="{StaticResource Login.Gap}" Width="20" />
+            <TextBlock Foreground="{StaticResource Color.Text}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="20" Margin="0,0,0,-7">SELECT SOURCE</TextBlock>
+            <Rectangle Grid.Row="1" Height="{StaticResource Login.Gap}" Width="20" />
+            <Image Cursor="Hand" Source="/Celebrium_WPF;component/Resources/Images/add_collectable.png">
+                <Image.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding ChooseFiles, Mode=OneTime}" />
+                </Image.InputBindings>
+            </Image>
+            <Rectangle Grid.Row="1" Height="10" Width="20" />
+            <TextBlock Foreground="{StaticResource Color.Text}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" FontSize="12" Margin="0,0,0,-7">ONLY JPG, JPEG, ARE SUPPORTED FILES</TextBlock>
+            <Rectangle Grid.Row="1" Height="40" Width="20" />
+            <Grid>
+            <ProgressBar Height="14" Value="{Binding ProgressValue, FallbackValue=15}" Background="#FF555555" Foreground="#FF75A801" BorderBrush="{x:Null}" BorderThickness="0" ></ProgressBar>
+                <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource Color.Text}" Text="{Binding ProgressStatus, FallbackValue='IMPORT NOT STARTED YET'}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" FontSize="12" Margin="0,0,0,-7"></TextBlock>
+                
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

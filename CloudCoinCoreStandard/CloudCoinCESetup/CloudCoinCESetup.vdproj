@@ -400,13 +400,13 @@
         "Entry"
         {
         "MsmKey" = "8:_C4D25C498F3EFA16ECE68B57DC55DD0C"
-        "OwnerKey" = "8:_FB78CF755189428F9728A1F29060804B"
+        "OwnerKey" = "8:_98366E928CD06AE09D949C292A445F7C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_C4D25C498F3EFA16ECE68B57DC55DD0C"
-        "OwnerKey" = "8:_98366E928CD06AE09D949C292A445F7C"
+        "OwnerKey" = "8:_FB78CF755189428F9728A1F29060804B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -526,12 +526,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C4D25C498F3EFA16ECE68B57DC55DD0C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_40B262C3D900DC6D4DD14AC4001681AE"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -569,6 +563,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_98366E928CD06AE09D949C292A445F7C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C4D25C498F3EFA16ECE68B57DC55DD0C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -946,6 +946,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -2997,7 +3005,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CloudCoinCESetup"
         "ProductCode" = "8:{116A381E-0322-4414-97BB-5229D268F5CC}"
-        "PackageCode" = "8:{66E334C9-A23C-47AC-B4E6-FFC67B7F0DC5}"
+        "PackageCode" = "8:{971354B2-1B65-4DD5-8B7D-A4E4F29D8D9A}"
         "UpgradeCode" = "8:{A3F0DBEA-F50A-4DEF-8DD7-25E7165AA47C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -3018,7 +3026,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -3546,7 +3554,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FB78CF755189428F9728A1F29060804B"
             {
-            "SourcePath" = "8:..\\CloudCoinCE\\obj\\Debug\\CloudCoinCE.exe"
+            "SourcePath" = "8:..\\CloudCoinCE\\obj\\x64\\Debug\\CloudCoinCE.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_632759AF97CB4F80BE89633B27DE0ED6"
