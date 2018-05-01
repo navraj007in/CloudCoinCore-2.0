@@ -11,7 +11,8 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        <!--<TextBlock Margin="20,0,20,0" VerticalAlignment="Center"  Foreground="{StaticResource Color.Yellow}" Text="{Binding ShowLast}"></TextBlock>-->
+        <!--<TextBlock Margin="20,50,20,0" VerticalAlignment="Center"  Foreground="{StaticResource Color.Yellow}" Text="{Binding ShowFirst}"></TextBlock>-->
         <StackPanel Grid.Column="0" VerticalAlignment="Center"  >
             <StackPanel  Orientation="Horizontal" Height="80"  TextBlock.FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold" TextBlock.FontSize="30" TextBlock.Foreground="{StaticResource Color.Text}"  >
                 <StackPanel.LayoutTransform>
@@ -22,8 +23,9 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </StackPanel.LayoutTransform>
+                <TextBlock Margin="20,0,20,0" VerticalAlignment="Center" Visibility="{Binding ShowFirst}" Foreground="{StaticResource Color.Yellow}">MEMO<Run FontSize="11" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM</Run>  VALUT</TextBlock>
                 <TextBlock Text="{Binding Title1, FallbackValue='ADD'}" VerticalAlignment="Center" ></TextBlock>
-                <TextBlock Text="{Binding Title2, FallbackValue='COLLECTABLE'}" Margin="20,0,20,0" VerticalAlignment="Center" Foreground="{StaticResource Color.Yellow}"></TextBlock>
+                <TextBlock Margin="20,0,20,0" VerticalAlignment="Center" Visibility="{Binding ShowLast}" Foreground="{StaticResource Color.Yellow}">MEMO<Run FontSize="11" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM</Run>  VALUT</TextBlock>
             </StackPanel>
         </StackPanel>
         <ContentControl Grid.Column="1" x:Name="contCtrlName" Content="{Binding CurrentView}"></ContentControl>

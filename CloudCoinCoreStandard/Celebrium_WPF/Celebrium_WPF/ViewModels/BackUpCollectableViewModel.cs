@@ -11,7 +11,7 @@ namespace Celebrium_WPF.ViewModels
         public BackUpCollectableViewModel()
         {
             Title1 = "BACKUP";
-            Title2 = "COLLECTABLES";
+            Title2 = "MEMO";
         }
     }
 }

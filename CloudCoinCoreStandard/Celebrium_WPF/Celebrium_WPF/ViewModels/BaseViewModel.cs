@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Celebrium_WPF.ViewModels
 {
@@ -11,7 +12,7 @@ namespace Celebrium_WPF.ViewModels
     {
         public BaseViewModel()
         {
-            Title1 = string.Empty;
+            Title1  = Title2= string.Empty;
         }
         private string _title1;
 
@@ -34,6 +35,34 @@ namespace Celebrium_WPF.ViewModels
             {
                 _title2 = value;
                 OnPropertyChanged(nameof(Title2));
+            }
+        }
+
+        private Visibility _showFirst;
+        public Visibility ShowFirst
+        {
+            get
+            {
+                return _showFirst;
+            }
+            set
+            {
+                _showFirst = value;
+                OnPropertyChanged(nameof(ShowFirst));
+            }
+        }
+
+        private Visibility _showLast;
+        public Visibility ShowLast
+        {
+            get
+            {
+                return _showLast;
+            }
+            set
+            {
+                _showLast = value;
+                OnPropertyChanged(nameof(ShowLast));
             }
         }
 

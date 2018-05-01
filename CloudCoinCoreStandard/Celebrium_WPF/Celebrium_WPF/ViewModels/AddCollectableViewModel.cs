@@ -14,7 +14,9 @@ namespace Celebrium_WPF.ViewModels
         public AddCollectableViewModel()
         {
             Title1 = "ADD";
-            Title2 = "COLLECTABLES";
+            Title2 = "MEMO";
+            ShowFirst = System.Windows.Visibility.Visible;
+            ShowLast = System.Windows.Visibility.Collapsed;
             ProgressValue = 0;
             ProgressStatus = "Not started";
         }

@@ -22,7 +22,7 @@
                 <ColumnDefinition MinWidth="15" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Coolvetica Rg" Foreground="{DynamicResource Color.Text}" Padding="10,20,0,0" FontSize="38" Margin="0,0,100,0" TextAlignment="Right" FontWeight="Bold" >THE</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Coolvetica Rg" Foreground="{DynamicResource Color.Text}" Padding="10,20,0,0" FontSize="38" Margin="0,0,100,0" TextAlignment="Right" FontWeight="Bold" >MEMO<Run FontSize="11" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM</Run></TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Coolvetica Rg" Foreground="{DynamicResource Color.Text}" Padding="0" FontSize="72" Margin="0,-20,100,0" TextAlignment="Right" >VAULT</TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" Foreground="{DynamicResource Color.Text}" Padding="10,20,0,0" FontSize="14" Margin="0,37,100,0" TextAlignment="Right"  Text="{Binding Version, FallbackValue='ALPHA RELEASE V 1.0'}" />
 

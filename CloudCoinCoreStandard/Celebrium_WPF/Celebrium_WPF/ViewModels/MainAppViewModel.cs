@@ -32,6 +32,8 @@ namespace Celebrium_WPF.ViewModels
             vmBackUpCollectable.RequestBackNavigation += vm_RequestBackNavigation;
 
             CurrentView = vmStories;
+            //TODO jsut set the value of the "Version" property to what ever you want, it will autoupdate in the view
+            Version = "ALPHA RELEASE V 2.0";
         }
 
         private void vm_RequestBackNavigation(object sender, EventArgs e)
@@ -46,6 +48,19 @@ namespace Celebrium_WPF.ViewModels
             CurrentView = vmStory;
         }
 
+        private string _version;
+
+        public string Version
+        {
+            get { return _version; }
+            set
+            {
+                _version = value;
+                OnPropertyChanged(nameof(Version));
+            }
+        }
+
+
         private BaseViewModel _currentView;
         public BaseViewModel CurrentView
         {
@@ -58,6 +73,28 @@ namespace Celebrium_WPF.ViewModels
                 _currentView = value;
                 this.Title1 = value.Title1;
                 this.Title2 = value.Title2;
+
+                if (Title1 == "MEMO")
+                {
+                    ShowFirst = System.Windows.Visibility.Visible;
+                    Title1 = Title2;
+
+                }
+                else
+                {
+                    ShowFirst = System.Windows.Visibility.Collapsed;
+                }
+
+                if (Title2 == "MEMO")
+                {
+                    ShowLast = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    ShowLast = System.Windows.Visibility.Collapsed;
+                }
+
+
                 OnPropertyChanged(nameof(CurrentView));
             }
         }
@@ -119,7 +156,6 @@ namespace Celebrium_WPF.ViewModels
             //TODO write code here
             //System.Windows.Forms.MessageBox.Show("Write the news logic here");
             System.Diagnostics.Process.Start("http://celebrium.com/news");
-
         }
 
         public ICommand News
@@ -132,7 +168,6 @@ namespace Celebrium_WPF.ViewModels
             //TODO write code here
             //System.Windows.Forms.MessageBox.Show("Write the shop logic here");
             System.Diagnostics.Process.Start("http://celebrium.com/");
-
         }
 
         public ICommand Shop

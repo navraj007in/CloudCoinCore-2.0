@@ -238,6 +238,12 @@
   <ItemGroup>
     <Resource Include="Resources\Images\add_collectable.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CloudCoinCoreStandard\CloudCoinCoreStandard.csproj">
+      <Project>{f8ca76b1-e464-4ff8-acd3-0e28c10b0ce1}</Project>
+      <Name>CloudCoinCoreStandard</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

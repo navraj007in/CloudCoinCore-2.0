@@ -7,7 +7,7 @@
         mc:Ignorable="d"
          d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="10">
-        <ListView ItemsSource="{Binding Stories}" BorderThickness="0" Background="Transparent" SelectedItem="{Binding SelectedItem}" SelectionMode="Single" Style="{DynamicResource ListViewStyle}" >
+        <ListView ItemsSource="{Binding Stories}" BorderThickness="0" Background="Transparent" SelectedItem="{Binding SelectedItem}" SelectionMode="Single"  > <!-- Style="{DynamicResource ListViewStyle}" -->
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="4" HorizontalAlignment="Center"  VerticalAlignment="Stretch"/>

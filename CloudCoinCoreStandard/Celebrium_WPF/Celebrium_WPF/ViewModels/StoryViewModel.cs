@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Celebrium_WPF.ViewModels
@@ -13,11 +14,10 @@ namespace Celebrium_WPF.ViewModels
     {
         public StoryViewModel()
         {
-            Title1 = "COLLECTABLE";
+            Title1 = "MEMO";
             Title2 = "STORY";
         }
 
-        
 
         private StoryModel _story;
         public StoryModel Story
