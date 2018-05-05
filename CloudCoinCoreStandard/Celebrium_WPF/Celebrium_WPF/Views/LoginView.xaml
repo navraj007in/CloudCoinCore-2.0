@@ -40,7 +40,7 @@
 
                 <TextBlock Grid.Row="0" Foreground="{StaticResource Color.Text}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold" FontSize="28" Margin="0,0,0,-7" >SECURITY CHECK</TextBlock>
                 <Rectangle Grid.Row="1" Height="{StaticResource Login.Gap}" Width="20" />
-                <TextBox Name="txtBoxFakePass" Grid.Row="2" GotFocus="TextBox_GotFocus" Tag="PASSWORD PIN" Style="{DynamicResource TextBoxStyle}" Panel.ZIndex="1"></TextBox>
+                <TextBox Name="txtBoxFakePass" Grid.Row="2"  GotFocus="TextBox_GotFocus" Tag="PASSWORD PIN" Style="{DynamicResource TextBoxStyle}" Panel.ZIndex="1"></TextBox>
                 <PasswordBox Name="passBox" Grid.Row="2" Height="40" Padding="20,2,20,2" FontSize="14" VerticalContentAlignment="Center" BorderThickness="0" LostFocus="passBox_LostFocus" Tag="PASSWORD PIN" Panel.ZIndex="-1" ></PasswordBox>
                 <Rectangle Grid.Row="3" Height="{StaticResource Login.Gap}" Width="20" />
                 <TextBox Grid.Row="4" Text="{Binding Email}" Tag="RECOVER EMAIL" Style="{DynamicResource TextBoxStyle}"></TextBox>

@@ -18,6 +18,8 @@ namespace Celebrium_WPF.ViewModels
 
             vmLogin = new LoginViewModel();
             vmMain = new MainAppViewModel();
+            //MessageBox.Show(Properties.Settings.Default.PIN);
+            //MessageBox.Show(Properties.Settings.Default.Email);
 
             vmLogin.SubmitRequest += VmLogin_SubmitRequest;
            // vmLogin.Email = Properties.Settings.Default.Email;
@@ -47,6 +49,11 @@ namespace Celebrium_WPF.ViewModels
                     MessageBox.Show("Not a valid Email address.");
                 if (error_code == Constants.ERROR_CODE_PIN_LENGTH)
                     MessageBox.Show("PIN can not be less than 4 characters.");
+                if (error_code == Constants.ERROR_CODE_PIN_INCORRECT)
+                    MessageBox.Show("PIN is incorrect");
+                if (error_code == Constants.ERROR_CODE_EMAIL_INCORRECT)
+                    MessageBox.Show("EMAIL is incorrect");
+
                 //  System.Windows.Forms.MessageBox.Show("Invalid credentials");
             }
         }
@@ -85,6 +92,17 @@ namespace Celebrium_WPF.ViewModels
                 error_code = Constants.ERROR_CODE_NOT_EMAIL;
                 return false;
             }
+            if(Properties.Settings.Default.PIN.Length>0 && Properties.Settings.Default.PIN != password)
+            {
+                error_code = Constants.ERROR_CODE_PIN_INCORRECT;
+                return false;
+            }
+            if (Properties.Settings.Default.Email.Length > 0 && Properties.Settings.Default.Email != email)
+            {
+                error_code = Constants.ERROR_CODE_EMAIL_INCORRECT;
+                return false;
+            }
+
             Properties.Settings.Default.PIN = password;
             Properties.Settings.Default.Email = email;
             Properties.Settings.Default.Save();
