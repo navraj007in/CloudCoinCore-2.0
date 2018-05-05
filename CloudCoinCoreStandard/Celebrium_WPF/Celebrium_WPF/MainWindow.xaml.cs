@@ -1,4 +1,7 @@
-﻿using Celebrium_WPF.ViewModels;
+﻿using Celebrium;
+using Celebrium_WPF.ViewModels;
+using CloudCoinClient.CoreClasses;
+using CloudCoinCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +24,76 @@ namespace Celebrium_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region CoreVariables
+        CloudCoinCore.RAIDA raidaCore = App.raida;
+        CloudCoinClient.CoreClasses.FileSystem FS;
+        //string RootPath;
+        //FileSystem FS;
+        //RAIDA raida;
+        int onesCount = 0;
+        int fivesCount = 0;
+        int qtrCount = 0;
+        int hundredsCount = 0;
+        int twoFiftiesCount = 0;
+
+        public static int exportOnes = 0;
+        public static int exportFives = 0;
+        public static int exportTens = 0;
+        public static int exportQtrs = 0;
+        public static int exportHundreds = 0;
+        public static int exportTwoFifties = 0;
+        public static int exportJpegStack = 2;
+        public static string exportTag = "";
+        SimpleLogger logger = new SimpleLogger();
+        Frack_Fixer fixer;
+
+        #endregion
+        public static String RootFolder = AppDomain.CurrentDomain.BaseDirectory;
         public MainWindow()
         {
             InitializeComponent();
             ApplicationStartViewModel mainVm = new ApplicationStartViewModel();
             this.DataContext = mainVm;
+            SetupFolders();
+            logger = new SimpleLogger(FS.LogsFolder + "logs" + DateTime.Now.ToString("yyyyMMdd").ToLower() + ".log", true);
+            raidaCore.LoggerHandler += Raida_LogRecieved;
+
+        }
+
+        private void Raida_LogRecieved(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+        public string getWorkspace()
+        {
+            string workspace = "";
+            if (Properties.Settings.Default.WorkSpace != null && Properties.Settings.Default.WorkSpace.Length > 0)
+                workspace = Properties.Settings.Default.WorkSpace;
+            else
+                workspace = AppDomain.CurrentDomain.BaseDirectory;
+            Properties.Settings.Default.WorkSpace = workspace;
+            return workspace;
+        }
+
+        public void SetupFolders()
+        {
+            RootFolder = getWorkspace();
+            FS = new FileSystem(RootFolder);
+
+            // Create the Folder Structure
+            FS.CreateFolderStructure();
+            FS.CopyTemplates();
+            // Populate RAIDA Nodes
+            raidaCore = CloudCoinCore.RAIDA.GetInstance();
+            raidaCore.FS = FS;
+            //CoinDetected += Raida_CoinDetected;
+            //raida.Echo();
+
+            FS.LoadFileSystem();
+
+            //fileUtils = FileUtils.GetInstance(MainWindow.rootFolder);
+
+
         }
     }
 }

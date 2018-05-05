@@ -35,8 +35,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,9 +62,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
+    <Compile Include="CoreClasses\Exporter.cs" />
+    <Compile Include="CoreClasses\FileSystem.cs" />
+    <Compile Include="CoreClasses\FixItHelper.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\StoryModel.cs" />
     <Compile Include="Other\ActionCommand.cs" />
+    <Compile Include="ProgressEventArgs.cs" />
+    <Compile Include="SimpleLogger.cs" />
     <Compile Include="UserControls\ImageButton.cs" />
     <Compile Include="ViewModels\AddCollectableViewModel.cs" />
     <Compile Include="ViewModels\ApplicationStartViewModel.cs" />
@@ -238,6 +248,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\add_collectable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CloudCoinCoreStandard\CloudCoinCoreStandard.csproj">
+      <Project>{f8ca76b1-e464-4ff8-acd3-0e28c10b0ce1}</Project>
+      <Name>CloudCoinCoreStandard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
