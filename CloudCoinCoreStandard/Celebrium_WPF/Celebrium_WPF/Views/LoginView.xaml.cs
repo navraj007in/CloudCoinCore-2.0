@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Celebrium_WPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,11 @@ namespace Celebrium_WPF.Views
             {
                 Panel.SetZIndex(passBox, -1);
                 Panel.SetZIndex(txtBoxFakePass, 1);
+            }
+            else
+            {
+                LoginViewModel vm = this.DataContext as LoginViewModel;
+                vm.Password = passBox.Password;
             }
         }
     }

@@ -154,8 +154,7 @@ namespace Celebrium_WPF.ViewModels
         private void mNews(object obj)
         {
             //TODO write code here
-            //System.Windows.Forms.MessageBox.Show("Write the news logic here");
-            System.Diagnostics.Process.Start("http://celebrium.com/news");
+            System.Windows.Forms.MessageBox.Show("Write the news logic here");
         }
 
         public ICommand News
@@ -166,8 +165,7 @@ namespace Celebrium_WPF.ViewModels
         private void mShop(object obj)
         {
             //TODO write code here
-            //System.Windows.Forms.MessageBox.Show("Write the shop logic here");
-            System.Diagnostics.Process.Start("http://celebrium.com/");
+            System.Windows.Forms.MessageBox.Show("Write the shop logic here");
         }
 
         public ICommand Shop

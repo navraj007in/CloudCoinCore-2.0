@@ -34,5 +34,30 @@ namespace Celebrium_WPF.ViewModels
         {
             get { return new ActionCommand(mSubmit); }
         }
+
+        private string _email;
+
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged(nameof(Email));
+            }
+        }
+
+        private string _pass;
+
+        public string Password
+        {
+            get { return _pass; }
+            set
+            {
+                _pass = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+
     }
 }
