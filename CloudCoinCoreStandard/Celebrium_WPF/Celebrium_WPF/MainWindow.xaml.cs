@@ -25,8 +25,8 @@ namespace Celebrium_WPF
     public partial class MainWindow : Window
     {
         #region CoreVariables
-        CloudCoinCore.RAIDA raidaCore = App.raida;
-        CloudCoinClient.CoreClasses.FileSystem FS;
+        RAIDA raidaCore = App.raida;
+        public static FileSystem FS;
         //string RootPath;
         //FileSystem FS;
         //RAIDA raida;
@@ -44,7 +44,7 @@ namespace Celebrium_WPF
         public static int exportTwoFifties = 0;
         public static int exportJpegStack = 2;
         public static string exportTag = "";
-        SimpleLogger logger = new SimpleLogger();
+        public static SimpleLogger logger = new SimpleLogger();
         Frack_Fixer fixer;
 
         #endregion
@@ -60,6 +60,21 @@ namespace Celebrium_WPF
 
         }
 
+        public static void printLineDots()
+        {
+            updateLog("********************************************************************************");
+        }
+
+        public static void updateLog(string logLine, bool writeUI = true)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                //if (writeUI)
+                  //  txtLogs.AppendText(logLine + Environment.NewLine);
+                logger.Info(logLine);
+            });
+
+        }
         private void Raida_LogRecieved(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
