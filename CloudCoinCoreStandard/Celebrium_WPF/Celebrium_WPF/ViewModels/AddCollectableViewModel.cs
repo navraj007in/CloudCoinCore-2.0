@@ -30,7 +30,7 @@ namespace Celebrium_WPF.ViewModels
         private void mChooseFiles(object obj)
         {
             //TODO write code here
-            System.Windows.Forms.MessageBox.Show("Write the choose files logic here and update the ProgressValue + ProgressStatus properties");
+            //System.Windows.Forms.MessageBox.Show("Write the choose files logic here and update the ProgressValue + ProgressStatus properties");
             var files = Directory
                .GetFiles(MainWindow.FS.ImportFolder)
                .Where(file => CloudCoinCore.Config.allowedExtensions.Any(file.ToLower().EndsWith))
@@ -50,7 +50,9 @@ namespace Celebrium_WPF.ViewModels
             //update the values of these properties and the UI will update itself.
             //ProgressValue += 20;
             //ProgressStatus = ProgressValue.ToString() + "%";
-            detect();
+            ProgressValue = 0;
+            ProgressStatus = "Processing Files";
+            Detect();
 
         }
 
@@ -59,7 +61,7 @@ namespace Celebrium_WPF.ViewModels
 
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Cloudcoins (*.stack, *.jpg,*.jpeg)|*.stack;*.jpg;*.jpeg|Stack files (*.stack)|*.stack|Jpeg files (*.jpg)|*.jpg|All files (*.*)|*.*";
+                openFileDialog.Filter = "Cloudcoins (*.celebrium, *.jpg,*.jpeg)|*.celebrium;*.jpg;*.jpeg|Stack files (*.celebrium)|*.celebrium|Jpeg files (*.jpg)|*.jpg|All files (*.*)|*.*";
                 openFileDialog.InitialDirectory = MainWindow.FS.RootPath;
                 openFileDialog.Multiselect = true;
 
@@ -107,14 +109,15 @@ namespace Celebrium_WPF.ViewModels
             return true;
         }
 
-        private async void detect()
+        private async void Detect()
         {
             MainWindow.updateLog("Starting Multi Detect..");
             TimeSpan ts = new TimeSpan();
             DateTime before = DateTime.Now;
             DateTime after;
             MainWindow.FS.LoadFileSystem();
-
+            ProgressValue = 0;
+            ProgressStatus =  "Starting detection";
             // Prepare Coins for Import
             MainWindow.FS.DetectPreProcessing();
 
@@ -162,7 +165,7 @@ namespace Celebrium_WPF.ViewModels
                 coins.ToList().ForEach(x => x.pown = "");
                 App.raida.coins = coins;
 
-                var tasks = App.raida.GetMultiDetectTasks(coins.ToArray(), CloudCoinCore.Config.milliSecondsToTimeOut);
+                var tasks = App.raida.GetMultiDetectTasks(coins.ToArray(), CloudCoinCore.Config.milliSecondsToTimeOut,false);
                 try
                 {
                     string requestFileName = Utils.RandomString(16).ToLower() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".stack";

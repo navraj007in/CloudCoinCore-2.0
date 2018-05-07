@@ -56,7 +56,7 @@ namespace CloudCoinCore
             {
                 fnames[i] = Path.GetFileName(files.ElementAt(i));
                 string ext = Path.GetExtension(files.ElementAt(i));
-                if (ext == ".stack")
+                if (ext == ".stack" || ext == ".celebrium" || ext == ".celeb")
                 {
                     var coins = Utils.LoadJson(files[i]);
                     if (coins != null)
