@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using ZXing;
 using ZXing.Common;
+using System.Net;
 
 namespace CloudCoinCore
 {
@@ -90,6 +91,7 @@ namespace CloudCoinCore
 
         public static async Task<String> GetHtmlFromURL(String urlAddress)
         {
+            
             string data = "";
             try
             {

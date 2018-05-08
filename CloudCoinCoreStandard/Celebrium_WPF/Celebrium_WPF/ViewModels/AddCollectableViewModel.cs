@@ -12,11 +12,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+
+using System.Windows.Data;
+using System.Windows.Documents;
+
+using System.Windows.Media;
+
+using System.Windows.Controls;
+using System.Drawing.Imaging;
+using System.Net.Http;
+using System.Net;
 
 namespace Celebrium_WPF.ViewModels
 {
     class AddCollectableViewModel : BaseNavigationViewModel
     {
+        List<CloudCoin> memoCoins = new List<CloudCoin>();
         public AddCollectableViewModel()
         {
             Title1 = "ADD";
@@ -27,12 +39,26 @@ namespace Celebrium_WPF.ViewModels
             ProgressStatus = "Not started";
         }
 
+        public void FetchImages(List<CloudCoin> cloudCoins)
+        {
+            int count = 1;
+            foreach (var jpegCoin in cloudCoins)
+            {
+
+                FetchImage(jpegCoin);
+                ProgressValue = (int)(count * 100 / cloudCoins.Count);
+                ProgressStatus = "Fetching Images. " + ProgressValue + " % completed.";
+                count++;
+            }
+            ProgressValue = 100;
+            ProgressStatus = "Fetching Images Completed.";
+        }
         private void mChooseFiles(object obj)
         {
             //TODO write code here
             //System.Windows.Forms.MessageBox.Show("Write the choose files logic here and update the ProgressValue + ProgressStatus properties");
             var files = Directory
-               .GetFiles(MainWindow.FS.ImportFolder)
+               .GetFiles(App.templateFolder)
                .Where(file => CloudCoinCore.Config.allowedExtensions.Any(file.ToLower().EndsWith))
                .ToList();
 
@@ -52,10 +78,42 @@ namespace Celebrium_WPF.ViewModels
             //ProgressStatus = ProgressValue.ToString() + "%";
             ProgressValue = 0;
             ProgressStatus = "Processing Files";
-            Detect();
+
+            new Thread(delegate () {
+                memoCoins = ProcessBank().Result;
+                MainWindow.logger.Info("Celebriums detected " + memoCoins.Count);
+                MessageBox.Show("Celebriums detected " + memoCoins.Count);
+                Detect();
+            }).Start();
+
+            //memoCoins = ProcessBank().Result;
+
+            //Detect();
 
         }
 
+        private async Task<List<CloudCoin>> ProcessBank()
+        {
+            var importCoins = MainWindow.FS.LoadFolderCoins(MainWindow.FS.ImportFolder);
+            List<CloudCoin> memoCoins = new List<CloudCoin>();
+            int count = 1;
+            foreach(var coin in importCoins)
+            {
+                //string jpegExists = await CheckJpeg(coin);
+                string jpegExists = await GetHtmlFromURL(string.Format(Config.URL_JPEG_Exists, Config.NetworkNumber, coin.sn));
+
+                if (jpegExists == "true")
+                    memoCoins.Add(coin);
+                Console.WriteLine("S. No. -"+ coin.sn +" Coins Exists - "+ jpegExists);
+                ProgressValue = (int)(count * 100 / importCoins.Count);
+                ProgressStatus = "Detecting Memos. " + ProgressValue + " % completed.";
+                count++;
+            }
+            ProgressValue = 100;
+            ProgressStatus = "Memo Detection completed.";
+            return memoCoins;
+        }
+        #region Pickup files
         private bool PickFiles()
         {
 
@@ -108,7 +166,9 @@ namespace Celebrium_WPF.ViewModels
             }
             return true;
         }
+        #endregion
 
+        #region Celebrium Detection
         private async void Detect()
         {
             MainWindow.updateLog("Starting Multi Detect..");
@@ -148,9 +208,27 @@ namespace Celebrium_WPF.ViewModels
             predetectCoins = newCoins;
             //return;
 
+            int existIndex = 0;
+            List<CloudCoin> ccList = new List<CloudCoin>();
+            foreach (var jpegCoin in newCoins)
+            {
+                string jpegExists = await CheckJpeg(jpegCoin);
+                if (jpegExists == "yes")
+                {
+                    MainWindow.updateLog("Jpeg Found" + jpegCoin.sn);
+                  //  ccList.Add(jpegCoin);
+                }
+                else
+                {
+                    MainWindow.updateLog("Jpeg Not Found" + jpegCoin.sn);
+                    
 
+                }
+                ccList.Add(jpegCoin);
+                existIndex++;
+            }
 
-
+            predetectCoins = memoCoins;
             // Process Coins in Lots of 200. Can be changed from Config File
             int LotCount = predetectCoins.Count() / CloudCoinCore.Config.MultiDetectLoad;
             if (predetectCoins.Count() % CloudCoinCore.Config.MultiDetectLoad > 0) LotCount++;
@@ -279,6 +357,8 @@ namespace Celebrium_WPF.ViewModels
             Debug.WriteLine("Detection Completed in - " + ts.TotalMilliseconds / 1000);
             MainWindow.updateLog("Detection Completed in - " + ts.TotalMilliseconds / 1000);
 
+            FetchImages(passedCoins);
+
 
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -288,6 +368,7 @@ namespace Celebrium_WPF.ViewModels
             });
 
         }
+        #endregion
         public ICommand ChooseFiles
         {
             get { return new ActionCommand(mChooseFiles); }
@@ -306,7 +387,26 @@ namespace Celebrium_WPF.ViewModels
                 OnPropertyChanged(nameof(ProgressValue));
             }
         }
-
+        public static async Task<String> GetHtmlFromURL(String urlAddress)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            string data = "";
+            try
+            {
+                using (var cli = new HttpClient())
+                {
+                    HttpResponseMessage response = await cli.GetAsync(urlAddress);
+                    if (response.IsSuccessStatusCode)
+                        data = await response.Content.ReadAsStringAsync();
+                    //Debug.WriteLine(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return data;
+        }//end get HTML
         private string _progressStatus;
 
         public string ProgressStatus
@@ -319,5 +419,132 @@ namespace Celebrium_WPF.ViewModels
             }
         }
 
+        public async Task<string> CheckJpeg(CloudCoin cc)
+        {
+            string jpegExists = await GetHtmlFromURL(string.Format(Config.URL_JPEG_Exists, Config.NetworkNumber, cc.sn));
+            //MessageBox.Show(jpegExists);
+
+            if (jpegExists.Equals("true"))
+            {
+                //await FetchImage(cc);
+
+            }
+
+            return jpegExists;
+
+        }
+
+        public async Task<string> FetchImage(CloudCoin cc)
+        {
+            var ticketTask = App.raida.nodes[0].GetTicketResponse(Config.NetworkNumber, cc.sn, cc.an[0], cc.denomination);
+            string url = string.Format(App.raida.nodes[3].FullUrl + Config.URL_GET_TICKET, Config.NetworkNumber, cc.sn, cc.an[3], cc.an[3], cc.denomination);
+            string resp = await GetHtmlFromURL(url);
+            if (resp.Contains("ticket"))
+            {
+                try
+                {
+                    String[] KeyPairs = resp.Split(',');
+                    String message = KeyPairs[3];
+                    int startTicket = Utils.ordinalIndexOf(message, "\"", 3) + 2;
+                    int endTicket = Utils.ordinalIndexOf(message, "\"", 4) - startTicket;
+                    string resp2 = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
+                    url = string.Format(Config.URL_GET_IMAGE, Config.NetworkNumber, cc.sn, 3, resp2);
+                    string image = await GetHtmlFromURL(url);
+                    image = image.Substring(0, image.Length - 4);
+                    int curlpos = image.IndexOf("{");
+                    image = image.Substring(curlpos);
+                    image = image.Replace("\r", "").Replace("\n", "").Replace("\t", "");
+
+                    String[] KeyPairs2 = image.Split(',');
+                    String message2 = KeyPairs2[3];
+
+                    int startTicket1 = Utils.ordinalIndexOf(message2, "\"", 3) + 2;
+                    int endTicket1 = Utils.ordinalIndexOf(message2, "\"", 4) - startTicket1;
+                    string resp3 = message2.Substring(startTicket1 - 1, endTicket1 + 1); //This is the ticket or message
+
+
+                    byte[] bytes = Convert.FromBase64String(resp3);
+
+                    MemoryStream ms = new MemoryStream(bytes, 0, bytes.Length);
+                    ms.Position = 0;
+                    ms.Write(bytes, 0, bytes.Length);
+                    System.Drawing.Image imgimg = System.Drawing.Image.FromStream(ms, true);// this line giving exception parameter not valid
+
+                    imgimg.Save(MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg");
+                }
+                catch(Exception e)
+                {
+                    MainWindow.logger.Error(e.Message);
+                    Console.WriteLine(e.Message);
+
+                }
+               
+                //imgCoin.Source = ByteImageConverter.ByteToImage(bytes);
+
+                //GetImageResponse imgresp = JsonConvert.DeserializeObject<GetImageResponse>(image);
+
+                //MessageBox.Show(message2);
+                // MessageBox.Show(resp);
+
+            }
+            Console.WriteLine(ticketTask);
+            return "";
+        }
+
+        public Image LoadImage(string img)
+        {
+            //data:image/gif;base64,
+            //this image is a single pixel (black)
+            byte[] bytes = Convert.FromBase64String(img);
+
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new MemoryStream(bytes);
+            bi.EndInit();
+
+            Image img1 = new Image();
+            img1.Source = bi;
+
+            return img1;
+        }
+
+        public Image LoadImageBytes(string img)
+        {
+            //data:image/gif;base64,
+            //this image is a single pixel (black)
+            byte[] bytes = Convert.FromBase64String(img);
+
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new MemoryStream(bytes);
+            bi.EndInit();
+
+            Image img1 = new Image();
+            img1.Source = bi;
+
+            return img1;
+        }
+        private void Raida_ProgressChanged(object sender, EventArgs e)
+        {
+            //  throw new NotImplementedException();
+        }
     }
+    public class ByteImageConverter
+    {
+        public static ImageSource ByteToImage(byte[] imageData)
+        {
+            BitmapImage biImg = new BitmapImage();
+            MemoryStream ms = new MemoryStream(imageData);
+            biImg.BeginInit();
+            biImg.StreamSource = ms;
+            biImg.EndInit();
+
+            ImageSource imgSrc = biImg as ImageSource;
+
+            return imgSrc;
+        }
+    }
+
+
 }
+

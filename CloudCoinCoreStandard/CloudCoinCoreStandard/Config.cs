@@ -38,9 +38,9 @@ namespace CloudCoinCore
         public static string TAG_DANGEROUS = "Dangerous";
         public static string TAG_LOGS = "Logs";
 
-        public static string URL_JPEG_Exists = "https://templates.cloudcoin.global/jpeg_exists?nn={0}&sn={1}";
+        public static string URL_JPEG_Exists = "https://raida.tech/jpeg_exists.php?nn={0}&sn={1}";
         public static string URL_GET_TICKET = "get_ticket?nn={0}&sn={1}&an={2}&pan={3}&denomination={4}";
-        public static string URL_GET_IMAGE = "https://templates.cloudcoin.global/get_template?nn={0}&sn={1}&fromserver1={2}&message1={3}";
+        public static string URL_GET_IMAGE = "https://raida.tech/get_template.php?nn={0}&sn={1}&fromserver1={2}&message1={3}";
 
     }
 }
