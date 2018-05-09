@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Celebrium_WPF.ViewModels
@@ -121,7 +122,38 @@ namespace Celebrium_WPF.ViewModels
 
         private void mShowBackupCollectable(object obj)
         {
-            CurrentView = vmBackUpCollectable;
+            //CurrentView = vmBackUpCollectable;
+            backup();
+        }
+
+        private void backup()
+        {
+            var bankCoins = MainWindow.FS.LoadFolderCoins(MainWindow.FS.BankFolder);
+            var frackedCoins = MainWindow.FS.LoadFolderCoins(MainWindow.FS.FrackedFolder);
+            //var partialCoins = MainWindow.FS.LoadFolderCoins(FS.PartialFolder);
+
+            // Add them all up in a single list for backup
+
+            bankCoins.AddRange(frackedCoins);
+            //bankCoins.AddRange(partialCoins);
+
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    string backupFileName = "celebrium_backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() ;
+                    MainWindow.FS.WriteCoinsToFile(bankCoins, dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar +
+                                        backupFileName, ".celeb");
+                    MainWindow.printLineDots();
+                    MainWindow.updateLog("Backup file " + backupFileName + " saved to " + dialog.SelectedPath + " .");
+                    MainWindow.printLineDots();
+
+                    MessageBox.Show("Memos Backup completed successfully.");
+                }
+            }
+
         }
 
         public ICommand ShowBackUpCollectable
