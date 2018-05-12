@@ -26,7 +26,7 @@ namespace Celebrium_WPF.ViewModels
           //  vmLogin.Password = Properties.Settings.Default.PIN;
            // vmLogin.Email = "navraj@outlook.com";
            // vmLogin.Password = "1234";
-            ActiveView = vmLogin;
+            ActiveView = vmMain;
         }
 
         private void VmLogin_SubmitRequest(object sender, EventArgs e)
