@@ -11,6 +11,10 @@
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.3|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="DetectionAgent.cs" />
     <Compile Remove="RAIDA_Status.cs" />

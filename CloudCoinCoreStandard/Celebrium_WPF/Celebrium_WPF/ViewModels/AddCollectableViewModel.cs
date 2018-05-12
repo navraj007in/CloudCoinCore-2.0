@@ -171,6 +171,7 @@ namespace Celebrium_WPF.ViewModels
         #region Celebrium Detection
         private async void Detect()
         {
+            string extension = ".celeb";
             MainWindow.updateLog("Starting Multi Detect..");
             TimeSpan ts = new TimeSpan();
             DateTime before = DateTime.Now;
@@ -202,7 +203,7 @@ namespace Celebrium_WPF.ViewModels
             foreach (var coin in existingCoins)
             {
                 MainWindow.updateLog("Found existing coin :" + coin.sn + ". Skipping.");
-                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + coin.FileName + ".stack", MainWindow.FS.TrashFolder + coin.FileName + ".stack", IFileSystem.FileMoveOptions.Replace);
+                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + coin.FileName + ".celeb", MainWindow.FS.TrashFolder + coin.FileName + ".celeb", IFileSystem.FileMoveOptions.Replace);
             }
 
             predetectCoins = newCoins;
@@ -248,7 +249,7 @@ namespace Celebrium_WPF.ViewModels
                 {
                     string requestFileName = Utils.RandomString(16).ToLower() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".stack";
                     // Write Request To file before detect
-                    MainWindow.FS.WriteCoinsToFile(coins, MainWindow.FS.RequestsFolder + requestFileName);
+                    MainWindow.FS.WriteCoinsToFile(coins, MainWindow.FS.RequestsFolder + requestFileName,extension);
                     await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
                     int j = 0;
                     foreach (var coin in coins)
@@ -279,8 +280,8 @@ namespace Celebrium_WPF.ViewModels
                     ProgressStatus = ProgressValue.ToString() + "% Detected";
                     Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
                     App.raida.OnProgressChanged(pge);
-                    MainWindow.FS.WriteCoin(coins, MainWindow.FS.DetectedFolder);
-                    MainWindow.FS.RemoveCoins(coins, MainWindow.FS.PreDetectFolder);
+                    MainWindow.FS.WriteCoin(coins, MainWindow.FS.DetectedFolder,extension);
+                    MainWindow.FS.RemoveCoins(coins, MainWindow.FS.PreDetectFolder,extension);
                 }
                 catch (Exception ex)
                 {
@@ -337,17 +338,18 @@ namespace Celebrium_WPF.ViewModels
             MainWindow.updateLog("Total Dangerous Coins : " + dangerousCoins.Count() + "");
 
             // Move Coins to their respective folders after sort
-            MainWindow.FS.MoveCoins(passedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.BankFolder);
-            MainWindow.FS.MoveCoins(frackedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.FrackedFolder);
-            MainWindow.FS.WriteCoin(failedCoins, MainWindow.FS.CounterfeitFolder, true);
-            MainWindow.FS.MoveCoins(lostCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.LostFolder);
-            MainWindow.FS.MoveCoins(suspectCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.SuspectFolder);
-            MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder);
+            //string extension = ".celeb";
+            MainWindow.FS.MoveCoins(passedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.BankFolder,extension);
+            MainWindow.FS.MoveCoins(frackedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.FrackedFolder,extension);
+            MainWindow.FS.WriteCoin(failedCoins, MainWindow.FS.CounterfeitFolder,extension, true);
+            MainWindow.FS.MoveCoins(lostCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.LostFolder,extension);
+            MainWindow.FS.MoveCoins(suspectCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.SuspectFolder,extension);
+            MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder, extension);
 
             // Clean up Detected Folder
-            MainWindow.FS.RemoveCoins(failedCoins, MainWindow.FS.DetectedFolder);
-            MainWindow.FS.RemoveCoins(lostCoins, MainWindow.FS.DetectedFolder);
-            MainWindow.FS.RemoveCoins(suspectCoins, MainWindow.FS.DetectedFolder);
+            MainWindow.FS.RemoveCoins(failedCoins, MainWindow.FS.DetectedFolder,extension);
+            MainWindow.FS.RemoveCoins(lostCoins, MainWindow.FS.DetectedFolder,extension);
+            MainWindow.FS.RemoveCoins(suspectCoins, MainWindow.FS.DetectedFolder,extension);
 
             MainWindow.FS.MoveImportedFiles();
             //FileSystem.detectedCoins = FS.LoadFolderCoins(FS.RootPath + System.IO.Path.DirectorySeparatorChar + FS.DetectedFolder);

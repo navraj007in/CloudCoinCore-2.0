@@ -94,6 +94,7 @@ namespace Celebrium_WPF
             base.OnStartup(e);
         }
 
+
         private int GetNetworkNumber(RAIDADirectory dir)
         {
             if (Celebrium_WPF. Properties.Settings.Default.NetworkNumber == 0)

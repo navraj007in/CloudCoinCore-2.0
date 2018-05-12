@@ -441,6 +441,104 @@ namespace CloudCoinCore
             return fileSavedSuccessfully;
         }//end write JPEG
 
+        public bool writeJpeg(CloudCoin cc, string tag,string filePath)
+        {
+            // Console.Out.WriteLine("Writing jpeg " + cc.sn);
+
+            //  CoinUtils cu = new CoinUtils(cc);
+            filePath = filePath.Replace("\\\\","\\");
+            bool fileSavedSuccessfully = true;
+
+            /* BUILD THE CLOUDCOIN STRING */
+            String cloudCoinStr = "01C34A46494600010101006000601D05"; //THUMBNAIL HEADER BYTES
+            for (int i = 0; (i < 25); i++)
+            {
+                cloudCoinStr = cloudCoinStr + cc.an[i];
+            } // end for each an
+
+            //cloudCoinStr += "204f42455920474f4420262044454645415420545952414e545320";// Hex for " OBEY GOD & DEFEAT TYRANTS "
+            //cloudCoinStr += "20466f756e6465727320372d352d3137";// Founders 7-5-17
+            cloudCoinStr += "4c6976652046726565204f7220446965";// Live Free or Die
+            cloudCoinStr += "00000000000000000000000000";//Set to unknown so program does not export user data
+                                                         // for (int i =0; i < 25; i++) {
+                                                         //     switch () { }//end switch pown char
+                                                         // }//end for each pown
+            cloudCoinStr += "00"; // HC: Has comments. 00 = No
+            cc.CalcExpirationDate();
+            cloudCoinStr += cc.edHex; // 01;//Expiration date Sep 2016 (one month after zero month)
+            cloudCoinStr += "01";//  cc.nn;//network number
+            String hexSN = cc.sn.ToString("X6");
+            String fullHexSN = "";
+            switch (hexSN.Length)
+            {
+                case 1: fullHexSN = ("00000" + hexSN); break;
+                case 2: fullHexSN = ("0000" + hexSN); break;
+                case 3: fullHexSN = ("000" + hexSN); break;
+                case 4: fullHexSN = ("00" + hexSN); break;
+                case 5: fullHexSN = ("0" + hexSN); break;
+                case 6: fullHexSN = hexSN; break;
+            }
+            cloudCoinStr = (cloudCoinStr + fullHexSN);
+            /* BYTES THAT WILL GO FROM 04 to 454 (Inclusive)*/
+            byte[] ccArray = this.hexStringToByteArray(cloudCoinStr);
+
+
+            /* READ JPEG TEMPLATE*/
+            byte[] jpegBytes = null;
+
+            //jpegBytes = readAllBytes(filePath);
+            jpegBytes = File.ReadAllBytes(filePath);
+
+            /* WRITE THE SERIAL NUMBER ON THE JPEG */
+
+            //Bitmap bitmapimage;
+            SKBitmap bitmapimage;
+            //using (var ms = new MemoryStream(jpegBytes))
+            {
+
+                //bitmapimage = new Bitmap(ms);
+                bitmapimage = SKBitmap.Decode(jpegBytes);
+            }
+            SKCanvas canvas = new SKCanvas(bitmapimage);
+            //Graphics graphics = Graphics.FromImage(bitmapimage);
+            //graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            //graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            SKPaint textPaint = new SKPaint()
+            {
+                IsAntialias = true,
+                Color = SKColors.White,
+                TextSize = 14,
+                Typeface = SKTypeface.FromFamilyName("Arial")
+            };
+            //PointF drawPointAddress = new PointF(30.0F, 25.0F);
+
+            canvas.DrawText(String.Format("{0:N0}", cc.sn) + " of 16,777,216 on Network: 1", 30, 40, textPaint);
+            //graphics.DrawString(String.Format("{0:N0}", cc.sn) + " of 16,777,216 on Network: 1", new Font("Arial", 10), Brushes.White, drawPointAddress);
+
+            //ImageConverter converter = new ImageConverter();
+            //byte[] snBytes = (byte[])converter.ConvertTo(bitmapimage, typeof(byte[]));
+            SKImage image = SKImage.FromBitmap(bitmapimage);
+            SKData data = image.Encode(SKEncodedImageFormat.Jpeg, 100);
+            byte[] snBytes = data.ToArray();
+
+            List<byte> b1 = new List<byte>(snBytes);
+            List<byte> b2 = new List<byte>(ccArray);
+            b1.InsertRange(4, b2);
+
+            if (tag == "random")
+            {
+                Random r = new Random();
+                int rInt = r.Next(100000, 1000000); //for ints
+                tag = rInt.ToString();
+            }
+
+            string fileName = ExportFolder + cc.FileName  + ".jpg";
+            File.WriteAllBytes(fileName, b1.ToArray());
+            Console.Out.WriteLine("Writing to " + fileName);
+            //CoreLogger.Log("Writing to " + fileName);
+            return fileSavedSuccessfully;
+        }//end write JPEG
+
         public string bytesToHexString(byte[] data)
         {
             if (data == null)
