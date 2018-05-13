@@ -15,7 +15,7 @@ namespace Celebrium_WPF.ViewModels
 {
     public class MainAppViewModel:BaseViewModel
     {
-        StoriesViewModel vmStories;
+        public static StoriesViewModel vmStories;
 
         StoryViewModel vmStory;
         AddCollectableViewModel vmAddCollectable;
@@ -30,7 +30,7 @@ namespace Celebrium_WPF.ViewModels
             vmBackUpCollectable = new ViewModels.BackUpCollectableViewModel();
 
             vmStories.ShowStoryRequest += VmStories_ShowStoryRequest;
-
+            
             vmStory.RequestBackNavigation += vm_RequestBackNavigation;
             vmAddCollectable.RequestBackNavigation += vm_RequestBackNavigation;
             vmBackUpCollectable.RequestBackNavigation += vm_RequestBackNavigation;
@@ -43,6 +43,7 @@ namespace Celebrium_WPF.ViewModels
         private void vm_RequestBackNavigation(object sender, EventArgs e)
         {
             vmStories.SelectedItem = null;
+            vmStories.Refresh();
             CurrentView = vmStories;
         }
 
@@ -180,9 +181,20 @@ namespace Celebrium_WPF.ViewModels
             //TODO write code here
             if(CurrentView == vmStory)
             {
-                MessageBox.Show("Story Selected.");
-                JpegWrite(vmStory.Story.CoinPath, vmStory.Story.ImagePath, "", "",vmStory.Story);
-
+                var exportResult = MessageBox.Show("Are you sure you want to export this memo?", "Memo Export", MessageBoxButton.YesNo);
+                if (exportResult == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        JpegWrite(vmStory.Story.CoinPath, vmStory.Story.ImagePath, "", "", vmStory.Story);
+                        Process.Start(MainWindow.FS.ExportFolder);
+                        vmStories.Refresh();
+                    }
+                    catch(Exception e)
+                    {
+                        MainWindow.logger.Error(e.Message);
+                    }
+                }
             }
             else
             {

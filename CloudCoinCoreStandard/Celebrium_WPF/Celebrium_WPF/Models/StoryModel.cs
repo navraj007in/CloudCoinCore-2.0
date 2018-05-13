@@ -25,8 +25,8 @@ namespace Celebrium_WPF.Models
             ImagePath = imageUrl;
 
             Image = src;
-            string name = FS.BankFolder + fileName + ".celeb";
-            string frackName = FS.FrackedFolder + fileName + ".celeb";
+            string name = FS.BankFolder + fileName + ".celebrium";
+            string frackName = FS.FrackedFolder + fileName + ".celebrium";
             if (File.Exists(name))
             {
                 cloudCoin = FS.LoadCoin(name);

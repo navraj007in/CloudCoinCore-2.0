@@ -39,13 +39,13 @@ namespace Celebrium_WPF.ViewModels
             ProgressStatus = "Not started";
         }
 
-        public void FetchImages(List<CloudCoin> cloudCoins)
+        public async Task FetchImages(List<CloudCoin> cloudCoins)
         {
             int count = 1;
             foreach (var jpegCoin in cloudCoins)
             {
 
-                FetchImage(jpegCoin);
+                await FetchImage(jpegCoin);
                 ProgressValue = (int)(count * 100 / cloudCoins.Count);
                 ProgressStatus = "Fetching Images. " + ProgressValue + " % completed.";
                 count++;
@@ -63,7 +63,7 @@ namespace Celebrium_WPF.ViewModels
                .ToList();
 
             int filesCount = Directory.GetFiles(MainWindow.FS.ImportFolder).Length;
-            if (files.Count() == 0)
+            if (filesCount == 0)
             {
                 bool pickResult = PickFiles();
                 if (!pickResult)
@@ -119,7 +119,7 @@ namespace Celebrium_WPF.ViewModels
 
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Cloudcoins (*.celebrium, *.jpg,*.jpeg)|*.celebrium;*.jpg;*.jpeg|Stack files (*.celebrium)|*.celebrium|Jpeg files (*.jpg)|*.jpg|All files (*.*)|*.*";
+                openFileDialog.Filter = "Cloudcoins (*.celebrium, *.jpg,*.jpeg)|*.celebrium;*.jpg;*.jpeg|Celebrium files (*.celebrium)|*.celebrium|Jpeg files (*.jpg)|*.jpg|All files (*.*)|*.*";
                 openFileDialog.InitialDirectory = MainWindow.FS.RootPath;
                 openFileDialog.Multiselect = true;
 
@@ -171,7 +171,7 @@ namespace Celebrium_WPF.ViewModels
         #region Celebrium Detection
         private async void Detect()
         {
-            string extension = ".celeb";
+            string extension = ".celebrium";
             MainWindow.updateLog("Starting Multi Detect..");
             TimeSpan ts = new TimeSpan();
             DateTime before = DateTime.Now;
@@ -203,7 +203,7 @@ namespace Celebrium_WPF.ViewModels
             foreach (var coin in existingCoins)
             {
                 MainWindow.updateLog("Found existing coin :" + coin.sn + ". Skipping.");
-                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + coin.FileName + ".celeb", MainWindow.FS.TrashFolder + coin.FileName + ".celeb", IFileSystem.FileMoveOptions.Replace);
+                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + coin.FileName + extension, MainWindow.FS.TrashFolder + coin.FileName + extension, IFileSystem.FileMoveOptions.Replace);
             }
 
             predetectCoins = newCoins;
@@ -247,7 +247,7 @@ namespace Celebrium_WPF.ViewModels
                 var tasks = App.raida.GetMultiDetectTasks(coins.ToArray(), CloudCoinCore.Config.milliSecondsToTimeOut,false);
                 try
                 {
-                    string requestFileName = Utils.RandomString(16).ToLower() + DateTime.Now.ToString("yyyyMMddHHmmss") + ".stack";
+                    string requestFileName = Utils.RandomString(16).ToLower() + DateTime.Now.ToString("yyyyMMddHHmmss");
                     // Write Request To file before detect
                     MainWindow.FS.WriteCoinsToFile(coins, MainWindow.FS.RequestsFolder + requestFileName,extension);
                     await Task.WhenAll(tasks.AsParallel().Select(async task => await task()));
@@ -347,6 +347,7 @@ namespace Celebrium_WPF.ViewModels
             MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder, extension);
 
             // Clean up Detected Folder
+            MainWindow.FS.RemoveCoins(passedCoins, MainWindow.FS.DetectedFolder, extension);
             MainWindow.FS.RemoveCoins(failedCoins, MainWindow.FS.DetectedFolder,extension);
             MainWindow.FS.RemoveCoins(lostCoins, MainWindow.FS.DetectedFolder,extension);
             MainWindow.FS.RemoveCoins(suspectCoins, MainWindow.FS.DetectedFolder,extension);
@@ -359,9 +360,8 @@ namespace Celebrium_WPF.ViewModels
             Debug.WriteLine("Detection Completed in - " + ts.TotalMilliseconds / 1000);
             MainWindow.updateLog("Detection Completed in - " + ts.TotalMilliseconds / 1000);
 
-            FetchImages(passedCoins);
-
-
+            await FetchImages(passedCoins);
+            //MainAppViewModel.vmStories.AddStories(passedCoins);
             App.Current.Dispatcher.Invoke(delegate
             {
                 MainWindow.FS.LoadFileSystem();
@@ -489,7 +489,8 @@ namespace Celebrium_WPF.ViewModels
                 // MessageBox.Show(resp);
 
             }
-            Console.WriteLine(ticketTask);
+            //Console.WriteLine(ticketTask);
+
             return "";
         }
 

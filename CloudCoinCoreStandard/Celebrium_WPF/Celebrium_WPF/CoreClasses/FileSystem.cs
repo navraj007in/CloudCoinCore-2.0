@@ -163,7 +163,7 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 Stack stack = new Stack(coin);
-                using (StreamWriter sw = new StreamWriter(PreDetectFolder + fileName + ".celeb"))
+                using (StreamWriter sw = new StreamWriter(PreDetectFolder + fileName + ".celebrium"))
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
                     serializer.Serialize(writer, stack);
@@ -375,7 +375,7 @@ namespace CloudCoinClient.CoreClasses
         {
             if (writeAll)
             {
-                string fileName = Utils.RandomString(16) + extension;
+                string fileName = Utils.RandomString(16) ;
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
                 serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -404,7 +404,7 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Converters.Add(new JavaScriptDateTimeConverter());
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 Stack stack = new Stack(coin);
-                using (StreamWriter sw = new StreamWriter(folder + fileName + ".stack"))
+                using (StreamWriter sw = new StreamWriter(folder + fileName + extension))
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
                     serializer.Serialize(writer, stack);

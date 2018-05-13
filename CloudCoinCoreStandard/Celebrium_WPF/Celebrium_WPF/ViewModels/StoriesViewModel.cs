@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Celebrium_WPF.ViewModels
@@ -37,10 +38,10 @@ namespace Celebrium_WPF.ViewModels
             Stories = LoadStories();
             Stories.CollectionChanged += Stories_CollectionChanged;
         }
-
+        ObservableCollection<StoryModel> stories = new ObservableCollection<StoryModel>();
         private ObservableCollection<StoryModel> LoadStories()
         {
-            ObservableCollection<StoryModel> stories = new ObservableCollection<StoryModel>();
+            stories.Clear();
            string[] exts = new[] {  ".jpeg" , ".jpg"};
             var files = Directory
                 .GetFiles(App.templateFolder)
@@ -62,6 +63,24 @@ namespace Celebrium_WPF.ViewModels
             if (ShowStoryRequest != null)
             {
                 ShowStoryRequest(this, EventArgs.Empty);
+            }
+        }
+        public void Refresh()
+        {
+            LoadStories();
+        }
+
+        public void AddStories(List<CloudCoinCore.CloudCoin> coins)
+        {
+            foreach(var coin in coins)
+            {
+                StoryModel model = new StoryModel(MainWindow.FS.TemplateFolder + coin.FileName + ".jpg") { Title = "", Celeb = "", Content = "", Memos = "", Series = "", Value = "" };
+
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    Stories.Add(model);
+                    /* Your code here */
+                }));
+
             }
         }
 
