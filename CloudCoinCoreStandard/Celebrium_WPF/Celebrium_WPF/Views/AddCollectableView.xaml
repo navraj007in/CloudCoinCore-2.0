@@ -18,7 +18,7 @@
                 </Image.InputBindings>
             </Image>
             <Rectangle Grid.Row="1" Height="10" Width="20" />
-            <TextBlock Foreground="{StaticResource Color.Text}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" FontSize="12" Margin="0,0,0,-7">ONLY JPG, JPEG, ARE SUPPORTED FILES</TextBlock>
+            <TextBlock Foreground="{StaticResource Color.Text}"  FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" FontSize="12" Margin="0,0,0,-7">ONLY CELEBRIUM, JPG AND JPEG ARE SUPPORTED FILES</TextBlock>
             <Rectangle Grid.Row="1" Height="40" Width="20" />
             <Grid>
             <ProgressBar Height="14" Value="{Binding ProgressValue, FallbackValue=15}" Background="#FF555555" Foreground="#FF75A801" BorderBrush="{x:Null}" BorderThickness="0" ></ProgressBar>

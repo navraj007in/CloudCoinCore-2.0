@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_36C0791230E947CF84FDF095E527A4B9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9FCD03B73B05B11639B2BA602B0B2DA3"
         "OwnerKey" = "8:_C043C2DF0F39989E0DF1DE19705886D4"
         "MsmSig" = "8:_UNDEFINED"
@@ -59,12 +65,6 @@
         {
         "MsmKey" = "8:_DDA50DB6D900BB72D4F09848EA06FD9A"
         "OwnerKey" = "8:_C043C2DF0F39989E0DF1DE19705886D4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3533640DAF65DD71BBE59FD9E68829F3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -103,6 +103,12 @@
         "OwnerKey" = "8:_DDA50DB6D900BB72D4F09848EA06FD9A"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3533640DAF65DD71BBE59FD9E68829F3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -121,6 +127,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -137,6 +151,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -195,6 +217,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_36C0791230E947CF84FDF095E527A4B9"
+            {
+            "SourcePath" = "8:C:\\Users\\navraj.singh\\Downloads\\celebicon.ico"
+            "TargetName" = "8:celebicon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_C32048EEE891420A9D2304A7A319F49B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9FCD03B73B05B11639B2BA602B0B2DA3"
@@ -355,6 +397,28 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_13AC13E3ED82479A9756B7DFDA070E60"
+            {
+            "Name" = "8:Celebrium.Memos"
+            "Description" = "8:"
+            "Extensions" = "8:.celebrium"
+            "MIME" = "8:"
+            "Icon" = "8:_36C0791230E947CF84FDF095E527A4B9"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_ED82535EF2FE466EB3405C16CB59574A"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {

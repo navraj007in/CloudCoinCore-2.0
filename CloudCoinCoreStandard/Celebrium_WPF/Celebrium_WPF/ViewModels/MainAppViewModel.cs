@@ -186,7 +186,12 @@ namespace Celebrium_WPF.ViewModels
                 {
                     try
                     {
-                        JpegWrite(vmStory.Story.CoinPath, vmStory.Story.ImagePath, "", "", vmStory.Story);
+                        //JpegWrite(vmStory.Story.CoinPath, vmStory.Story.ImagePath, "", "", vmStory.Story);
+                        string fileName = System.IO.Path.GetFileName (vmStory.Story.ImagePath );
+                        string exportPath = MainWindow.FS.ExportFolder + Path.DirectorySeparatorChar + fileName;
+
+                        File.Copy(vmStory.Story.ImagePath, exportPath);
+                        File.Delete(vmStory.Story.ImagePath);
                         Process.Start(MainWindow.FS.ExportFolder);
                         vmStories.Refresh();
                     }
@@ -213,7 +218,7 @@ namespace Celebrium_WPF.ViewModels
             if (File.Exists(Path))//If the file is a bank file, export a good bank coin
             {
                 CloudCoin jpgCoin = fileSystem.LoadCoin(Path);
-                if (fileSystem.writeJpeg(jpgCoin, Tag,MainWindow.FS.TemplateFolder + System.IO.Path.GetFileNameWithoutExtension(storyModel.ImagePath)+ ".jpg"))//If the jpeg writes successfully 
+                if (fileSystem.writeJpeg(jpgCoin, Tag,MainWindow.FS.BankFolder + System.IO.Path.GetFileNameWithoutExtension(storyModel.ImagePath)+ ".jpg"))//If the jpeg writes successfully 
                 {
                     File.Delete(Path);//Delete the files if they have been written to
                     File.Delete(MainWindow.FS.TemplateFolder + System.IO.Path.GetFileNameWithoutExtension(storyModel.ImagePath) + ".jpg");

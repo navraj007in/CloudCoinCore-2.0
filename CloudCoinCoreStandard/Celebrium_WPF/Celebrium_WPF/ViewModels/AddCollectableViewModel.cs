@@ -23,6 +23,7 @@ using System.Windows.Controls;
 using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Net;
+using Celebrium_WPF.Models;
 
 namespace Celebrium_WPF.ViewModels
 {
@@ -39,19 +40,19 @@ namespace Celebrium_WPF.ViewModels
             ProgressStatus = "Not started";
         }
 
-        public async Task FetchImages(List<CloudCoin> cloudCoins)
+        public async Task FetchImages(List<CloudCoin> cloudCoins,int fracked=0)
         {
             int count = 1;
             foreach (var jpegCoin in cloudCoins)
             {
 
-                await FetchImage(jpegCoin);
+                await FetchImage(jpegCoin,fracked);
                 ProgressValue = (int)(count * 100 / cloudCoins.Count);
                 ProgressStatus = "Fetching Images. " + ProgressValue + " % completed.";
                 count++;
             }
             ProgressValue = 100;
-            ProgressStatus = "Fetching Images Completed.";
+            ProgressStatus = "Celebrium imported. Click Back to view.";
         }
         private void mChooseFiles(object obj)
         {
@@ -82,7 +83,7 @@ namespace Celebrium_WPF.ViewModels
             new Thread(delegate () {
                 memoCoins = ProcessBank().Result;
                 MainWindow.logger.Info("Celebriums detected " + memoCoins.Count);
-                MessageBox.Show("Celebriums detected " + memoCoins.Count);
+                //MessageBox.Show("Celebriums detected " + memoCoins.Count);
                 Detect();
             }).Start();
 
@@ -341,7 +342,8 @@ namespace Celebrium_WPF.ViewModels
             //string extension = ".celeb";
             MainWindow.FS.MoveCoins(passedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.BankFolder,extension);
             MainWindow.FS.MoveCoins(frackedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.FrackedFolder,extension);
-            MainWindow.FS.WriteCoin(failedCoins, MainWindow.FS.CounterfeitFolder,extension, true);
+            if(failedCoins.Count>0)
+                MainWindow.FS.WriteCoin(failedCoins, MainWindow.FS.CounterfeitFolder,extension, true);
             MainWindow.FS.MoveCoins(lostCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.LostFolder,extension);
             MainWindow.FS.MoveCoins(suspectCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.SuspectFolder,extension);
             MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder, extension);
@@ -361,6 +363,8 @@ namespace Celebrium_WPF.ViewModels
             MainWindow.updateLog("Detection Completed in - " + ts.TotalMilliseconds / 1000);
 
             await FetchImages(passedCoins);
+            await FetchImages(frackedCoins,1);
+
             //MainAppViewModel.vmStories.AddStories(passedCoins);
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -436,7 +440,7 @@ namespace Celebrium_WPF.ViewModels
 
         }
 
-        public async Task<string> FetchImage(CloudCoin cc)
+        public async Task<string> FetchImage(CloudCoin cc,int fracked=0)
         {
             var ticketTask = App.raida.nodes[0].GetTicketResponse(Config.NetworkNumber, cc.sn, cc.an[0], cc.denomination);
             string url = string.Format(App.raida.nodes[3].FullUrl + Config.URL_GET_TICKET, Config.NetworkNumber, cc.sn, cc.an[3], cc.an[3], cc.denomination);
@@ -472,9 +476,21 @@ namespace Celebrium_WPF.ViewModels
                     ms.Write(bytes, 0, bytes.Length);
                     System.Drawing.Image imgimg = System.Drawing.Image.FromStream(ms, true);// this line giving exception parameter not valid
 
-                    imgimg.Save(MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg");
+                    string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                    imgimg.Save(imgpath);
+
+                    string coinPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
+                    string memoPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                    if (fracked == 1)
+                    {
+                        coinPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
+                        memoPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                    }
+
+                    JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + cc.FileName + ".jpg");
+                    File.Delete(coinPath);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MainWindow.logger.Error(e.Message);
                     Console.WriteLine(e.Message);
@@ -493,6 +509,32 @@ namespace Celebrium_WPF.ViewModels
 
             return "";
         }
+
+        private void JpegWrite(String Path,CloudCoin cc, String memoPath, String BankFileName,String FrackedFileName, string imagePath)
+        {
+
+            IFileSystem fileSystem = MainWindow.FS;
+
+            if (File.Exists(Path))//If the file is a bank file, export a good bank coin
+            {
+                CloudCoin jpgCoin = fileSystem.LoadCoin(Path);
+                if (fileSystem.writeJpeg(jpgCoin, "" ,imagePath, memoPath))//If the jpeg writes successfully 
+                {
+                    //File.Delete(Path);//Delete the files if they have been written to
+                    File.Delete(imagePath);
+                }//end if write was good. 
+
+            }
+            else//Export a fracked coin. 
+            {
+                CloudCoin jpgCoin = fileSystem.LoadCoin(FrackedFileName);
+                //if (fileSystem.writeJpeg(jpgCoin, ""))
+                {
+                    //File.Delete(FrackedFileName);//Delete the files if they have been written to
+                }//end if
+            }//end else
+
+        }//End write one jpeg 
 
         public Image LoadImage(string img)
         {

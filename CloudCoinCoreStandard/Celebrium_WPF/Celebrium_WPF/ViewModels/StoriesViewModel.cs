@@ -44,7 +44,7 @@ namespace Celebrium_WPF.ViewModels
             stories.Clear();
            string[] exts = new[] {  ".jpeg" , ".jpg"};
             var files = Directory
-                .GetFiles(App.templateFolder)
+                .GetFiles(App.bankFolder)
                 .Where(file => exts.Any(file.ToLower().EndsWith))
                 .ToList();   
 
@@ -54,6 +54,20 @@ namespace Celebrium_WPF.ViewModels
                 stories.Add(model);
                 
             }
+
+            var ffiles = Directory
+                .GetFiles(App.frackedFolder)
+                .Where(file => exts.Any(file.ToLower().EndsWith))
+                .ToList();
+
+            foreach (var file in ffiles)
+            {
+                StoryModel model = new StoryModel(file) { Title = "", Celeb = "", Content = "", Memos = "", Series = "", Value = "" };
+                stories.Add(model);
+
+            }
+
+
             return stories;
         }
         public event EventHandler ShowStoryRequest;
@@ -74,7 +88,7 @@ namespace Celebrium_WPF.ViewModels
         {
             foreach(var coin in coins)
             {
-                StoryModel model = new StoryModel(MainWindow.FS.TemplateFolder + coin.FileName + ".jpg") { Title = "", Celeb = "", Content = "", Memos = "", Series = "", Value = "" };
+                StoryModel model = new StoryModel(MainWindow.FS.BankFolder + coin.FileName + ".jpg") { Title = "", Celeb = "", Content = "", Memos = "", Series = "", Value = "" };
 
                 Application.Current.Dispatcher.Invoke(new Action(() => {
                     Stories.Add(model);
