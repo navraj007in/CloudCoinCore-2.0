@@ -147,9 +147,15 @@ namespace Celebrium_WPF.ViewModels
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
+
+                    if((dialog.SelectedPath + Path.DirectorySeparatorChar).Replace("\\\\", "\\") == MainWindow.FS.BankFolder.Replace("\\\\", "\\"))
+                    {
+                        MessageBox.Show("Cant save");
+                        return;
+                    }
                     string backupFileName = "celebrium_backup" + DateTime.Now.ToString("yyyyMMddHHmmss").ToLower() ;
                     MainWindow.FS.WriteCoinsToFile(bankCoins, dialog.SelectedPath + System.IO.Path.DirectorySeparatorChar +
-                                        backupFileName, ".celeb");
+                                        backupFileName, ".celebrium");
                     MainWindow.printLineDots();
                     MainWindow.updateLog("Backup file " + backupFileName + " saved to " + dialog.SelectedPath + " .");
                     MainWindow.printLineDots();
@@ -193,7 +199,10 @@ namespace Celebrium_WPF.ViewModels
                         File.Copy(vmStory.Story.ImagePath, exportPath);
                         File.Delete(vmStory.Story.ImagePath);
                         Process.Start(MainWindow.FS.ExportFolder);
+                       // vmStories.Refresh();
+                        vmStories.SelectedItem = null;
                         vmStories.Refresh();
+                        CurrentView = vmStories;
                     }
                     catch(Exception e)
                     {

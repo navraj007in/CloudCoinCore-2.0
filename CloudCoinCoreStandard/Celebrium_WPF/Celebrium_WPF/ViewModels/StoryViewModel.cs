@@ -18,6 +18,22 @@ namespace Celebrium_WPF.ViewModels
             Title2 = "STORY";
         }
 
+        private void mMouseDoubleClickCommand(object obj)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(@_story.ImagePath);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        public ICommand MouseDoubleClickCommand
+        {
+            get { return new ActionCommand(mMouseDoubleClickCommand); }
+        }
 
         private StoryModel _story;
         public StoryModel Story

@@ -476,18 +476,18 @@ namespace Celebrium_WPF.ViewModels
                     ms.Write(bytes, 0, bytes.Length);
                     System.Drawing.Image imgimg = System.Drawing.Image.FromStream(ms, true);// this line giving exception parameter not valid
 
-                    string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                    string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
                     imgimg.Save(imgpath);
 
                     string coinPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
-                    string memoPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                    string memoPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
                     if (fracked == 1)
                     {
                         coinPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
-                        memoPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpg";
+                        memoPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
                     }
 
-                    JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + cc.FileName + ".jpg");
+                    JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + cc.FileName + ".jpeg");
                     File.Delete(coinPath);
                 }
                 catch (Exception e)
