@@ -45,6 +45,8 @@ namespace Celebrium_WPF
         public static int exportJpegStack = 2;
         public static string exportTag = "";
         public static SimpleLogger logger = new SimpleLogger();
+        public static SimpleLogger activityLogger = new SimpleLogger( "activities.log",true);
+
         Frack_Fixer fixer;
 
         #endregion
@@ -56,8 +58,25 @@ namespace Celebrium_WPF
             this.DataContext = mainVm;
             SetupFolders();
             logger = new SimpleLogger(FS.LogsFolder + "logs" + DateTime.Now.ToString("yyyyMMdd").ToLower() + ".log", true);
-            raidaCore.LoggerHandler += Raida_LogRecieved;
+            //raidaCore.LoggerHandler += Raida_LogRecieved;
+            fixer = new Frack_Fixer(FS, Config.milliSecondsToTimeOut);
 
+            Task.Run(() => {
+               // Fix();
+            });
+
+        }
+
+        
+
+        public event EventHandler<EventArgs> ThresholdReached;
+
+        private void Fix()
+        {
+            fixer.continueExecution = true;
+            fixer.IsFixing = true;
+            fixer.FixAll();
+            fixer.IsFixing = false;
         }
 
         public static void printLineDots()
@@ -75,8 +94,31 @@ namespace Celebrium_WPF
             });
 
         }
-        private void Raida_LogRecieved(object sender, EventArgs e)
+
+        public static void updateActivityLog(string logLine, bool writeUI = true)
         {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                //if (writeUI)
+                //  txtLogs.AppendText(logLine + Environment.NewLine);
+                activityLogger.Info(logLine);
+                ProgressChangedEventArgs pge = new ProgressChangedEventArgs();
+                pge.MajorProgressMessage = logLine;
+                App.raida.OnLogRecieved(pge);
+            });
+
+        }
+
+       
+
+
+        private void Raida_LogRecieved(object sender, ProgressChangedEventArgs e)
+        {
+            EventHandler<ProgressChangedEventArgs> handler = Raida_LogRecieved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
             //throw new NotImplementedException();
         }
         public string getWorkspace()

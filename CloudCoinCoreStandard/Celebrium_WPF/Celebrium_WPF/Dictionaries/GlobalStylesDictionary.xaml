@@ -45,4 +45,10 @@
         <locV:BackUpCollectableView /> <!-- Change this to the appropriate view that will be created later if needed-->
     </DataTemplate>
 
+    <DataTemplate  DataType="{x:Type locVM:ActivityLogModel}">
+        <locV:ActivityLogView />
+        <!-- Change this to the appropriate view that will be created later if needed-->
+    </DataTemplate>
+
+
 </ResourceDictionary>

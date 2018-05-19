@@ -20,6 +20,7 @@ namespace Celebrium_WPF.ViewModels
         StoryViewModel vmStory;
         AddCollectableViewModel vmAddCollectable;
         BackUpCollectableViewModel vmBackUpCollectable;
+        ActivityLogModel vmactivityLogModel;
 
         public MainAppViewModel()
         {
@@ -28,13 +29,14 @@ namespace Celebrium_WPF.ViewModels
             vmStory = new ViewModels.StoryViewModel();
             vmAddCollectable = new ViewModels.AddCollectableViewModel();
             vmBackUpCollectable = new ViewModels.BackUpCollectableViewModel();
+            vmactivityLogModel = new ActivityLogModel();
 
             vmStories.ShowStoryRequest += VmStories_ShowStoryRequest;
             
             vmStory.RequestBackNavigation += vm_RequestBackNavigation;
             vmAddCollectable.RequestBackNavigation += vm_RequestBackNavigation;
             vmBackUpCollectable.RequestBackNavigation += vm_RequestBackNavigation;
-
+            vmactivityLogModel.RequestBackNavigation += vm_RequestBackNavigation;
             CurrentView = vmStories;
             //TODO jsut set the value of the "Version" property to what ever you want, it will autoupdate in the view
             Version = "ALPHA RELEASE V 2.0";
@@ -160,6 +162,7 @@ namespace Celebrium_WPF.ViewModels
                     MainWindow.updateLog("Backup file " + backupFileName + " saved to " + dialog.SelectedPath + " .");
                     MainWindow.printLineDots();
 
+                    MainWindow.updateActivityLog("Celebriums backed up to " + backupFileName);
                     MessageBox.Show("Memos Backup completed successfully.");
                 }
             }
@@ -174,7 +177,8 @@ namespace Celebrium_WPF.ViewModels
         private void mShowActivityHistory(object obj)
         {
             //TODO write code here
-            System.Windows.Forms.MessageBox.Show("Write the activity logic here");
+            CurrentView = vmactivityLogModel;
+           // System.Windows.Forms.MessageBox.Show("Write the activity logic here");
         }
 
         public ICommand ShowActivityHistory
@@ -203,6 +207,10 @@ namespace Celebrium_WPF.ViewModels
                         vmStories.SelectedItem = null;
                         vmStories.Refresh();
                         CurrentView = vmStories;
+
+                        CloudCoin cloudCoin = MainWindow.FS.loadOneCloudCoinFromJPEGFile(exportPath);
+                        MainWindow.updateActivityLog("Celebrium "+ cloudCoin.sn +" Exported to "+ exportPath);
+
                     }
                     catch(Exception e)
                     {

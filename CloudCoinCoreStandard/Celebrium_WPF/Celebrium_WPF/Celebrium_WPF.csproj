@@ -115,6 +115,7 @@
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="SimpleLogger.cs" />
     <Compile Include="UserControls\ImageButton.cs" />
+    <Compile Include="ViewModels\ActivityLogModel.cs" />
     <Compile Include="ViewModels\AddCollectableViewModel.cs" />
     <Compile Include="ViewModels\ApplicationStartViewModel.cs" />
     <Compile Include="ViewModels\BaseNavigationViewModel.cs" />
@@ -124,6 +125,9 @@
     <Compile Include="ViewModels\BackUpCollectableViewModel.cs" />
     <Compile Include="ViewModels\StoriesViewModel.cs" />
     <Compile Include="ViewModels\StoryViewModel.cs" />
+    <Compile Include="Views\ActivityLogView.xaml.cs">
+      <DependentUpon>ActivityLogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BackUpCollectableView.xaml.cs">
       <DependentUpon>BackUpCollectableView.xaml</DependentUpon>
     </Compile>
@@ -178,6 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dictionaries\YellowButtonDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ActivityLogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

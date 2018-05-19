@@ -488,6 +488,7 @@ namespace Celebrium_WPF.ViewModels
                     }
 
                     JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + cc.FileName + ".jpeg");
+                    MainWindow.updateActivityLog("New Memo imported to " + memoPath);
                     File.Delete(coinPath);
                 }
                 catch (Exception e)
