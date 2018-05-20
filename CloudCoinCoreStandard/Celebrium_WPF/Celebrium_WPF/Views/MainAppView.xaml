@@ -32,9 +32,12 @@
             <TextBlock Grid.Row="1" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Coolvetica Rg" Foreground="{DynamicResource Color.Text}" Padding="0" FontSize="72" Margin="0,-20,100,0" TextAlignment="Right" >VAULT</TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="0" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk" Foreground="{DynamicResource Color.Text}" Padding="10,20,0,0" FontSize="14" Margin="0,37,100,0" TextAlignment="Right"  Text="{Binding Version, FallbackValue='ALPHA RELEASE V 1.0'}" />
             <StackPanel Grid.Row="0" Grid.Column="1"  SnapsToDevicePixels="False" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,15" Height="28" >
-                <Button Command="{Binding CustomerSupport}" Style="{DynamicResource YellowButton}" Padding="4" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold" FontWeight="Bold">CUSTOMER SUPPORT</Button>
+                <Button Command="{Binding CustomerSupport}" Cursor="Hand" Style="{DynamicResource YellowButton}" Padding="4" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold" FontWeight="Bold">
+                   
+                   
+                    CUSTOMER SUPPORT</Button>
                 <Rectangle Width="10" />
-                <Button Command="{Binding SoftwareUpdate}" Style="{DynamicResource YellowButton}" Padding="4" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold">SOFTWARE UPDATE</Button>
+                <Button Command="{Binding SoftwareUpdate}" Cursor="Hand" Style="{DynamicResource YellowButton}" Padding="4" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Bold">SOFTWARE UPDATE</Button>
             </StackPanel>
             <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -52,7 +55,9 @@
                         <ColumnDefinition Width="2" />
                         <ColumnDefinition MinWidth="{StaticResource Button.Width.Header}" />
                     </Grid.ColumnDefinitions>
-                    <uc:ImageButton Grid.Column="0"  Command="{Binding ShowAddCollectable}" Content="ADD MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png"  ImageWidth="24"  />
+                        <uc:ImageButton Cursor="Hand" Grid.Column="0"  Command="{Binding ShowAddCollectable}" Content="ADD MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png"  ImageWidth="24"  >
+                            
+                        </uc:ImageButton>
 
                     <Border Grid.Column="1" BorderBrush="{DynamicResource Color.Yellow}">
                         <StackPanel Orientation="Horizontal" >
@@ -60,7 +65,7 @@
                         </StackPanel>
                     </Border>
 
-                    <uc:ImageButton  Grid.Column="2" Command="{Binding ShowBackUpCollectable}" Content="BACKUP MEMOS" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png"  ImageWidth="24"  ></uc:ImageButton>
+                        <uc:ImageButton Cursor="Hand"  Grid.Column="2" Command="{Binding ShowBackUpCollectable}" Content="BACKUP MEMOS" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png"  ImageWidth="24"  ></uc:ImageButton>
 
                     <Border Grid.Column="3" BorderBrush="{DynamicResource Color.Yellow}">
                         <StackPanel Orientation="Horizontal" >
@@ -68,7 +73,7 @@
                         </StackPanel>
                     </Border>
 
-                    <uc:ImageButton  Grid.Column="4" Command="{Binding ShowExportCollectable}" Content="EXPORT MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png"  ImageWidth="24" ></uc:ImageButton>
+                        <uc:ImageButton  Grid.Column="4" Cursor="Hand" Command="{Binding ShowExportCollectable}" Content="EXPORT MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png"  ImageWidth="24" ></uc:ImageButton>
 
                     <Border Grid.Column="5"  BorderBrush="{StaticResource Color.Yellow}">
                         <StackPanel Orientation="Horizontal" >
@@ -76,7 +81,7 @@
                         </StackPanel>
                     </Border>
 
-                    <uc:ImageButton  Grid.Column="6" Command="{Binding ShowActivityHistory}" Content="YOUR ACTIVITY HISTORY" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/activity_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/activity_icon.png"  ImageWidth="24" ></uc:ImageButton>
+                        <uc:ImageButton Cursor="Hand"  Grid.Column="6" Command="{Binding ShowActivityHistory}" Content="YOUR ACTIVITY HISTORY" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/activity_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/activity_icon.png"  ImageWidth="24" ></uc:ImageButton>
 
 
                 </Grid>
@@ -93,9 +98,9 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
                     <StackPanel  Height="38" Orientation="Horizontal"  HorizontalAlignment="Center" >
-                        <Button Command="{Binding Shop}" Style="{DynamicResource YellowButton}"  FontSize="23"  Width="140">SHOP</Button>
+                        <Button Command="{Binding Shop}" Cursor="Hand" Style="{DynamicResource YellowButton}"  FontSize="23"  Width="140">SHOP</Button>
                         <Rectangle Width="13" />
-                        <Button Command="{Binding News}" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">NEWS</Button>
+                        <Button Command="{Binding News}" Cursor="Hand" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">NEWS</Button>
                     </StackPanel>
                     <!--<TextBlock Foreground="{DynamicResource Color.Text}" Padding="6" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="8" TextAlignment="Center">THESE BUTTONS WILL TAKE YOU TO CELEBRIUM SITE STORE AND NEWS PAGES</TextBlock>-->
                 </StackPanel>

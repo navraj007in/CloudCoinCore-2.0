@@ -24,5 +24,10 @@ namespace Celebrium_WPF.Views
         {
             InitializeComponent();
         }
+
+        private void vmContentContainer_Loaded()
+        {
+
+        }
     }
 }

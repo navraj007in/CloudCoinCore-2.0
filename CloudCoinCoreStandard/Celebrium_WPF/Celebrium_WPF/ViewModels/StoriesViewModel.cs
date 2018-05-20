@@ -20,6 +20,9 @@ namespace Celebrium_WPF.ViewModels
         {
             Stories = new ObservableCollection<StoryModel>();
 
+            Title1 = "DIGITAL";
+            Title2 = "MEMO";
+
             //Title1 = "DIGITAL";
             //Title2 = "MEMO";
 
@@ -68,6 +71,15 @@ namespace Celebrium_WPF.ViewModels
             }
 
 
+            if (stories.Count < Constants.GALLERY_IMAGE_COUNT)
+            {
+                for (int i = 0; i < Constants.GALLERY_IMAGE_COUNT - stories.Count; i++)
+                {
+                    StoryModel blankmodel = new StoryModel("default.jpg") { IsDefault = true, Title = "", Celeb = "", Content = "", Memos = "", Series = "", Value = "" };
+                    stories.Add(blankmodel);
+                }
+            }
+
             return stories;
         }
         public event EventHandler ShowStoryRequest;
@@ -95,7 +107,10 @@ namespace Celebrium_WPF.ViewModels
                     /* Your code here */
                 }));
 
+                
+
             }
+
         }
 
         private void Stories_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

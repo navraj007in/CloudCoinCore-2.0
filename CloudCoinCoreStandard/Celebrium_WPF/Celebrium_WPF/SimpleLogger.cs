@@ -25,12 +25,12 @@ namespace Celebrium
             string logHeader = Filename + " is created.";
             if (!File.Exists(Filename))
             {
-                WriteLine(System.DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+                WriteLine(System.DateTime.Now.ToString(DatetimeFormat) + "> " + logHeader, false);
             }
             else
             {
                 if (append == false)
-                    WriteLine(DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+                    WriteLine(DateTime.Now.ToString(DatetimeFormat) + "> " + logHeader, false);
             }
         }
 
@@ -44,12 +44,12 @@ namespace Celebrium
             string logHeader = Filename + " is created.";
             if (!File.Exists(Filename))
             {
-                WriteLine(DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+                WriteLine(DateTime.Now.ToString(DatetimeFormat) + "> " + logHeader, false);
             }
             else
             {
                 if (append == false)
-                    WriteLine(DateTime.Now.ToString(DatetimeFormat) + " " + logHeader, false);
+                    WriteLine(DateTime.Now.ToString(DatetimeFormat) + "> " + logHeader, false);
             }
         }
 

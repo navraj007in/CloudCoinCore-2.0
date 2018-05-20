@@ -134,7 +134,7 @@ namespace Celebrium_WPF
 
         public void SetupFolders()
         {
-            RootFolder = getWorkspace();
+            RootFolder = App.rootFolder;
             FS = new FileSystem(RootFolder);
 
             // Create the Folder Structure

@@ -16,6 +16,6 @@ namespace Celebrium_WPF
         public static int ERROR_CODE_PIN_LENGTH = 506;
         public static int ERROR_CODE_PIN_INCORRECT = 507;
         public static int ERROR_CODE_EMAIL_INCORRECT = 508;
-
+        public static int GALLERY_IMAGE_COUNT = 22;
     }
 }

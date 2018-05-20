@@ -1,4 +1,5 @@
-﻿using CloudCoinCore;
+﻿using CloudCoinClient.CoreClasses;
+using CloudCoinCore;
 using CloudCoinCoreDirectory;
 using Microsoft.Win32;
 using System;
@@ -19,7 +20,7 @@ namespace Celebrium_WPF
     /// </summary>
     public partial class App : Application
     {
-        public static String rootFolder = AppDomain.CurrentDomain.BaseDirectory;
+        public static String rootFolder = AppDomain.CurrentDomain.BaseDirectory + "Data" + Path.DirectorySeparatorChar; 
         public static String importFolder = rootFolder + "Import" + System.IO.Path.DirectorySeparatorChar;
         public static String importedFolder = rootFolder + "Imported" + System.IO.Path.DirectorySeparatorChar;
         public static String trashFolder = rootFolder + "Trash" + System.IO.Path.DirectorySeparatorChar;
@@ -33,6 +34,7 @@ namespace Celebrium_WPF
         public static String languageFolder = rootFolder + "Language" + System.IO.Path.DirectorySeparatorChar;
         public static String partialFolder = rootFolder + "Partial" + System.IO.Path.DirectorySeparatorChar;
         public static String detectedFolder = rootFolder + "Detected" + System.IO.Path.DirectorySeparatorChar;
+        private FileSystem fileUtils;
         public static String logsFolder = rootFolder + "Logs" + System.IO.Path.DirectorySeparatorChar;
         public static RAIDA raida;// = RAIDA.GetInstance();
 
@@ -172,7 +174,8 @@ namespace Celebrium_WPF
 
         public void setupFolders()
         {
-            rootFolder = getWorkspace();
+            //rootFolder = getWorkspace();
+            Directory.CreateDirectory(rootFolder);
 
             importFolder = rootFolder + "Import" + System.IO.Path.DirectorySeparatorChar;
             importedFolder = rootFolder + "Imported" + System.IO.Path.DirectorySeparatorChar;
@@ -188,8 +191,10 @@ namespace Celebrium_WPF
             partialFolder = rootFolder + "Partial" + System.IO.Path.DirectorySeparatorChar;
             detectedFolder = rootFolder + "Detected" + System.IO.Path.DirectorySeparatorChar;
 
-            //fileUtils = FileUtils.GetInstance(rootFolder);
 
+
+            fileUtils = new FileSystem(rootFolder);
+            fileUtils.CreateFolderStructure();
 
         }
         public string getWorkspace()

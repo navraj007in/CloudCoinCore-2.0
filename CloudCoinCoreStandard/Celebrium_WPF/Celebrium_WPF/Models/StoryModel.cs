@@ -53,6 +53,19 @@ namespace Celebrium_WPF.Models
             return workspace;
         }
 
+        private bool _isDefault = false;
+        public bool IsDefault
+        {
+            get
+            {
+                return _isDefault;
+            }
+            set
+            {
+                _isDefault = value;
+                OnPropertyChanged(nameof(IsDefault));
+            }
+        }
         private string _coinPath;
 
         public string CoinPath

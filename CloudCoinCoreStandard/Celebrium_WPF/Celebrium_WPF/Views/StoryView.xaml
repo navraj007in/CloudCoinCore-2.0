@@ -18,7 +18,7 @@
         </Image>
         <ScrollViewer Grid.Column="1" Margin="20,10,10,10" SnapsToDevicePixels="True">
             <StackPanel Orientation="Vertical" Margin="0,0,10,0" TextBlock.FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk SemiBold" TextBlock.FontSize="13" TextBlock.LineHeight="22" TextBlock.Foreground="{StaticResource Color.Yellow}">
-                <Button Command="{Binding GoBack}" Style="{StaticResource YellowButton}" Width="100" Height="30" Margin="0,0,0,7" HorizontalAlignment="Left">BACK</Button>
+                <Button Command="{Binding GoBack}" Cursor="Hand" Style="{StaticResource YellowButton}" Width="100" Height="30" Margin="0,0,0,7" HorizontalAlignment="Right">BACK</Button>
 
                 <TextBlock Text="{Binding Title, FallbackValue='NO TITLE'}"  />
                 <TextBlock Text="{Binding Series, FallbackValue='NO SERIES'}"  />

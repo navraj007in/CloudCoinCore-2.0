@@ -39,7 +39,7 @@ namespace Celebrium_WPF.ViewModels
             vmactivityLogModel.RequestBackNavigation += vm_RequestBackNavigation;
             CurrentView = vmStories;
             //TODO jsut set the value of the "Version" property to what ever you want, it will autoupdate in the view
-            Version = "ALPHA RELEASE V 2.0";
+            Version = "ALPHA RELEASE V 1.0";
         }
 
         private void vm_RequestBackNavigation(object sender, EventArgs e)
@@ -52,7 +52,8 @@ namespace Celebrium_WPF.ViewModels
         private void VmStories_ShowStoryRequest(object sender, EventArgs e)
         {
             vmStory.Story = vmStories.SelectedItem;
-            CurrentView = vmStory;
+            if (vmStories.SelectedItem!=null &&  !vmStories.SelectedItem.IsDefault)
+                CurrentView = vmStory;
         }
 
         private string _version;
@@ -277,7 +278,7 @@ namespace Celebrium_WPF.ViewModels
         private void mNews(object obj)
         {
             //TODO write code here
-            System.Diagnostics.Process.Start("http://celebrium.com/news");
+            System.Diagnostics.Process.Start("https://www.celebrium.com/news");
         }
 
         public ICommand News
@@ -288,7 +289,7 @@ namespace Celebrium_WPF.ViewModels
         private void mShop(object obj)
         {
             //TODO write code here
-            System.Diagnostics.Process.Start("http://celebrium.com/");
+            System.Diagnostics.Process.Start("https://www.celebrium.com/");
         }
 
         public ICommand Shop
@@ -299,7 +300,7 @@ namespace Celebrium_WPF.ViewModels
         private void mCustomerSupport(object obj)
         {
             //TODO write code here
-            System.Diagnostics.Process.Start("http://celebrium.com/");
+            System.Diagnostics.Process.Start("https://www.celebrium.com/");
         }
 
         public ICommand CustomerSupport
