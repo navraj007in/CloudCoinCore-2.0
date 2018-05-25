@@ -51,8 +51,6 @@ namespace Celebrium_WPF.ViewModels
                 ProgressStatus = "Fetching Images. " + ProgressValue + " % completed.";
                 count++;
             }
-            ProgressValue = 100;
-            ProgressStatus = "Celebrium imported. Click Back to view.";
         }
         private void mChooseFiles(object obj)
         {
@@ -111,7 +109,7 @@ namespace Celebrium_WPF.ViewModels
                 count++;
             }
             ProgressValue = 100;
-            ProgressStatus = "Memo Detection completed.";
+            ProgressStatus = "Memo Detection completed. Starting Image Retreival";
             return memoCoins;
         }
         #region Pickup files
@@ -364,6 +362,9 @@ namespace Celebrium_WPF.ViewModels
 
             await FetchImages(passedCoins);
             await FetchImages(frackedCoins,1);
+
+            ProgressValue = 100;
+            ProgressStatus = "Celebrium imported. Click Back to view.";
 
             //MainAppViewModel.vmStories.AddStories(passedCoins);
             App.Current.Dispatcher.Invoke(delegate

@@ -34,6 +34,8 @@ namespace Celebrium_WPF
         public static String languageFolder = rootFolder + "Language" + System.IO.Path.DirectorySeparatorChar;
         public static String partialFolder = rootFolder + "Partial" + System.IO.Path.DirectorySeparatorChar;
         public static String detectedFolder = rootFolder + "Detected" + System.IO.Path.DirectorySeparatorChar;
+        public static String infoFolder = rootFolder + "Info" + System.IO.Path.DirectorySeparatorChar;
+
         private FileSystem fileUtils;
         public static String logsFolder = rootFolder + "Logs" + System.IO.Path.DirectorySeparatorChar;
         public static RAIDA raida;// = RAIDA.GetInstance();
@@ -176,6 +178,7 @@ namespace Celebrium_WPF
         {
             //rootFolder = getWorkspace();
             Directory.CreateDirectory(rootFolder);
+            Directory.CreateDirectory(infoFolder);
 
             importFolder = rootFolder + "Import" + System.IO.Path.DirectorySeparatorChar;
             importedFolder = rootFolder + "Imported" + System.IO.Path.DirectorySeparatorChar;
