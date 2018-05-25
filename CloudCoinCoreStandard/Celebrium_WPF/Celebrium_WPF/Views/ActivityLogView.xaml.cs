@@ -42,21 +42,28 @@ namespace Celebrium_WPF.Views
     new System.IO.StreamReader(@"activities.log");
             while ((line = file.ReadLine()) != null)
             {
-                System.Console.WriteLine(line);
-                counter++;
-                var parts = line.Split(']');
-                TextRange tr = new TextRange(txtLogs.Document.ContentEnd, txtLogs.Document.ContentEnd);
-                tr.Text = "\n"+parts[0] + "]";
-                tr.ApplyPropertyValue(TextElement.ForegroundProperty, br);
+                try
+                {
+                    System.Console.WriteLine(line);
+                    counter++;
+                    var parts = line.Split(']');
+                    TextRange tr = new TextRange(txtLogs.Document.ContentEnd, txtLogs.Document.ContentEnd);
+                    tr.Text = "\n" + parts[0] + "]";
+                    tr.ApplyPropertyValue(TextElement.ForegroundProperty, br);
 
-                TextRange tr1 = new TextRange(txtLogs.Document.ContentEnd, txtLogs.Document.ContentEnd);
-                tr1.Text = parts[1];
-                tr1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
-
+                    TextRange tr1 = new TextRange(txtLogs.Document.ContentEnd, txtLogs.Document.ContentEnd);
+                    tr1.Text = parts[1];
+                    tr1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
+                }
+                catch(Exception e)
+                {
+                    MainWindow.logger.Error(e.Message);
+                }
             }
 
             file.Close();
             App.raida.LoggerHandler += Raida_LoggerHandler;
+            txtLogs.ScrollToEnd();
 
         }
 
@@ -79,6 +86,7 @@ namespace Celebrium_WPF.Views
             tr1.Text = parts[1];
             tr1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
 
+            txtLogs.CaretPosition = txtLogs.CaretPosition.DocumentEnd;
 
             //txtLogs.AppendText("\n"+pge.MajorProgressMessage);
         }

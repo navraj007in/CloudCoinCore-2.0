@@ -77,6 +77,7 @@ namespace CloudCoinClient.CoreClasses
 
             try
             {
+                Directory.CreateDirectory(RootPath);
                 Directory.CreateDirectory(ImportFolder);
                 Directory.CreateDirectory(ExportFolder);
                 Directory.CreateDirectory(BankFolder);

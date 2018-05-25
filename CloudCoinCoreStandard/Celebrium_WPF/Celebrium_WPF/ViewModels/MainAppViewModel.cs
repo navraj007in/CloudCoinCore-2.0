@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Celebrium_WPF.ViewModels
 {
@@ -40,6 +41,50 @@ namespace Celebrium_WPF.ViewModels
             CurrentView = vmStories;
             //TODO jsut set the value of the "Version" property to what ever you want, it will autoupdate in the view
             Version = "ALPHA RELEASE V 1.0";
+            Echo();
+        }
+
+        public async void Echo(bool resumeFix = false)
+        {
+            AccountStatus = false;
+            AccountStatusMessage =  "CONTACTING SERVER...";
+
+            var echos = App.raida.GetEchoTasks();
+            MainWindow.printLineDots();
+            MainWindow.updateLog("\tEcho RAIDA");
+            //updateLog("----------------------------------");
+            MainWindow.printLineDots();
+            await Task.WhenAll(echos.AsParallel().Select(async task => await task()));
+            //MessageBox.Show("Finished Echo");
+            // lblReady.Content = raida.ReadyCount;
+            // lblNotReady.Content = raida.NotReadyCount;
+
+            for (int i = 0; i < App.raida.nodes.Count(); i++)
+            {
+
+                Debug.WriteLine("Node" + i + " Status --" + App.raida.nodes[i].RAIDANodeStatus);
+            }
+
+            //raidaLevel.IntValue = App.raida.ReadyCount;
+
+            MainWindow.updateLog("\tReady Nodes : " + Convert.ToString(App.raida.ReadyCount) + "");
+            MainWindow.updateLog("\tNot Ready Nodes : " + Convert.ToString(App.raida.NotReadyCount) + "");
+            MainWindow.printLineDots();
+
+            if(App.raida.ReadyCount >= CloudCoinCore.Config.PassCount)
+            {
+                AccountStatus = true;
+                AccountStatusMessage =  App.raida.ReadyCount + 
+                    " / "+ Config.NodeCount +"(STATUS: READY)";
+            }
+            else
+            {
+                AccountStatus = false;
+                AccountStatusMessage = App.raida.ReadyCount +
+                    " / " + Config.NodeCount + "(STATUS: NOT READY)";
+            }
+
+
         }
 
         private void vm_RequestBackNavigation(object sender, EventArgs e)
@@ -67,6 +112,60 @@ namespace Celebrium_WPF.ViewModels
                 OnPropertyChanged(nameof(Version));
             }
         }
+
+        #region Account Status
+
+        private bool _accountStatus;
+
+        public bool AccountStatus
+        {
+            get { return _accountStatus; }
+            set
+            {
+                _accountStatus = value;
+                OnPropertyChanged(nameof(AccountStatus));
+                OnPropertyChanged(nameof(AccountStatusBrush));
+                OnPropertyChanged(nameof(AccountStatusMessage));
+            }
+        }
+
+        public SolidColorBrush AccountStatusBrush
+        {
+            get
+            {
+                SolidColorBrush result = new SolidColorBrush(Colors.Red);
+                if (AccountStatus)
+                {
+                    result.Color = Colors.LightGreen;
+                }
+                OnPropertyChanged(nameof(AccountStatus));
+                OnPropertyChanged(nameof(AccountStatusMessage));
+
+                return result;
+            }
+        }
+
+        private string _accountStatusMessage;
+
+        public string AccountStatusMessage
+        {
+            get
+            {
+                return _accountStatusMessage;
+            }
+            set
+            {
+                _accountStatusMessage = value;
+
+                OnPropertyChanged(nameof(AccountStatus));
+                OnPropertyChanged(nameof(AccountStatusBrush));
+                OnPropertyChanged(nameof(AccountStatusMessage));
+
+            }
+        }
+
+        #endregion
+
 
 
         private BaseViewModel _currentView;
@@ -278,7 +377,8 @@ namespace Celebrium_WPF.ViewModels
         private void mNews(object obj)
         {
             //TODO write code here
-            System.Diagnostics.Process.Start("https://www.celebrium.com/news");
+            //System.Diagnostics.Process.Start("https://www.celebrium.com/news");
+            Echo();
         }
 
         public ICommand News

@@ -100,10 +100,23 @@
                     <StackPanel  Height="38" Orientation="Horizontal"  HorizontalAlignment="Center" >
                         <Button Command="{Binding Shop}" Cursor="Hand" Style="{DynamicResource YellowButton}"  FontSize="23"  Width="140">SHOP</Button>
                         <Rectangle Width="13" />
-                        <Button Command="{Binding News}" Cursor="Hand" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">NEWS</Button>
+                        <Button Command="{Binding News}" Cursor="Hand" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">ECHO</Button>
                     </StackPanel>
                     <!--<TextBlock Foreground="{DynamicResource Color.Text}" Padding="6" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="8" TextAlignment="Center">THESE BUTTONS WILL TAKE YOU TO CELEBRIUM SITE STORE AND NEWS PAGES</TextBlock>-->
                 </StackPanel>
+                <Border BorderThickness="1" Grid.Column="1"  Height="35" SnapsToDevicePixels="True" CornerRadius="4" BorderBrush="{Binding AccountStatusBrush, FallbackValue=Red}" Padding="3">
+                    <Grid  SnapsToDevicePixels="True"  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="/Celebrium_WPF;component/Resources/Images/raida_logo.png"  Stretch="None"/>
+                        <TextBlock Grid.Column="1" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Text="{Binding AccountStatusMessage, FallbackValue='0/25 (STATUS: BAD)'}" />
+                        <Border Grid.Column="2" Width="10" Height="10" Margin="0,0,30,0" CornerRadius="5" Background="{Binding AccountStatusBrush, FallbackValue=Red}" />
+                    </Grid>
+                </Border>
+
                 <Image Grid.Column="2" Source="/Celebrium_WPF;component/Resources/Images/celebrium_logo.png" Stretch="None" Margin="0,-50,30,0"/>
             </Grid>
         </Grid>
