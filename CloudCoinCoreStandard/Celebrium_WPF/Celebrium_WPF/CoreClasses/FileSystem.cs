@@ -151,7 +151,7 @@ namespace CloudCoinClient.CoreClasses
         {
             foreach (var coin in importCoins)
             {
-                string fileName = coin.FileName;
+                string fileName = getCelebriumName(coin.FileName);
                 int coinExists = (from x in predetectCoins
                                   where x.sn == coin.sn
                                   select x).Count();
@@ -194,7 +194,7 @@ namespace CloudCoinClient.CoreClasses
         public void WriteCoin(CloudCoin coin, string folder)
         {
             var folderCoins = LoadFolderCoins(folder);
-            string fileName = coin.FileName;
+            string fileName = getCelebriumName(coin.FileName);
             int coinExists = (from x in folderCoins
                               where x.sn == coin.sn
                               select x).Count();
@@ -217,7 +217,7 @@ namespace CloudCoinClient.CoreClasses
         public void WriteCoin(CloudCoin coin, string folder,string extension)
         {
             var folderCoins = LoadFolderCoins(folder);
-            string fileName = coin.FileName;
+            string fileName = getCelebriumName(coin.FileName);
             int coinExists = (from x in folderCoins
                               where x.sn == coin.sn
                               select x).Count();
@@ -236,14 +236,17 @@ namespace CloudCoinClient.CoreClasses
                 serializer.Serialize(writer, stack);
             }
         }
-
+        public string getCelebriumName(string CoinName)
+        {
+            return CoinName.Replace("CloudCoin", "Celebrium");
+        }
         public void TransferCoins(IEnumerable<CloudCoin> coins, string sourceFolder, string targetFolder,string extension = ".stack")
         {
             var folderCoins = LoadFolderCoins(targetFolder);
 
             foreach (var coin in coins)
             {
-                string fileName = coin.FileName;
+                string fileName = getCelebriumName(coin.FileName);
                 try
                 {
                     JsonSerializer serializer = new JsonSerializer();
@@ -255,7 +258,7 @@ namespace CloudCoinClient.CoreClasses
                     {
                         serializer.Serialize(writer, stack);
                     }
-                    File.Delete(sourceFolder + coin.FileName + extension);
+                    File.Delete(sourceFolder + getCelebriumName(coin.FileName) + extension);
                 }
                 catch (Exception e)
                 {
@@ -272,7 +275,7 @@ namespace CloudCoinClient.CoreClasses
 
             foreach (var coin in coins)
             {
-                string fileName = coin.FileName;
+                string fileName = getCelebriumName(coin.FileName);
                 int coinExists = (from x in folderCoins
                                   where x.sn == coin.sn
                                   select x).Count();
@@ -292,7 +295,7 @@ namespace CloudCoinClient.CoreClasses
                     {
                         serializer.Serialize(writer, stack);
                     }
-                    File.Delete(sourceFolder + coin.FileName + ".stack");
+                    File.Delete(sourceFolder + getCelebriumName(coin.FileName) + ".stack");
                 }
                 catch (Exception e)
                 {
@@ -309,7 +312,7 @@ namespace CloudCoinClient.CoreClasses
 
             foreach (var coin in coins)
             {
-                string fileName = coin.FileName;
+                string fileName = getCelebriumName(coin.FileName);
                 int coinExists = (from x in folderCoins
                                   where x.sn == coin.sn
                                   select x).Count();
@@ -329,7 +332,7 @@ namespace CloudCoinClient.CoreClasses
                     {
                         serializer.Serialize(writer, stack);
                     }
-                    File.Delete(sourceFolder + coin.FileName + extension);
+                    File.Delete(sourceFolder + getCelebriumName(coin.FileName) + extension);
                 }
                 catch (Exception e)
                 {
@@ -345,7 +348,7 @@ namespace CloudCoinClient.CoreClasses
 
             foreach (var coin in coins)
             {
-                File.Delete(folder + coin.FileName + ".stack");
+                File.Delete(folder + getCelebriumName(coin.FileName) + ".stack");
 
             }
         }
@@ -355,7 +358,7 @@ namespace CloudCoinClient.CoreClasses
 
             foreach (var coin in coins)
             {
-                File.Delete(folder + coin.FileName + extension);
+                File.Delete(folder + getCelebriumName(coin.FileName) + extension);
 
             }
         }
@@ -392,7 +395,7 @@ namespace CloudCoinClient.CoreClasses
 
             foreach (var coin in coins)
             {
-                string fileName = coin.FileName;
+                string fileName = getCelebriumName(coin.FileName);
                 int coinExists = (from x in folderCoins
                                   where x.sn == coin.sn
                                   select x).Count();

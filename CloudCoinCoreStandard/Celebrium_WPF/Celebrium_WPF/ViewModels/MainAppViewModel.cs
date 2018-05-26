@@ -47,7 +47,7 @@ namespace Celebrium_WPF.ViewModels
         public async void Echo(bool resumeFix = false)
         {
             AccountStatus = false;
-            AccountStatusMessage =  "CONTACTING SERVER...";
+            AccountStatusMessage =  "CONNECTING SERVER...";
 
             var echos = App.raida.GetEchoTasks();
             MainWindow.printLineDots();

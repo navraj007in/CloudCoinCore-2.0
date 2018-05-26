@@ -457,6 +457,13 @@ namespace Celebrium_WPF.ViewModels
                     string resp2 = message.Substring(startTicket - 1, endTicket + 1); //This is the ticket or message
                     url = string.Format(Config.URL_GET_IMAGE, Config.NetworkNumber, cc.sn, 3, resp2);
                     string image = await GetHtmlFromURL(url);
+
+                    StreamWriter OurStream;
+                    OurStream = File.CreateText("imgapi.txt");
+                    OurStream.WriteLine(image);
+                    OurStream.Close();
+                    Console.WriteLine("Created File!");
+
                     image = image.Substring(0, image.Length - 4);
                     int curlpos = image.IndexOf("{");
                     image = image.Substring(curlpos);
@@ -477,18 +484,18 @@ namespace Celebrium_WPF.ViewModels
                     ms.Write(bytes, 0, bytes.Length);
                     System.Drawing.Image imgimg = System.Drawing.Image.FromStream(ms, true);// this line giving exception parameter not valid
 
-                    string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
+                    string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".jpeg";
                     imgimg.Save(imgpath);
 
-                    string coinPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
-                    string memoPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
+                    string coinPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".celebrium";
+                    string memoPath = MainWindow.FS.BankFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".jpeg";
                     if (fracked == 1)
                     {
-                        coinPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".celebrium";
-                        memoPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + cc.FileName + ".jpeg";
+                        coinPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".celebrium";
+                        memoPath = MainWindow.FS.FrackedFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".jpeg";
                     }
 
-                    JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + cc.FileName + ".jpeg");
+                    JpegWrite(coinPath, cc, memoPath, "", "", MainWindow.FS.TemplateFolder + MainWindow.FS.getCelebriumName(cc.FileName) + ".jpeg");
                     MainWindow.updateActivityLog("New Memo imported to " + memoPath);
                     File.Delete(coinPath);
                 }

@@ -113,6 +113,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CelebriumFileSystem.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CoreClasses\CelebriumCoin.cs" />
     <Compile Include="CoreClasses\Exporter.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="SimpleLogger.cs" />
     <Compile Include="UserControls\ImageButton.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ViewModels\ActivityLogModel.cs" />
     <Compile Include="ViewModels\AddCollectableViewModel.cs" />
     <Compile Include="ViewModels\ApplicationStartViewModel.cs" />
