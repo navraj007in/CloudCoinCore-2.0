@@ -21,7 +21,7 @@
                                        Width="{TemplateBinding ImageWidth}" 
                                        Height="{TemplateBinding ImageHeight}"
                                        VerticalAlignment="Center" />
-                            <TextBlock Text="{TemplateBinding Content}" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="13" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                            <ContentPresenter Content="{TemplateBinding Content}" TextBlock.FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" TextBlock.FontSize="13" VerticalAlignment="Center" TextBlock.Foreground="{TemplateBinding Foreground}" />
                         </StackPanel>
                     </Border>
                     <ControlTemplate.Triggers>

@@ -55,8 +55,9 @@
                         <ColumnDefinition Width="2" />
                         <ColumnDefinition MinWidth="{StaticResource Button.Width.Header}" />
                     </Grid.ColumnDefinitions>
-                        <uc:ImageButton Cursor="Hand" Grid.Column="0"  Command="{Binding ShowAddCollectable}" Content="ADD MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png"  ImageWidth="24"  >
-                            
+                        <uc:ImageButton Grid.Column="0"  Command="{Binding ShowAddCollectable}"  ImageHover="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/add_icon.png"  ImageWidth="24"  >
+                            <TextBlock >ADD MEMO<Run FontSize="8" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM
+                                </Run></TextBlock>
                         </uc:ImageButton>
 
                     <Border Grid.Column="1" BorderBrush="{DynamicResource Color.Yellow}">
@@ -65,7 +66,10 @@
                         </StackPanel>
                     </Border>
 
-                        <uc:ImageButton Cursor="Hand"  Grid.Column="2" Command="{Binding ShowBackUpCollectable}" Content="BACKUP MEMOS" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png"  ImageWidth="24"  ></uc:ImageButton>
+                        <uc:ImageButton Cursor="Hand"  Grid.Column="2" Command="{Binding ShowBackUpCollectable}"  ImageHover="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/backup-icon.png"  ImageWidth="24"  >
+                            <TextBlock >BACKUP MEMOS<Run FontSize="8" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM
+                                </Run></TextBlock>
+                        </uc:ImageButton>
 
                     <Border Grid.Column="3" BorderBrush="{DynamicResource Color.Yellow}">
                         <StackPanel Orientation="Horizontal" >
@@ -73,7 +77,10 @@
                         </StackPanel>
                     </Border>
 
-                        <uc:ImageButton  Grid.Column="4" Cursor="Hand" Command="{Binding ShowExportCollectable}" Content="EXPORT MEMO" ImageHover="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png"  ImageWidth="24" ></uc:ImageButton>
+                        <uc:ImageButton  Grid.Column="4" Cursor="Hand" Command="{Binding ShowExportCollectable}"  ImageHover="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png" Image="/Celebrium_WPF;component/Resources/Images/icons/export_icon.png"  ImageWidth="24" >
+                            <TextBlock >EXPORT MEMO<Run FontSize="8" BaselineAlignment="Superscript" Typography.Variants="Superscript">TM
+                                </Run></TextBlock>
+                        </uc:ImageButton>
 
                     <Border Grid.Column="5"  BorderBrush="{StaticResource Color.Yellow}">
                         <StackPanel Orientation="Horizontal" >

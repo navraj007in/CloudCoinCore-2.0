@@ -338,13 +338,13 @@ namespace Celebrium_WPF.ViewModels
 
             // Move Coins to their respective folders after sort
             //string extension = ".celeb";
-            MainWindow.FS.MoveCoins(passedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.BankFolder,extension);
-            MainWindow.FS.MoveCoins(frackedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.FrackedFolder,extension);
+            MainWindow.FS.MoveCoins(passedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.BankFolder,extension,true);
+            MainWindow.FS.MoveCoins(frackedCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.FrackedFolder,extension,true);
             if(failedCoins.Count>0)
                 MainWindow.FS.WriteCoin(failedCoins, MainWindow.FS.CounterfeitFolder,extension, true);
             MainWindow.FS.MoveCoins(lostCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.LostFolder,extension);
-            MainWindow.FS.MoveCoins(suspectCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.SuspectFolder,extension);
-            MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder, extension);
+            MainWindow.FS.MoveCoins(suspectCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.SuspectFolder,extension,true);
+            MainWindow.FS.MoveCoins(dangerousCoins, MainWindow.FS.DetectedFolder, MainWindow.FS.DangerousFolder, extension,true);
 
             // Clean up Detected Folder
             MainWindow.FS.RemoveCoins(passedCoins, MainWindow.FS.DetectedFolder, extension);
