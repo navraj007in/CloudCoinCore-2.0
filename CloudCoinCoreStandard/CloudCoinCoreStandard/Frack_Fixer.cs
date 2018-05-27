@@ -9,11 +9,11 @@ namespace CloudCoinCore
     public class Frack_Fixer
     {
         /* INSTANCE VARIABLES */
-        private IFileSystem fileUtils;
-        private int totalValueToBank;
-        private int totalValueToFractured;
-        private int totalValueToCounterfeit;
-        private RAIDA raida;
+        protected IFileSystem fileUtils;
+        protected int totalValueToBank;
+        protected int totalValueToFractured;
+        protected int totalValueToCounterfeit;
+        protected RAIDA raida;
         public bool continueExecution = true;
         public bool IsFixing = false;
 

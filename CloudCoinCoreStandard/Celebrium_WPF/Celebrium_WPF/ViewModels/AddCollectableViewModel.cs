@@ -203,7 +203,7 @@ namespace Celebrium_WPF.ViewModels
             foreach (var coin in existingCoins)
             {
                 MainWindow.updateLog("Found existing coin :" + coin.sn + ". Skipping.");
-                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + coin.FileName + extension, MainWindow.FS.TrashFolder + coin.FileName + extension, IFileSystem.FileMoveOptions.Replace);
+                MainWindow.FS.MoveFile(MainWindow.FS.PreDetectFolder + MainWindow.FS.getCelebriumName( coin.FileName) + extension, MainWindow.FS.TrashFolder + coin.FileName + extension, IFileSystem.FileMoveOptions.Replace);
             }
 
             predetectCoins = newCoins;
@@ -293,7 +293,7 @@ namespace Celebrium_WPF.ViewModels
             pge.MinorProgress = 100;
             Debug.WriteLine("Minor Progress- " + pge.MinorProgress);
             ProgressValue = 100;
-            ProgressStatus = ProgressValue.ToString() + "% Detected";
+            ProgressStatus = ProgressValue.ToString() + "% Detected. Starting Celebrium Download..";
 
             App.raida.OnProgressChanged(pge);
             var detectedCoins = MainWindow.FS.LoadFolderCoins(MainWindow.FS.DetectedFolder);

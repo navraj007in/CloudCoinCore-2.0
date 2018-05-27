@@ -47,7 +47,7 @@ namespace Celebrium_WPF
         public static SimpleLogger logger = new SimpleLogger();
         public static SimpleLogger activityLogger = new SimpleLogger( "activities.log",true);
 
-        Frack_Fixer fixer;
+        Other.CelebriumFixer fixer;
 
         #endregion
         public static String RootFolder = AppDomain.CurrentDomain.BaseDirectory;
@@ -59,10 +59,10 @@ namespace Celebrium_WPF
             SetupFolders();
             logger = new SimpleLogger(FS.LogsFolder + "logs" + DateTime.Now.ToString("yyyyMMdd").ToLower() + ".log", true);
             //raidaCore.LoggerHandler += Raida_LogRecieved;
-            fixer = new Frack_Fixer(FS, Config.milliSecondsToTimeOut);
+            fixer = new Other.CelebriumFixer(FS, Config.milliSecondsToTimeOut);
 
             Task.Run(() => {
-               // Fix();
+                Fix();
             });
 
         }

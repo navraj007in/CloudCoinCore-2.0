@@ -140,6 +140,19 @@ namespace CloudCoinCore
 
         public CloudCoin LoadCoin(string fileName)
         {
+            string extension = Path.GetExtension(fileName);
+            if(extension ==".jpeg" || extension == ".jpg")
+            {
+                try
+                {
+                    var coin = loadOneCloudCoinFromJPEGFile(fileName);
+                    return coin;
+                }
+                catch(Exception e)
+                {
+                    return null;
+                }
+            }
             var coins = Utils.LoadJson(fileName);
 
             if (coins != null && coins.Length > 0)
@@ -283,6 +296,23 @@ namespace CloudCoinCore
             }
             return jsonData;
         }//end importJSON
+
+        public bool WriteTextFile(string fileName, string text)
+        {
+            try
+            {
+                StreamWriter OurStream;
+                OurStream = File.CreateText(fileName);
+                OurStream.Write(text);
+                OurStream.Flush();
+            }
+            catch (Exception e)
+            {
+             //   MainWindow.logger.Error(e.Message);
+                return false;
+            }
+            return true;
+        }
 
         // en d json test
         public String setJSON(CloudCoin cc)
