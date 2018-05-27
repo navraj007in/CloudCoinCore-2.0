@@ -198,7 +198,7 @@ namespace Celebrium_WPF
 
             fileUtils = new FileSystem(rootFolder);
             fileUtils.CreateFolderStructure();
-
+            fileUtils.WriteTextFile(infoFolder + "default.txt", "");
         }
         public string getWorkspace()
         {

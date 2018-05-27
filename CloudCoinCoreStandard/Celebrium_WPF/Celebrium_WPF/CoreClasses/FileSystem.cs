@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Celebrium_WPF;
 
 namespace CloudCoinClient.CoreClasses
 {
@@ -436,6 +437,23 @@ namespace CloudCoinClient.CoreClasses
                     Console.WriteLine(e.Message);
                 }
 
+        }
+
+        public bool WriteTextFile(string fileName,string text)
+        {
+            try
+            {
+                StreamWriter OurStream;
+                OurStream = File.CreateText(fileName);
+                OurStream.Write(text);
+                OurStream.Close();
+            }
+            catch(Exception e)
+            {
+                MainWindow.logger.Error(e.Message);
+                return false;
+            }
+            return true;
         }
         public List<FileInfo> GetFiles(string path, params string[] extensions)
         {
