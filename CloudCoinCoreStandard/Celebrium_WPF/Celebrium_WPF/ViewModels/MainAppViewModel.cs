@@ -299,9 +299,11 @@ namespace Celebrium_WPF.ViewModels
                         //JpegWrite(vmStory.Story.CoinPath, vmStory.Story.ImagePath, "", "", vmStory.Story);
                         string fileName = System.IO.Path.GetFileName (vmStory.Story.ImagePath );
                         string exportPath = MainWindow.FS.ExportFolder + Path.DirectorySeparatorChar + fileName;
-
+                        string infoFileName = Path.GetFileNameWithoutExtension(fileName) + ".txt";
                         File.Copy(vmStory.Story.ImagePath, exportPath);
                         File.Delete(vmStory.Story.ImagePath);
+                        File.Delete(App.infoFolder + infoFileName);
+
                         Process.Start(MainWindow.FS.ExportFolder);
                        // vmStories.Refresh();
                         vmStories.SelectedItem = null;
