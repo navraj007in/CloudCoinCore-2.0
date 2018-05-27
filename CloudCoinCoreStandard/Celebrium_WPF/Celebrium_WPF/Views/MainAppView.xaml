@@ -107,7 +107,7 @@
                     <StackPanel  Height="38" Orientation="Horizontal"  HorizontalAlignment="Center" >
                         <Button Command="{Binding Shop}" Cursor="Hand" Style="{DynamicResource YellowButton}"  FontSize="23"  Width="140">SHOP</Button>
                         <Rectangle Width="13" />
-                        <Button Command="{Binding News}" Cursor="Hand" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">ECHO</Button>
+                        <Button Command="{Binding News}" Cursor="Hand" Style="{DynamicResource YellowButton}" FontSize="23" Width="140">STATUS</Button>
                     </StackPanel>
                     <!--<TextBlock Foreground="{DynamicResource Color.Text}" Padding="6" FontFamily="/Celebrium_WPF;component/Resources/Fonts/#Ridley Grotesk Regular" FontSize="8" TextAlignment="Center">THESE BUTTONS WILL TAKE YOU TO CELEBRIUM SITE STORE AND NEWS PAGES</TextBlock>-->
                 </StackPanel>
