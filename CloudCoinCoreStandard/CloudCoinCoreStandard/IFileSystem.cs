@@ -121,7 +121,7 @@ namespace CloudCoinCore
 
                 //   Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
 
-                writeTo(SuspectFolder, tempCoin);
+                //writeTo(SuspectFolder, tempCoin);
                 return tempCoin;
             }
             catch (FileNotFoundException ex)

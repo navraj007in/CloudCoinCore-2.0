@@ -68,32 +68,6 @@ namespace Celebrium_WPF
                 System.Environment.Exit(1);
             }
 
-            if (AppDomain.CurrentDomain.SetupInformation
-                .ActivationArguments != null)
-                if (AppDomain.CurrentDomain.SetupInformation
-                    .ActivationArguments.ActivationData != null
-                && AppDomain.CurrentDomain.SetupInformation
-                    .ActivationArguments.ActivationData.Length > 0)
-                {
-                    string fname = "No filename given";
-                    try
-                    {
-                        fname = AppDomain.CurrentDomain.SetupInformation
-                                .ActivationArguments.ActivationData[0];
-
-                        // It comes in as a URI; this helps to convert it to a path.
-                        Uri uri = new Uri(fname);
-                        fname = uri.LocalPath;
-
-                        this.Properties["ArbitraryArgName"] = fname;
-                        // System.IO.File.Copy(fname, "");
-                    }
-                    catch (Exception ex)
-                    {
-                        // For some reason, this couldn't be read as a URI.
-                        // Do what you must...
-                    }
-                }
 
             setupFolders();
 
@@ -101,38 +75,7 @@ namespace Celebrium_WPF
         }
 
 
-        public static void SetAssociationWithExtension(string Extension, string KeyName, string OpenWith, string FileDescription)
-        {
-            try
-            {
-                RegistryKey BaseKey;
-                RegistryKey OpenMethod;
-                RegistryKey Shell;
-                RegistryKey CurrentUser;
 
-                BaseKey = Registry.ClassesRoot.CreateSubKey(Extension);
-                BaseKey.SetValue("", KeyName);
-
-                OpenMethod = Registry.ClassesRoot.CreateSubKey(KeyName);
-                OpenMethod.SetValue("", FileDescription);
-                OpenMethod.CreateSubKey("DefaultIcon").SetValue("", "\"" + OpenWith + "\",0");
-                Shell = OpenMethod.CreateSubKey("Shell");
-                Shell.CreateSubKey("edit").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
-                Shell.CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
-                BaseKey.Close();
-                OpenMethod.Close();
-                Shell.Close();
-
-                CurrentUser = Registry.CurrentUser.CreateSubKey(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.ucs");
-                CurrentUser = CurrentUser.OpenSubKey("UserChoice", RegistryKeyPermissionCheck.ReadWriteSubTree, System.Security.AccessControl.RegistryRights.FullControl);
-                CurrentUser.SetValue("Progid", KeyName, RegistryValueKind.String);
-                CurrentUser.Close();
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
         private int GetNetworkNumber(RAIDADirectory dir)
         {
             if (Celebrium_WPF. Properties.Settings.Default.NetworkNumber == 0)

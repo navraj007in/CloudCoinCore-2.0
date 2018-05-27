@@ -102,25 +102,6 @@ namespace CloudCoinClient.CoreClasses
                 Debug.WriteLine(e.Message);
                 return false;
             }
-            string[] fileNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            foreach (String fileName in fileNames)
-            {
-                if (fileName.Contains("jpeg"))
-                {
-                    try
-                    {
-                        string outputpath = Celebrium_WPF.Properties.Settings.Default.WorkSpace + "Templates" + System.IO.Path.DirectorySeparatorChar + fileName.Substring(22);
-                        using (FileStream fileStream = File.Create(outputpath))
-                        {
-                            Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName).CopyTo(fileStream);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
 
 
             return true;
