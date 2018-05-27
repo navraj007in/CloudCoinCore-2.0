@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.IO;
 using CloudCoinClient.CoreClasses;
+using Newtonsoft.Json;
+
 namespace Celebrium_WPF.Models
 {
     public class StoryModel:BaseModel
@@ -15,6 +17,7 @@ namespace Celebrium_WPF.Models
         public StoryModel(string imageUrl)
         {
             RootFolder = getWorkspace();
+            Celebrium = new Other.Celebrium();
             FS = new FileSystem(RootFolder);
             string fileName = System.IO.Path.GetFileNameWithoutExtension(imageUrl);
             BitmapImage src = new BitmapImage();
@@ -27,6 +30,8 @@ namespace Celebrium_WPF.Models
             Image = src;
             string name = FS.BankFolder + fileName + ".celebrium";
             string frackName = FS.FrackedFolder + fileName + ".celebrium";
+            string infoname = App.infoFolder + fileName + ".txt";
+
             if (File.Exists(name))
             {
                 cloudCoin = FS.LoadCoin(name);
@@ -39,6 +44,8 @@ namespace Celebrium_WPF.Models
             }
             else
                 cloudCoin = null;
+            string text = File.ReadAllText(infoname, Encoding.UTF8);
+            Celebrium = JsonConvert.DeserializeObject<Other.Celebrium>(text);
 
         }
 
@@ -78,6 +85,18 @@ namespace Celebrium_WPF.Models
             {
                 _coinPath = value;
                 OnPropertyChanged(nameof(CoinPath));
+            }
+        }
+
+        private Celebrium_WPF.Other.Celebrium _celebrium;
+
+        public Celebrium_WPF.Other.Celebrium Celebrium
+        {
+            get { return _celebrium; }
+            set
+            {
+                _celebrium = value;
+                OnPropertyChanged(nameof(Celebrium));
             }
         }
 

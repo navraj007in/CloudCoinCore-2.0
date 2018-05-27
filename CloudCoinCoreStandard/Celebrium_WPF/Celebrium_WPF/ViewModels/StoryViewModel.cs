@@ -53,7 +53,7 @@ namespace Celebrium_WPF.ViewModels
         {
             get
             {
-                return ("TITLE: "+Story.Title).ToUpper();
+                return ("TITLE: "+Story.Celebrium.meta.Title).ToUpper();
             }
         }
 
@@ -61,7 +61,7 @@ namespace Celebrium_WPF.ViewModels
         {
             get
             {
-                return ("SERIES: " + Story.Series).ToUpper();
+                return ("SERIES: " + Story.Celebrium.meta.SeriesName).ToUpper();
             }
         }
 
@@ -69,7 +69,7 @@ namespace Celebrium_WPF.ViewModels
         {
             get
             {
-                return ("CELEB: " + Story.Celeb).ToUpper();
+                return ("CELEB: " + Story.Celebrium.meta.Artist).ToUpper();
             }
         }
 
@@ -93,7 +93,7 @@ namespace Celebrium_WPF.ViewModels
         {
             get
             {
-                return Story.Content;
+                return Story.Celebrium.meta.Description;
             }
         }
 

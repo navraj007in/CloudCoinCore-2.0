@@ -24,6 +24,7 @@ using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Net;
 using Celebrium_WPF.Models;
+using Newtonsoft.Json;
 
 namespace Celebrium_WPF.ViewModels
 {
@@ -458,11 +459,8 @@ namespace Celebrium_WPF.ViewModels
                     url = string.Format(Config.URL_GET_IMAGE, Config.NetworkNumber, cc.sn, 3, resp2);
                     string image = await GetHtmlFromURL(url);
 
-                    StreamWriter OurStream;
-                    OurStream = File.CreateText("imgapi.txt");
-                    OurStream.WriteLine(image);
-                    OurStream.Close();
-                    Console.WriteLine("Created File!");
+
+                    Other.Celebrium deserializedCelebrium = JsonConvert.DeserializeObject<Other.Celebrium>(image);
 
                     image = image.Substring(0, image.Length - 4);
                     int curlpos = image.IndexOf("{");
@@ -483,6 +481,13 @@ namespace Celebrium_WPF.ViewModels
                     ms.Position = 0;
                     ms.Write(bytes, 0, bytes.Length);
                     System.Drawing.Image imgimg = System.Drawing.Image.FromStream(ms, true);// this line giving exception parameter not valid
+
+                    string infopath = App.infoFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".txt";
+                    StreamWriter OurStream;
+                    OurStream = File.CreateText(infopath);
+                    OurStream.Write(JsonConvert.SerializeObject(deserializedCelebrium));
+                    OurStream.Close();
+                    //Console.WriteLine("Created File!");
 
                     string imgpath = MainWindow.FS.TemplateFolder + System.IO.Path.DirectorySeparatorChar + MainWindow.FS.getCelebriumName(cc.FileName) + ".jpeg";
                     imgimg.Save(imgpath);

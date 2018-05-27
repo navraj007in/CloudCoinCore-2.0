@@ -122,6 +122,7 @@
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\StoryModel.cs" />
     <Compile Include="Other\ActionCommand.cs" />
+    <Compile Include="Other\Celebrium.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="SimpleLogger.cs" />
     <Compile Include="UserControls\ImageButton.cs" />
