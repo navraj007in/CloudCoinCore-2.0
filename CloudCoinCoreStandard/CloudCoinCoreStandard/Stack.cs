@@ -29,9 +29,9 @@ namespace CloudCoinCore
         }
 
         /* Methods */ 
-        
+         /* 
          public MultiDetectRequest getMultiDetectRequest(int timeout) {  //Method for Extracting a MultiDetection Request from stack file
-            
+          
             MultiDetectRequest returnRequest = new MultiDetectRequest();
             //Create the arrays for the detection request
             returnRequest.nn = new int[cc.Length];
@@ -49,5 +49,6 @@ namespace CloudCoinCore
 
             return returnRequest;
         }//end get multi detect request
-    }
-}
+         /* 
+    }//end Class Stack
+}//End namespace CloudCoinCore
