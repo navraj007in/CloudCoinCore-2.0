@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreStandard", "CoreStandard\CoreStandard.csproj", "{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreFramework", "CoreFramework\CoreFramework.csproj", "{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{71F25D45-583E-4587-A928-DEC1046D2F49}"
+	ProjectSection(SolutionItems) = preProject
+		Source\Banker.cs = Source\Banker.cs
+		Source\CloudCoin.cs = Source\CloudCoin.cs
+		Source\CoinUtils.cs = Source\CoinUtils.cs
+		Source\Config.cs = Source\Config.cs
+		Source\DetectEventArgs.cs = Source\DetectEventArgs.cs
+		Source\FileSystem.cs = Source\FileSystem.cs
+		Source\FixitHelper.cs = Source\FixitHelper.cs
+		Source\Frack_Fixer.cs = Source\Frack_Fixer.cs
+		Source\IFileSystem.cs = Source\IFileSystem.cs
+		Source\Logger.cs = Source\Logger.cs
+		Source\MultiDetectRequest.cs = Source\MultiDetectRequest.cs
+		Source\Network.cs = Source\Network.cs
+		Source\Node.cs = Source\Node.cs
+		Source\ProgressChangedEventArgs.cs = Source\ProgressChangedEventArgs.cs
+		Source\RAIDA.cs = Source\RAIDA.cs
+		Source\Response.cs = Source\Response.cs
+		Source\Stack.cs = Source\Stack.cs
+		Source\Utils.cs = Source\Utils.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81F94C99-0FFC-4570-B536-B9BC5A7610C0}
+	EndGlobalSection
+EndGlobal

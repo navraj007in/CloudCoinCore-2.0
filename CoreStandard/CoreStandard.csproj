@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>CloudCoinCore</AssemblyName>
+    <RootNamespace>CloudCoinCore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="SkiaSharp" Version="1.60.1" />
+    <PackageReference Include="ZXing.Net" Version="0.16.4" />
+  </ItemGroup>
+<ItemGroup>
+    <Compile Include="..\Source\Banker.cs" />
+    <Compile Include="..\Source\CloudCoin.cs" />
+    <Compile Include="..\Source\CoinUtils.cs" />
+    <Compile Include="..\Source\Config.cs" />
+    <Compile Include="..\Source\DetectEventArgs.cs" />
+    <Compile Include="..\Source\FileSystem.cs" />
+    <Compile Include="..\Source\FixitHelper.cs" />
+    <Compile Include="..\Source\Frack_Fixer.cs" />
+    <Compile Include="..\Source\IFileSystem.cs" />
+    <Compile Include="..\Source\Logger.cs" />
+    <Compile Include="..\Source\MultiDetectRequest.cs" />
+    <Compile Include="..\Source\Network.cs" />
+    <Compile Include="..\Source\Node.cs" />
+    <Compile Include="..\Source\ProgressChangedEventArgs.cs" />
+    <Compile Include="..\Source\RAIDA.cs" />
+    <Compile Include="..\Source\Response.cs" />
+    <Compile Include="..\Source\Stack.cs" />
+    <Compile Include="..\Source\Utils.cs" />
+  </ItemGroup>
+  
+</Project>
