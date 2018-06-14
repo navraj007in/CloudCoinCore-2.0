@@ -58,6 +58,7 @@
     <Compile Include="..\Source\Banker.cs" />
     <Compile Include="..\Source\CloudCoin.cs" />
     <Compile Include="..\Source\CoinUtils.cs" />
+    <Compile Include="..\Source\DetectResponse.cs" />
     <Compile Include="..\Source\Config.cs" />
     <Compile Include="..\Source\DetectEventArgs.cs" />
     <Compile Include="..\Source\FileSystem.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Source\RAIDA.cs" />
     <Compile Include="..\Source\Response.cs" />
+    <Compile Include="..\Source\SimpleLogger.cs" />
     <Compile Include="..\Source\Stack.cs" />
     <Compile Include="..\Source\Utils.cs" />
   </ItemGroup>

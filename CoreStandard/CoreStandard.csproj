@@ -17,6 +17,7 @@
     <Compile Include="..\Source\CoinUtils.cs" />
     <Compile Include="..\Source\Config.cs" />
     <Compile Include="..\Source\DetectEventArgs.cs" />
+    <Compile Include="..\Source\DetectResponse.cs" />
     <Compile Include="..\Source\FileSystem.cs" />
     <Compile Include="..\Source\FixitHelper.cs" />
     <Compile Include="..\Source\Frack_Fixer.cs" />
@@ -28,6 +29,7 @@
     <Compile Include="..\Source\ProgressChangedEventArgs.cs" />
     <Compile Include="..\Source\RAIDA.cs" />
     <Compile Include="..\Source\Response.cs" />
+    <Compile Include="..\Source\SimpleLogger.cs" />
     <Compile Include="..\Source\Stack.cs" />
     <Compile Include="..\Source\Utils.cs" />
   </ItemGroup>

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreStandard", "CoreStandard\CoreStandard.csproj", "{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreStandard", "CoreStandard\CoreStandard.csproj", "{AC6BDA4E-74F4-43A3-81B6-0AF786B6098D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreFramework", "CoreFramework\CoreFramework.csproj", "{BC3EEAA2-1D76-43E5-9500-C2A31D11DFE2}"
 EndProject
@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{71F25D
 		Source\CoinUtils.cs = Source\CoinUtils.cs
 		Source\Config.cs = Source\Config.cs
 		Source\DetectEventArgs.cs = Source\DetectEventArgs.cs
+		Source\DetectResponse.cs = Source\DetectResponse.cs
 		Source\FileSystem.cs = Source\FileSystem.cs
 		Source\FixitHelper.cs = Source\FixitHelper.cs
 		Source\Frack_Fixer.cs = Source\Frack_Fixer.cs
@@ -25,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{71F25D
 		Source\ProgressChangedEventArgs.cs = Source\ProgressChangedEventArgs.cs
 		Source\RAIDA.cs = Source\RAIDA.cs
 		Source\Response.cs = Source\Response.cs
+		Source\SimpleLogger.cs = Source\SimpleLogger.cs
 		Source\Stack.cs = Source\Stack.cs
 		Source\Utils.cs = Source\Utils.cs
 	EndProjectSection

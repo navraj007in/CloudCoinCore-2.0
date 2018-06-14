@@ -39,6 +39,7 @@ namespace CloudCoinCore
         public MultiDetectResponse MultiResponse = new MultiDetectResponse();
         public String Ticket = "";
         RAIDANode node;
+
         //Constructor
         public Node(int NodeNumber)
         {
@@ -126,6 +127,7 @@ namespace CloudCoinCore
             {
                 echoResponse.fullResponse = await Utils.GetHtmlFromURL(echoResponse.fullRequest);
                 Debug.WriteLine("Echo From Node - " + NodeNumber + ". " + echoResponse.fullResponse);
+                //Debug.WriteLine("Echo URL - "+ FullUrl);
                 if (echoResponse.fullResponse.Contains("ready"))
                 {
                     echoResponse.success = true;
@@ -472,11 +474,12 @@ namespace CloudCoinCore
         //int[] nn, int[] sn, String[] an, String[] pan, int[] d, int timeout
         public async Task<MultiDetectResponse> MultiDetect()
         {
+            
             /*PREPARE REQUEST*/
             try
             {
 
-                var raida = RAIDA.GetInstance();
+                var raida =RAIDA.ActiveRAIDA ;
                 int[] nn = raida.multiRequest.nn;
                 int[] sn = raida.multiRequest.sn;
                 String[] an = raida.multiRequest.an[NodeNumber - 1];
@@ -599,69 +602,100 @@ namespace CloudCoinCore
                 after = DateTime.Now;
                 ts = after.Subtract(before);//Start the timer
                                             //Is the request a dud?
-                if (totalResponse.Contains("dud"))
+
+                try
                 {
-                    //Mark all Responses as duds
+                    DetectResponse[] responses = JsonConvert.DeserializeObject<DetectResponse[]>(totalResponse);
+
+                    for (int i = 0; i < nn.Length; i++)
+                    {
+                        response[i].fullResponse = totalResponse;
+                        if (responses[i].status == "pass")
+                            response[i].success = true;
+                        else
+                            response[i].success = false;
+
+                        response[i].outcome = responses[i].status;
+                        response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                    }//end for each dud
+
+                }
+                catch (Exception e)
+                {
                     for (int i = 0; i < nn.Length; i++)
                     {
                         response[i].fullResponse = totalResponse;
                         response[i].success = false;
-                        response[i].outcome = "dud";
+                        response[i].outcome = "e";
                         response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
                     }//end for each dud
-                }//end if dud
-                else
-                {
-                    //Not a dud so break up parts into smaller pieces
-                    //Remove leading "[{"
-                    totalResponse = totalResponse.Remove(0, 2);
-                    //Remove trailing "}]"
-                    totalResponse = totalResponse.Remove(totalResponse.Length - 2, 2);
-                    //Split by "},{"
-                    string[] responseArray = Regex.Split(totalResponse, "},{");
-                    //Check to see if the responseArray is the same length as the request detectResponse. They should be the same
-                    if (response.Length != responseArray.Length)
-                    {
-                        //Mark all Responses as duds
-                        for (int i = 0; i < nn.Length; i++)
-                        {
-                            response[i].fullResponse = totalResponse;
-                            response[i].success = false;
-                            response[i].outcome = "dud";
-                            response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
-                        }//end for each dud
-                    }//end if lenghts are not the same
-                    else//Lengths are the same so lets go through each one
-                    {
+
+                }
+
+                //if (totalResponse.Contains("dud"))
+                //{
+                //    //Mark all Responses as duds
+                //    for (int i = 0; i < nn.Length; i++)
+                //    {
+                //        response[i].fullResponse = totalResponse;
+                //        response[i].success = false;
+
+                //        response[i].outcome = "dud";
+                //        response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                //    }//end for each dud
+                //}//end if dud
+                //else
+                //{
+                //    //Not a dud so break up parts into smaller pieces
+                //    //Remove leading "[{"
+                //    totalResponse = totalResponse.Remove(0, 2);
+                //    //Remove trailing "}]"
+                //    totalResponse = totalResponse.Remove(totalResponse.Length - 2, 2);
+                //    //Split by "},{"
+                //    string[] responseArray = Regex.Split(totalResponse, "},{");
+                //    //Check to see if the responseArray is the same length as the request detectResponse. They should be the same
+                //    if (response.Length != responseArray.Length)
+                //    {
+                //        //Mark all Responses as duds
+                //        for (int i = 0; i < nn.Length; i++)
+                //        {
+                //            response[i].fullResponse = totalResponse;
+                //            response[i].success = false;
+                //            response[i].outcome = "dud";
+                //            response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                //        }//end for each dud
+                //    }//end if lenghts are not the same
+                //    else//Lengths are the same so lets go through each one
+                //    {
 
 
-                        for (int i = 0; i < nn.Length; i++)
-                        {
-                            if (responseArray[i].Contains("pass"))
-                            {
-                                response[i].fullResponse = responseArray[i];
-                                response[i].outcome = "pass";
-                                response[i].success = true;
-                                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
-                            }
-                            else if (responseArray[i].Contains("fail") && responseArray[i].Length < 200)//less than 200 incase there is a fail message inside errored page
-                            {
-                                response[i].fullResponse = responseArray[i];
-                                response[i].outcome = "fail";
-                                response[i].success = false;
-                                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
-                            }
-                            else
-                            {
-                                response[i].fullResponse = responseArray[i];
-                                response[i].outcome = "error";
-                                response[i].success = false;
-                                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
-                            }
-                        }//End for each response
-                    }//end if array lengths are the same
+                //        for (int i = 0; i < nn.Length; i++)
+                //        {
+                //            if (responseArray[i].Contains("pass"))
+                //            {
+                //                response[i].fullResponse = responseArray[i];
+                //                response[i].outcome = "pass";
+                //                response[i].success = true;
+                //                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                //            }
+                //            else if (responseArray[i].Contains("fail") && responseArray[i].Length < 200)//less than 200 incase there is a fail message inside errored page
+                //            {
+                //                response[i].fullResponse = responseArray[i];
+                //                response[i].outcome = "fail";
+                //                response[i].success = false;
+                //                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                //            }
+                //            else
+                //            {
+                //                response[i].fullResponse = responseArray[i];
+                //                response[i].outcome = "error";
+                //                response[i].success = false;
+                //                response[i].milliseconds = Convert.ToInt32(ts.Milliseconds);
+                //            }
+                //        }//End for each response
+                //    }//end if array lengths are the same
 
-                }//End Else not a dud
+                //}//End Else not a dud
                  //Break the respons into sub responses. 
                 MultiDetectTime = Convert.ToInt32(ts.Milliseconds);
                 MultiResponse.responses = response;

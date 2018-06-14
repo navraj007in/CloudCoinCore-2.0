@@ -29,5 +29,7 @@ namespace CloudCoinCore
             this.fullRequest = "No request";
             this.fullResponse = "No response";
         }
+
+        
     }
 }

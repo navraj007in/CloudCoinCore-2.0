@@ -156,11 +156,11 @@ namespace CloudCoinCore
             if ((charCount(pown, 'p') < 6 && (charCount(pown, 'f') > 13)))
             {
                 returnTruth = true;
-                Console.Out.WriteLine("isCounterfeit");
+             //   Console.Out.WriteLine("isCounterfeit");
             }
             else
             {
-                Console.Out.WriteLine("Not isCounterfeit");
+               // Console.Out.WriteLine("Not isCounterfeit");
             }
             return returnTruth;
         }//end is counterfeit
@@ -172,7 +172,8 @@ namespace CloudCoinCore
 
         public string GetCSV()
         {
-            string csv = this.sn + ",";
+            string csv = this.sn + "," + this.nn + ",";
+               
 
             for (int i = 0; i < Config.NodeCount; i++)
             {
@@ -457,14 +458,14 @@ namespace CloudCoinCore
             //pown = pown.Replace('u', 'e');
             if (isPerfect())
             {
-                folder = folder = RAIDA.GetInstance().FS.BankFolder;
+                folder =  RAIDA.ActiveRAIDA.FS.BankFolder;
                 //folder = Folder.Bank;
                 return;
             }//if is perfect
 
             if (isCounterfeit())
             {
-                folder = RAIDA.GetInstance().FS.CounterfeitFolder;
+                folder = RAIDA.ActiveRAIDA.FS.CounterfeitFolder;
                 //folder = Folder.Counterfeit;
                 return;
             }//if is counterfeit
@@ -476,7 +477,7 @@ namespace CloudCoinCore
             {
                 if (!isFracked())
                 {
-                    folder = RAIDA.GetInstance().FS.BankFolder;
+                    folder = RAIDA.ActiveRAIDA.FS.BankFolder;
                     return;
                 }
                 else
@@ -486,13 +487,13 @@ namespace CloudCoinCore
                         if (isFixable())
                         {
                             recordPown();
-                            folder = RAIDA.GetInstance().FS.DangerousFolder;
+                            folder = RAIDA.ActiveRAIDA.FS.DangerousFolder;
                             return;
 
                         }
                         else
                         {
-                            folder = RAIDA.GetInstance().FS.CounterfeitFolder;
+                            folder = RAIDA.ActiveRAIDA.FS.CounterfeitFolder;
                             return;
                         }
                     }
@@ -500,12 +501,12 @@ namespace CloudCoinCore
                     {
                         if (!isFixable())
                         {
-                            folder = RAIDA.GetInstance().FS.CounterfeitFolder;
+                            folder = RAIDA.ActiveRAIDA.FS.CounterfeitFolder;
                             return;
                         }
                         else
                         {
-                            folder = RAIDA.GetInstance().FS.FrackedFolder;
+                            folder = RAIDA.ActiveRAIDA.FS.FrackedFolder;
                             return;
                         }
                     }
@@ -515,13 +516,13 @@ namespace CloudCoinCore
             {
                 if (noResponses())
                 {
-                    folder = RAIDA.GetInstance().FS.LostFolder;
+                    folder = RAIDA.ActiveRAIDA.FS.LostFolder;
                     //folder = Folder.Lost;
                     return;
                 }//end no responses
                 else
                 {
-                    folder = RAIDA.GetInstance().FS.SuspectFolder;
+                    folder = RAIDA.ActiveRAIDA.FS.SuspectFolder;
                     //folder = Folder.Lost;
                     return;
                 }

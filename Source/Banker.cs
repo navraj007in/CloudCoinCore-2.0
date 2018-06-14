@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 namespace CloudCoinCore
-
 {
     public class Banker
     {
